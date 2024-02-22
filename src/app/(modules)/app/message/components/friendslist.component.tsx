@@ -21,15 +21,32 @@ import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import GroupIcon from "@mui/icons-material/Group";
 import { getTimeDifference } from "@/app/data/utils";
 import CloseIcon from "@mui/icons-material/Close";
+import { useDispatch } from "react-redux";
+import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 const FriendItem = ({ friend, handleClosePop }: any) => {
+  const dispatch = useDispatch();
   const handleNotificationClick = (notification: any) => {
     handleClosePop();
   };
-  const sendFriendRequestResponse = async (id, status) => {
+  const acceptFriendRequest = async (id) => {
     try {
       const response = await FriendAPI.sendFriendRequestResponse({
         id,
-        status,
+        status: "accepted",
+      });
+      if (response.status) {
+        handleClosePop();
+        dispatch(handleBeginConversationDialogState(true));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const rejectFriendRequest = async (id) => {
+    try {
+      const response = await FriendAPI.sendFriendRequestResponse({
+        id,
+        status: "rejected",
       });
       console.log(response);
     } catch (e) {
@@ -97,14 +114,14 @@ const FriendItem = ({ friend, handleClosePop }: any) => {
           <IconButton
             sx={{ color: "red" }}
             size="small"
-            onClick={() => sendFriendRequestResponse(friend.id, "rejected")}
+            onClick={() => rejectFriendRequest(friend.id)}
           >
             <CloseIcon />
           </IconButton>
           <IconButton
             sx={{ color: "green" }}
             size="small"
-            onClick={() => sendFriendRequestResponse(friend.id, "accepted")}
+            onClick={() => acceptFriendRequest(friend.id)}
           >
             <CheckIcon />
           </IconButton>

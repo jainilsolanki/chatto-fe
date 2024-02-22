@@ -1,5 +1,6 @@
+"use client";
 import { CREATE_CHAT } from "@/app/data/assets-data";
-import store from "@/app/services/redux";
+import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import {
   Button,
   Dialog,
@@ -9,12 +10,15 @@ import {
   DialogTitle,
   Stack,
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function StartConversationConfirmationDialog() {
+  const dispatch = useDispatch();
+  const dialogConfig = useSelector((state: any) => state.dialogConfig);
   return (
     <>
       <Dialog
-        open={store.getState().dialogConfig.beginConversationDialogState}
+        open={dialogConfig.beginConversationDialogState}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
@@ -34,7 +38,11 @@ export default function StartConversationConfirmationDialog() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" sx={{ width: "100%" }}>
+          <Button
+            variant="outlined"
+            sx={{ width: "100%" }}
+            onClick={() => dispatch(handleBeginConversationDialogState(false))}
+          >
             Later
           </Button>
           <Button variant="contained" sx={{ width: "100%" }}>

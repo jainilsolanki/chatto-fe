@@ -80,7 +80,7 @@ const ChatPanel = () => {
     function onFriendsList(value: any) {
       // setFooEvents(fooEvents.concat(value));
       const { conversationList } = value;
-      console.log("value: ", value.conversationList);
+      console.log("list value: ", value.conversationList);
       setFriendsList(conversationList);
     }
 

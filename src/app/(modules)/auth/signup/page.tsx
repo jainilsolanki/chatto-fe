@@ -43,7 +43,10 @@ export default function SignupPage() {
         ...userData,
       });
       if (response.status) {
-        router.push("/auth/login");
+        showSnackbar(response.message, "success");
+        setTimeout(() => {
+          router.push("/auth/login");
+        }, 1000);
       }
     } catch (e: any) {
       showSnackbar(e.response.data.message, "error");
