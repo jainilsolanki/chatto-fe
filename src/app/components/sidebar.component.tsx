@@ -161,24 +161,39 @@ export default function Sidebar() {
           />
           <List>
             {SidebarData.map((menu: MenuItemType) => (
-              <ListItem key={menu.id} disablePadding sx={{ display: "block" }}>
+              <ListItem
+                key={menu.id}
+                disablePadding
+                sx={{
+                  display: "block",
+                  "& .Mui-selected": {
+                    borderRadius: 4,
+                    transform: "scale(0.8)",
+                  },
+                }}
+              >
                 <ListItemButton
                   sx={{
                     minHeight: 48,
                     justifyContent: "center",
                     px: 2.5,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                   onClick={() => menu.onClick()}
+                  selected={menu.id === "Message"}
                 >
                   <ListItemIcon
                     sx={{
-                      minWidth: 0,
                       mr: "auto",
                       justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
                     {menu.icon}
                   </ListItemIcon>
+                  <Typography fontSize={10}>{menu.name}</Typography>
                 </ListItemButton>
               </ListItem>
             ))}
@@ -188,20 +203,21 @@ export default function Sidebar() {
           <ListItemButton
             sx={{
               minHeight: 48,
-              justifyContent: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
               px: 2.5,
             }}
           >
             <ListItemIcon
               sx={{
-                minWidth: 0,
                 ml: 0,
                 justifyContent: "center",
               }}
             >
               <SettingsTwoToneIcon />
             </ListItemIcon>
-            {/* <ListItemText primary={"Settings"} sx={{ opacity: open ? 1 : 0 }} /> */}
+            <Typography fontSize={10}>Settings</Typography>
           </ListItemButton>
         </ListItem>
       </Drawer>
@@ -250,7 +266,7 @@ export default function Sidebar() {
                 ></Box>
               )}
             </Stack>
-            <LightTooltip 
+            <LightTooltip
               title={copyIcon ? "Copy User code" : "Copied!"}
               placement="top"
               arrow

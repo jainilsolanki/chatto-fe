@@ -16,7 +16,7 @@ import { VOID } from "@/app/data/assets-data";
 import { socket } from "@/app/components/socket.connection";
 import { useDispatch } from "react-redux";
 import { handleAddFriendDialogState } from "@/app/services/redux/slices/dialog-config.slice";
-import { NotificationBell } from "./friendslist.component";
+import { NotificationBell } from "./components/pending-friends-list.component";
 
 const userMessageData = [
   {

@@ -7,3 +7,4 @@ export const BEGIN_CHAT = "/assets/banners/begin-chat.svg";
 export const ADD_FRIEND = "/assets/banners/add-friend.svg";
 export const NO_PENDING_REQUESTS = "/assets/banners/no-notification.svg";
 export const CREATE_CHAT = "/assets/banners/create-chat.svg";
+export const HEY_EMOJI = "/assets/banners/hey-emoji.gif";

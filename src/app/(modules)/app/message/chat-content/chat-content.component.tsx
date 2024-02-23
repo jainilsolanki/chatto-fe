@@ -1,10 +1,11 @@
 "use client";
-import { BEGIN_CHAT } from "@/app/data/assets-data";
+import { BEGIN_CHAT, HEY_EMOJI } from "@/app/data/assets-data";
 import useCustomSnackbar from "@/app/hooks/useSnackbar";
 import {
   Avatar,
   Box,
   Button,
+  Chip,
   Divider,
   IconButton,
   InputAdornment,
@@ -13,9 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import moment from "moment";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
-import CallIcon from "@mui/icons-material/Call";
+import NoActiceChat from "./components/no-active-chat.component";
+import ChatContentHeader from "./components/chat-content-header.component";
+import EmptyChat from "./components/empty-chat.component";
 const chatData = {
   profile_picture:
     "https://plus.unsplash.com/premium_photo-1707403865913-d8ca5c2962dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -27,161 +28,161 @@ const chatData = {
       conversation_id: 1,
       sender_id: 1,
       content: "Yo !",
-      created_at: "2024-02-01 13:22:39",
+      created_at: "2024-01-01 13:22:39",
     },
     {
       id: 2,
       conversation_id: 2,
       sender_id: 2,
       content: "Yo man !",
-      created_at: "2024-02-01 13:22:40",
+      created_at: "2024-01-01 13:22:40",
     },
     {
       id: 3,
       conversation_id: 3,
       sender_id: 2,
       content: "Yo man !",
-      created_at: "2024-02-01 13:22:40",
+      created_at: "2024-01-01 13:22:40",
     },
     {
       id: 4,
       conversation_id: 4,
       sender_id: 2,
       content: "Yo man !",
-      created_at: "2024-02-01 13:22:40",
+      created_at: "2024-01-01 13:22:40",
     },
     {
       id: 5,
       conversation_id: 5,
       sender_id: 2,
       content: "Yo man !",
-      created_at: "2024-02-01 13:22:40",
+      created_at: "2024-02-04 13:22:40",
     },
     {
       id: 6,
       conversation_id: 6,
       sender_id: 1,
       content: "Yo Yo!",
-      created_at: "2024-02-01 13:22:41",
+      created_at: "2024-02-04 13:22:41",
     },
     {
       id: 7,
       conversation_id: 7,
       sender_id: 2,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-06 13:22:42",
     },
     {
       id: 8,
       conversation_id: 8,
       sender_id: 2,
       content: "Yo man !",
-      created_at: "2024-02-01 13:22:40",
+      created_at: "2024-02-06 13:22:40",
     },
     {
       id: 9,
       conversation_id: 9,
       sender_id: 1,
       content: "Yo Yo!",
-      created_at: "2024-02-01 13:22:41",
+      created_at: "2024-02-06 13:22:41",
     },
     {
       id: 10,
       conversation_id: 10,
       sender_id: 2,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-07 13:22:42",
     },
     {
       id: 11,
       conversation_id: 11,
       sender_id: 2,
       content: "Yo man !",
-      created_at: "2024-02-01 13:22:40",
+      created_at: "2024-02-07 13:22:40",
     },
     {
       id: 12,
       conversation_id: 12,
       sender_id: 1,
       content: "Yo Yo!",
-      created_at: "2024-02-01 13:22:41",
+      created_at: "2024-02-10 13:22:41",
     },
     {
       id: 13,
       conversation_id: 13,
       sender_id: 2,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-15 13:22:42",
     },
     {
       id: 14,
       conversation_id: 14,
       sender_id: 2,
       content: "Yo man !",
-      created_at: "2024-02-01 13:22:40",
+      created_at: "2024-02-15 13:22:40",
     },
     {
       id: 15,
       conversation_id: 15,
       sender_id: 1,
       content: "Yo Yo!",
-      created_at: "2024-02-01 13:22:41",
+      created_at: "2024-02-15 13:22:41",
     },
     {
       id: 16,
       conversation_id: 16,
       sender_id: 2,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-18 13:22:42",
     },
     {
       id: 17,
       conversation_id: 17,
       sender_id: 2,
       content: "Yo man !",
-      created_at: "2024-02-01 13:22:40",
+      created_at: "2024-02-18 13:22:40",
     },
     {
       id: 18,
       conversation_id: 18,
       sender_id: 1,
       content: "Yo Yo!",
-      created_at: "2024-02-01 13:22:41",
+      created_at: "2024-02-22 13:22:41",
     },
     {
       id: 19,
       conversation_id: 19,
       sender_id: 2,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-22  13:22:42",
     },
     {
       id: 20,
       conversation_id: 20,
       sender_id: 1,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-23 13:22:42",
     },
     {
       id: 21,
       conversation_id: 21,
       sender_id: 1,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-23 13:22:42",
     },
     {
       id: 22,
       conversation_id: 22,
       sender_id: 1,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-23 13:22:42",
     },
     {
       id: 23,
       conversation_id: 23,
       sender_id: 1,
       content: "Yo Yo Yo !",
-      created_at: "2024-02-01 13:22:42",
+      created_at: "2024-02-23 13:22:42",
     },
   ],
 };
@@ -195,76 +196,7 @@ const ChatContent = () => {
   return chatData ? (
     <>
       {/* Ongoing Chat Header */}
-      <Stack
-        justifyContent={"space-evenly"}
-        flexDirection={"column"}
-        p={1}
-        height={60}
-        gap={2}
-      >
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-        >
-          <Stack direction={"row"} gap={2} alignItems={"center"}>
-            <Avatar
-              sx={{
-                // bgcolor: getRandomColor(),
-                width: 45,
-                height: 45,
-                borderRadius: 4,
-              }}
-              src={chatData.profile_picture}
-              alt={"No Image"}
-            >
-              {chatData.first_name.charAt(0) + chatData.last_name.charAt(0)}
-            </Avatar>
-            <Stack>
-              <Typography
-                variant="h6"
-                fontWeight={"bold"}
-                fontSize={18}
-                lineHeight={"normal"}
-              >
-                {chatData.first_name + " " + chatData.last_name}
-              </Typography>
-              <Stack direction={"row"} alignItems={"center"} gap={1}>
-                <Box
-                  sx={{
-                    background: "#44b700",
-                    height: 10,
-                    width: 10,
-                    borderRadius: "50%",
-                  }}
-                ></Box>
-                <Typography variant="body1">Online</Typography>
-              </Stack>
-            </Stack>
-          </Stack>
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <Button
-              variant="outlined"
-              startIcon={<SportsEsportsIcon />}
-              sx={{ borderRadius: 3 }}
-              size="small"
-            >
-              Games
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<CallIcon />}
-              sx={{ borderRadius: 3 }}
-              size="small"
-            >
-              Call
-            </Button>
-            <IconButton>
-              <MoreHorizIcon />
-            </IconButton>
-          </Stack>
-        </Stack>
-      </Stack>
+      <ChatContentHeader chatData={chatData} />
       <Divider />
       {/* Chat List */}
       <Stack
@@ -276,87 +208,117 @@ const ChatContent = () => {
         p={1}
       >
         <Stack overflow={"auto"}>
-          {chatData.chats.map((chat: any, index: any) => {
-            const isDifferentSender =
-              index === 0 ||
-              chat.sender_id !== chatData.chats[index - 1].sender_id;
-            const isCurrentUser = chat.sender_id === 1;
-            return (
-              <>
-                <Box
-                  key={chat.id}
-                  sx={{
-                    alignItems: "center",
-                    display: "flex",
-                    justifyContent:
-                      chat.sender_id === 1 ? "flex-end" : "flex-start",
-                    gap: 1,
-                  }}
-                >
-                  <Avatar
-                    sx={{
-                      // bgcolor: getRandomColor(),
-                      width: 40,
-                      height: 40,
-                      borderRadius: 4,
-                      visibility:
-                        !isCurrentUser && isDifferentSender
-                          ? "visible"
-                          : "hidden",
-                    }}
-                    src={chatData.profile_picture}
-                    alt={"No Image"}
-                  >
-                    {chatData.first_name.charAt(0) +
-                      chatData.last_name.charAt(0)}
-                  </Avatar>
-
+          {chatData.chats.length !== 0 ? (
+            chatData.chats.map((chat: any, index: any) => {
+              const prevChat = chatData.chats[index - 1];
+              const isDifferentSender =
+                index === 0 ||
+                chat.sender_id !== chatData.chats[index - 1].sender_id;
+              const isCurrentUser = chat.sender_id === 1;
+              const isDifferentDay =
+                !prevChat ||
+                !moment(chat.created_at).isSame(prevChat.created_at, "day");
+              let dayLabel = moment(chat.created_at).calendar(null, {
+                sameDay: "[Today]",
+                lastDay: "[Yesterday]",
+                lastWeek: "[Last] dddd",
+                sameElse: "MMMM D, YYYY",
+              });
+              return (
+                <>
+                  {isDifferentDay && (
+                    <Divider
+                      sx={{
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 1,
+                        padding: "8px",
+                        textAlign: "center",
+                        background: "#fafafa",
+                      }}
+                    >
+                      <Chip label={dayLabel} variant="outlined" />
+                    </Divider>
+                  )}
                   <Box
+                    key={chat.id}
                     sx={{
-                      wordBreak: "break-all",
-                      margin: "8px",
-                      borderRadius: 4,
-                      textAlign: isCurrentUser ? "right" : "left",
-                      backgroundColor: isCurrentUser ? "#d3eae8" : "#F6F6F6",
-                      color: isCurrentUser ? "#FFFFFF" : "#333333",
-                      padding: "10px 15px",
+                      alignItems: "center",
                       display: "flex",
-                      justifyContent: isCurrentUser ? "flex-end" : "flex-start",
-                      position: "relative",
-                      flexDirection: "column",
+                      justifyContent:
+                        chat.sender_id === 1 ? "flex-end" : "flex-start",
+                      gap: 1,
                     }}
                   >
-                    <Typography variant="body1" sx={{ color: "#333" }}>
-                      {chat.content}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: "#888" }}>
-                      {moment(chat.created_at).format("hh:mm A")}
-                    </Typography>
-                  </Box>
+                    <Avatar
+                      sx={{
+                        // bgcolor: getRandomColor(),
+                        width: 40,
+                        height: 40,
+                        borderRadius: 4,
+                        visibility:
+                          !isCurrentUser && isDifferentSender
+                            ? "visible"
+                            : "hidden",
+                      }}
+                      src={chatData.profile_picture}
+                      alt={"No Image"}
+                    >
+                      {chatData.first_name.charAt(0) +
+                        chatData.last_name.charAt(0)}
+                    </Avatar>
 
-                  <Avatar
-                    sx={{
-                      // bgcolor: getRandomColor(),
-                      width: 40,
-                      height: 40,
-                      borderRadius: 4,
-                      visibility:
-                        isCurrentUser && isDifferentSender
-                          ? "visible"
-                          : "hidden",
-                    }}
-                    src={
-                      "https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    }
-                    alt={"No Image"}
-                  >
-                    {chatData.first_name.charAt(0) +
-                      chatData.last_name.charAt(0)}
-                  </Avatar>
-                </Box>
-              </>
-            );
-          })}
+                    <Box
+                      sx={{
+                        wordBreak: "break-all",
+                        margin: "8px",
+                        borderRadius: 4,
+                        textAlign: isCurrentUser ? "right" : "left",
+                        backgroundColor: isCurrentUser ? "#d3eae8" : "#F6F6F6",
+                        color: isCurrentUser ? "#FFFFFF" : "#333333",
+                        padding: "10px 15px",
+                        display: "flex",
+                        justifyContent: isCurrentUser
+                          ? "flex-end"
+                          : "flex-start",
+                        position: "relative",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography variant="body1" sx={{ color: "#333" }}>
+                        {chat.content}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: "#888" }}>
+                        {moment(chat.created_at).format("hh:mm A")}
+                      </Typography>
+                    </Box>
+
+                    <Avatar
+                      sx={{
+                        // bgcolor: getRandomColor(),
+                        width: 40,
+                        height: 40,
+                        borderRadius: 4,
+                        visibility:
+                          isCurrentUser && isDifferentSender
+                            ? "visible"
+                            : "hidden",
+                      }}
+                      src={
+                        "https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                      }
+                      alt={"No Image"}
+                    >
+                      {chatData.first_name.charAt(0) +
+                        chatData.last_name.charAt(0)}
+                    </Avatar>
+                  </Box>
+                </>
+              );
+            })
+          ) : (
+            <EmptyChat />
+          )}
         </Stack>
         {/* Message Textfield */}
         <Box
@@ -493,28 +455,8 @@ const ChatContent = () => {
       </Stack>
     </>
   ) : (
-    //empty chats
-    <Stack justifyContent={"center"} gap={2} p={10} height={"100%"}>
-      <img
-        src={BEGIN_CHAT}
-        alt="Begin Chat"
-        style={{ width: "100%", maxWidth: 200 }}
-      />
-      <Stack gap={1}>
-        <Typography variant="h5" fontWeight={"bold"} maxWidth={500}>
-          Select any chat or start a new conversation
-        </Typography>
-
-        <Box>
-          <Button
-            variant="contained"
-            sx={{ px: 8, py: 2, borderRadius: 4, mt: 1 }}
-          >
-            New Message
-          </Button>
-        </Box>
-      </Stack>
-    </Stack>
+    //No Active Chat Message
+    <NoActiceChat />
   );
 };
 export default ChatContent;

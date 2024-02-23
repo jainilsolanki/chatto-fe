@@ -90,6 +90,7 @@ export default function AddFriendDialog() {
                 }}
                 inputFocusStyle={{ border: "1px solid #21978B" }}
                 onChange={(e: string) => setUserCode(e)}
+                onComplete={(e: string) => setUserCode(e)}
               />
               <DialogContentText mt={3} fontWeight={"bold"}>
                 Note: You can find your user code in your profile
