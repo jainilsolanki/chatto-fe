@@ -1,22 +1,19 @@
 "use client";
-import { BEGIN_CHAT, HEY_EMOJI } from "@/app/data/assets-data";
 import useCustomSnackbar from "@/app/hooks/useSnackbar";
 import {
   Avatar,
   Box,
-  Button,
   Chip,
   Divider,
-  IconButton,
   InputAdornment,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import moment from "moment";
-import NoActiceChat from "./components/no-active-chat.component";
 import ChatContentHeader from "./components/chat-content-header.component";
 import EmptyChat from "./components/empty-chat.component";
+import NoActiveChat from "./components/no-active-chat.component";
 const chatData = {
   profile_picture:
     "https://plus.unsplash.com/premium_photo-1707403865913-d8ca5c2962dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -456,7 +453,7 @@ const ChatContent = () => {
     </>
   ) : (
     //No Active Chat Message
-    <NoActiceChat />
+    <NoActiveChat />
   );
 };
 export default ChatContent;

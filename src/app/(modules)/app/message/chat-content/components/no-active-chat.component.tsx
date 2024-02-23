@@ -1,7 +1,7 @@
 import { BEGIN_CHAT } from "@/app/data/assets-data";
 import { Box, Button, Stack, Typography } from "@mui/material";
 
-export default function NoActiceChat() {
+export default function NoActiveChat() {
   return (
     <Stack justifyContent={"center"} gap={2} p={10} height={"100%"}>
       <img
