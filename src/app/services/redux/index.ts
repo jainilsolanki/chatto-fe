@@ -6,6 +6,7 @@ import userDataSlice, { userDataInitialState } from "./slices/user-data.slice";
 import storage from "redux-persist/lib/storage";
 import expireReducer from "redux-persist-expire";
 import dialogConfigSlice from "./slices/dialog-config.slice";
+import ongoingChatDataSlice from "./slices/ongoing-chat-data.slice";
 
 const persistConfig = {
   key: "root",
@@ -26,6 +27,7 @@ const reducers = combineReducers({
 
   // Temporary
   dialogConfig: dialogConfigSlice,
+  onGoingChatData: ongoingChatDataSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

@@ -14,186 +14,57 @@ import moment from "moment";
 import ChatContentHeader from "./components/chat-content-header.component";
 import EmptyChat from "./components/empty-chat.component";
 import NoActiveChat from "./components/no-active-chat.component";
-const chatData = {
-  profile_picture:
-    "https://plus.unsplash.com/premium_photo-1707403865913-d8ca5c2962dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  first_name: "Pragnesh",
-  last_name: "Prajapati",
-  chats: [
-    {
-      id: 1,
-      conversation_id: 1,
-      sender_id: 1,
-      content: "Yo !",
-      created_at: "2024-01-01 13:22:39",
-    },
-    {
-      id: 2,
-      conversation_id: 2,
-      sender_id: 2,
-      content: "Yo man !",
-      created_at: "2024-01-01 13:22:40",
-    },
-    {
-      id: 3,
-      conversation_id: 3,
-      sender_id: 2,
-      content: "Yo man !",
-      created_at: "2024-01-01 13:22:40",
-    },
-    {
-      id: 4,
-      conversation_id: 4,
-      sender_id: 2,
-      content: "Yo man !",
-      created_at: "2024-01-01 13:22:40",
-    },
-    {
-      id: 5,
-      conversation_id: 5,
-      sender_id: 2,
-      content: "Yo man !",
-      created_at: "2024-02-04 13:22:40",
-    },
-    {
-      id: 6,
-      conversation_id: 6,
-      sender_id: 1,
-      content: "Yo Yo!",
-      created_at: "2024-02-04 13:22:41",
-    },
-    {
-      id: 7,
-      conversation_id: 7,
-      sender_id: 2,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-06 13:22:42",
-    },
-    {
-      id: 8,
-      conversation_id: 8,
-      sender_id: 2,
-      content: "Yo man !",
-      created_at: "2024-02-06 13:22:40",
-    },
-    {
-      id: 9,
-      conversation_id: 9,
-      sender_id: 1,
-      content: "Yo Yo!",
-      created_at: "2024-02-06 13:22:41",
-    },
-    {
-      id: 10,
-      conversation_id: 10,
-      sender_id: 2,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-07 13:22:42",
-    },
-    {
-      id: 11,
-      conversation_id: 11,
-      sender_id: 2,
-      content: "Yo man !",
-      created_at: "2024-02-07 13:22:40",
-    },
-    {
-      id: 12,
-      conversation_id: 12,
-      sender_id: 1,
-      content: "Yo Yo!",
-      created_at: "2024-02-10 13:22:41",
-    },
-    {
-      id: 13,
-      conversation_id: 13,
-      sender_id: 2,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-15 13:22:42",
-    },
-    {
-      id: 14,
-      conversation_id: 14,
-      sender_id: 2,
-      content: "Yo man !",
-      created_at: "2024-02-15 13:22:40",
-    },
-    {
-      id: 15,
-      conversation_id: 15,
-      sender_id: 1,
-      content: "Yo Yo!",
-      created_at: "2024-02-15 13:22:41",
-    },
-    {
-      id: 16,
-      conversation_id: 16,
-      sender_id: 2,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-18 13:22:42",
-    },
-    {
-      id: 17,
-      conversation_id: 17,
-      sender_id: 2,
-      content: "Yo man !",
-      created_at: "2024-02-18 13:22:40",
-    },
-    {
-      id: 18,
-      conversation_id: 18,
-      sender_id: 1,
-      content: "Yo Yo!",
-      created_at: "2024-02-22 13:22:41",
-    },
-    {
-      id: 19,
-      conversation_id: 19,
-      sender_id: 2,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-22  13:22:42",
-    },
-    {
-      id: 20,
-      conversation_id: 20,
-      sender_id: 1,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-23 13:22:42",
-    },
-    {
-      id: 21,
-      conversation_id: 21,
-      sender_id: 1,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-23 13:22:42",
-    },
-    {
-      id: 22,
-      conversation_id: 22,
-      sender_id: 1,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-23 13:22:42",
-    },
-    {
-      id: 23,
-      conversation_id: 23,
-      sender_id: 1,
-      content: "Yo Yo Yo !",
-      created_at: "2024-02-23 13:22:42",
-    },
-  ],
-};
+import { useDispatch, useSelector } from "react-redux";
+import { useSocketEmit } from "@/app/hooks/useSocketEmit";
+import { useEffect, useRef, useState } from "react";
+import { socket } from "@/app/components/socket.connection";
+import { updateOnGoingChatList } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 
 const ChatContent = () => {
-  const { showSnackbar } = useCustomSnackbar();
+  const { emitEvent } = useSocketEmit();
+  const dispatch = useDispatch();
+  const ref = useRef<HTMLDivElement>(null);
+  const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
+  const userData = useSelector((state: any) => state.userData);
+  const [messageToSend, setMessageToSend] = useState("");
+  const [initialLoading, setInitialLoading] = useState(true);
+  useEffect(() => {
+    function onMessages(value: any) {
+      const { chat } = value;
+      dispatch(updateOnGoingChatList(chat));
+      if (initialLoading) setInitialLoading(false);
+    }
 
-  const handleButtonClick = () => {
-    showSnackbar("This is a custom snackbar message", "success");
+    socket?.on("chat-list", onMessages);
+
+    return () => {
+      socket?.off("chat-list", onMessages);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (onGoingChatData?.chatList?.length) {
+      ref.current?.scrollIntoView({
+        behavior: initialLoading ? "instant" : "smooth",
+        block: "end",
+      });
+    }
+  }, [onGoingChatData?.chatList?.length]);
+
+  const sendMessage = () => {
+    if (messageToSend.trim().length === 0) return;
+    emitEvent("message", {
+      message: messageToSend.trim(),
+      conversationId: onGoingChatData.conversationId,
+    });
+
+    setMessageToSend("");
   };
-  return chatData ? (
+
+  return onGoingChatData ? (
     <>
       {/* Ongoing Chat Header */}
-      <ChatContentHeader chatData={chatData} />
+      <ChatContentHeader messageReceiver={onGoingChatData.messageReceiver} />
       <Divider />
       {/* Chat List */}
       <Stack
@@ -205,24 +76,25 @@ const ChatContent = () => {
         p={1}
       >
         <Stack overflow={"auto"}>
-          {chatData.chats.length !== 0 ? (
-            chatData.chats.map((chat: any, index: any) => {
-              const prevChat = chatData.chats[index - 1];
+          {onGoingChatData.chatList.length !== 0 ? (
+            onGoingChatData.chatList.map((chat: any, index: any) => {
+              const prevChat = onGoingChatData.chatList[index - 1];
               const isDifferentSender =
                 index === 0 ||
-                chat.sender_id !== chatData.chats[index - 1].sender_id;
-              const isCurrentUser = chat.sender_id === 1;
+                chat.sender.id !==
+                  onGoingChatData.chatList[index - 1].sender.id;
+              const isCurrentUser = chat.sender.id === userData.id;
               const isDifferentDay =
                 !prevChat ||
-                !moment(chat.created_at).isSame(prevChat.created_at, "day");
-              let dayLabel = moment(chat.created_at).calendar(null, {
+                !moment(chat.createdAt).isSame(prevChat.createdAt, "day");
+              let dayLabel = moment(chat.createdAt).calendar(null, {
                 sameDay: "[Today]",
                 lastDay: "[Yesterday]",
                 lastWeek: "[Last] dddd",
                 sameElse: "MMMM D, YYYY",
               });
               return (
-                <>
+                <Box key={index}>
                   {isDifferentDay && (
                     <Divider
                       sx={{
@@ -238,12 +110,13 @@ const ChatContent = () => {
                     </Divider>
                   )}
                   <Box
-                    key={chat.id}
                     sx={{
                       alignItems: "center",
                       display: "flex",
                       justifyContent:
-                        chat.sender_id === 1 ? "flex-end" : "flex-start",
+                        chat.sender.id === userData.id
+                          ? "flex-end"
+                          : "flex-start",
                       gap: 1,
                     }}
                   >
@@ -258,11 +131,15 @@ const ChatContent = () => {
                             ? "visible"
                             : "hidden",
                       }}
-                      src={chatData.profile_picture}
+                      src={onGoingChatData.messageReceiver.profile_picture}
                       alt={"No Image"}
                     >
-                      {chatData.first_name.charAt(0) +
-                        chatData.last_name.charAt(0)}
+                      {onGoingChatData.messageReceiver.first_name
+                        .charAt(0)
+                        .toUpperCase() +
+                        onGoingChatData.messageReceiver.last_name
+                          .charAt(0)
+                          .toUpperCase()}
                     </Avatar>
 
                     <Box
@@ -286,7 +163,7 @@ const ChatContent = () => {
                         {chat.content}
                       </Typography>
                       <Typography variant="caption" sx={{ color: "#888" }}>
-                        {moment(chat.created_at).format("hh:mm A")}
+                        {moment(chat.createdAt).format("hh:mm A")}
                       </Typography>
                     </Box>
 
@@ -306,16 +183,17 @@ const ChatContent = () => {
                       }
                       alt={"No Image"}
                     >
-                      {chatData.first_name.charAt(0) +
-                        chatData.last_name.charAt(0)}
+                      {userData.first_name.charAt(0).toUpperCase() +
+                        userData.last_name.charAt(0).toUpperCase()}
                     </Avatar>
                   </Box>
-                </>
+                </Box>
               );
             })
           ) : (
             <EmptyChat />
           )}
+          <div ref={ref} />
         </Stack>
         {/* Message Textfield */}
         <Box
@@ -339,6 +217,13 @@ const ChatContent = () => {
             }}
           >
             <TextField
+              inputRef={
+                messageToSend === ""
+                  ? (input) => input && input.focus()
+                  : undefined
+              }
+              autoComplete="off"
+              value={messageToSend}
               variant="standard"
               fullWidth
               placeholder="Type something..."
@@ -354,7 +239,7 @@ const ChatContent = () => {
                         cursor: "pointer",
                         mt: 1,
                       }}
-                      onClick={handleButtonClick}
+                      onClick={sendMessage}
                     >
                       <Box>
                         <svg
@@ -369,7 +254,11 @@ const ChatContent = () => {
                               width="40"
                               height="40"
                               rx="20"
-                              fill="#21978B"
+                              fill={
+                                messageToSend.trim().length !== 0
+                                  ? "#21978B"
+                                  : "gray"
+                              }
                             />
                           </g>
                           <defs>
@@ -440,12 +329,13 @@ const ChatContent = () => {
                 background: "#F6F6F6",
                 p: "10px 8px",
               }}
-              // onKeyDown={(ev) => {
-              //   if (ev.key === "Enter") {
-              //     ev.preventDefault();
-              //     sendMessage();
-              //   }
-              // }}
+              onChange={(e) => setMessageToSend(e.target.value)}
+              onKeyDown={(ev) => {
+                if (ev.key === "Enter") {
+                  ev.preventDefault();
+                  sendMessage();
+                }
+              }}
             />
           </Box>
         </Box>

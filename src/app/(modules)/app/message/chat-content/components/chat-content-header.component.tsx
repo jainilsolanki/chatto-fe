@@ -9,7 +9,7 @@ import {
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import CallIcon from "@mui/icons-material/Call";
-export default function ChatContentHeader({ chatData }) {
+export default function ChatContentHeader({ messageReceiver }) {
   return (
     <Stack
       justifyContent={"space-evenly"}
@@ -31,10 +31,11 @@ export default function ChatContentHeader({ chatData }) {
               height: 45,
               borderRadius: 4,
             }}
-            src={chatData.profile_picture}
+            src={messageReceiver.profile_picture}
             alt={"No Image"}
           >
-            {chatData.first_name.charAt(0) + chatData.last_name.charAt(0)}
+            {messageReceiver.first_name.charAt(0).toUpperCase() +
+              messageReceiver.last_name.charAt(0).toUpperCase()}
           </Avatar>
           <Stack>
             <Typography
@@ -43,7 +44,7 @@ export default function ChatContentHeader({ chatData }) {
               fontSize={18}
               lineHeight={"normal"}
             >
-              {chatData.first_name + " " + chatData.last_name}
+              {messageReceiver.first_name + " " + messageReceiver.last_name}
             </Typography>
             <Stack direction={"row"} alignItems={"center"} gap={1}>
               <Box

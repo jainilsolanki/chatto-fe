@@ -27,4 +27,12 @@ export const FriendAPI = {
     const response = await request.data;
     return response;
   },
+  getSingleChatData: async (data: any) => {
+    const request = await GlobalInstance.request({
+      url: `/chat/list?conversationId=${data}`,
+      method: "GET",
+    });
+    const response = await request.data;
+    return response;
+  },
 };
