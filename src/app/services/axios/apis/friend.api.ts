@@ -35,4 +35,12 @@ export const FriendAPI = {
     const response = await request.data;
     return response;
   },
+  getAllFriends: async () => {
+    const request = await GlobalInstance.request({
+      url: `/friend/list`,
+      method: "GET",
+    });
+    const response = await request.data;
+    return response;
+  },
 };
