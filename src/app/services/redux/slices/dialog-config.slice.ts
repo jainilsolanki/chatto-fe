@@ -17,12 +17,16 @@ const dialogConfigSlice = createSlice({
       let s = current(state);
       return { ...s, beginConversationDialogState: action.payload };
     },
+    clearDialogConfigSlice() {
+      return { ...dialogConfigInitialState };
+    },
   },
 });
 
 export const {
   handleAddFriendDialogState,
   handleBeginConversationDialogState,
+  clearDialogConfigSlice,
 } = dialogConfigSlice.actions;
 
 export default dialogConfigSlice.reducer;

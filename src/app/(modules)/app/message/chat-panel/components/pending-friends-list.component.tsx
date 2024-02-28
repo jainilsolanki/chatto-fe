@@ -23,6 +23,7 @@ import { getTimeDifference } from "@/app/data/utils";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
 import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
+import { updateConversationId } from "@/app/services/redux/slices/temp-data.slice";
 const FriendItem = ({ friend, handleClosePop }: any) => {
   const dispatch = useDispatch();
   const handleNotificationClick = (notification: any) => {
@@ -37,6 +38,7 @@ const FriendItem = ({ friend, handleClosePop }: any) => {
       if (response.status) {
         handleClosePop();
         dispatch(handleBeginConversationDialogState(true));
+        dispatch(updateConversationId(response.conversationId));
       }
     } catch (e) {
       console.log(e);

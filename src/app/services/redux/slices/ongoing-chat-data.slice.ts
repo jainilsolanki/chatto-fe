@@ -21,9 +21,15 @@ const onGoingChatData = createSlice({
         chatList: action.payload,
       };
     },
+    clearOnGoingChatData() {
+      return onGoingChatDataInitialState;
+    },
   },
 });
 
-export const { saveOnGoingChatData, updateOnGoingChatList } =
-  onGoingChatData.actions;
+export const {
+  saveOnGoingChatData,
+  updateOnGoingChatList,
+  clearOnGoingChatData,
+} = onGoingChatData.actions;
 export default onGoingChatData.reducer;

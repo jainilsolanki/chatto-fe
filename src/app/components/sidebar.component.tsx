@@ -4,7 +4,6 @@ import {
   Box,
   Divider,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -30,8 +29,12 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "./socket.connection";
 import { useState } from "react";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import CheckIcon from "@mui/icons-material/Check";
+import {
+  clearTempData,
+  updateSelectedSection,
+} from "../services/redux/slices/temp-data.slice";
+import { clearOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
+import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.slice";
 type MenuItemType = {
   id: string;
   name: string;
@@ -45,6 +48,7 @@ export default function Sidebar() {
   const router = useRouter();
   const dispatch = useDispatch();
   const userData = useSelector((state: any) => state.userData);
+  const tempData = useSelector((state: any) => state.tempData);
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
     null
   );
@@ -75,6 +79,7 @@ export default function Sidebar() {
       name: "Home",
       icon: <HomeTwoToneIcon />,
       onClick: () => {
+        dispatch(updateSelectedSection(0));
         router.push("/app/home");
       },
     },
@@ -82,14 +87,17 @@ export default function Sidebar() {
       id: "Search",
       name: "Search",
       icon: <SearchTwoToneIcon />,
-      onClick: () => {},
+      onClick: () => {
+        dispatch(updateSelectedSection(1));
+      },
     },
     {
-      id: "Groups",
-      name: "Groups",
+      id: "Only Friends",
+      name: "Only Friends",
       icon: <Groups2TwoToneIcon />,
       onClick: () => {
-        router.push("/app/groups");
+        dispatch(updateSelectedSection(2));
+        router.push("/app/friends");
       },
     },
     {
@@ -97,6 +105,7 @@ export default function Sidebar() {
       name: "Message",
       icon: <AssistantTwoToneIcon />,
       onClick: () => {
+        dispatch(updateSelectedSection(3));
         router.push("/app/message");
       },
     },
@@ -105,10 +114,13 @@ export default function Sidebar() {
       name: "Logout",
       icon: <ExitToAppTwoToneIcon />,
       onClick: () => {
+        router.push("/auth/login");
         dispatch(clearUserData());
+        dispatch(clearTempData());
+        dispatch(clearOnGoingChatData());
+        dispatch(clearDialogConfigSlice());
         destroyCookie(null, "userData", { path: "/" });
         socket.disconnect();
-        router.push("/auth/login");
       },
     },
   ];
@@ -160,7 +172,7 @@ export default function Sidebar() {
             src="https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           />
           <List>
-            {SidebarData.map((menu: MenuItemType) => (
+            {SidebarData.map((menu: MenuItemType, index) => (
               <ListItem
                 key={menu.id}
                 disablePadding
@@ -182,7 +194,7 @@ export default function Sidebar() {
                     alignItems: "center",
                   }}
                   onClick={() => menu.onClick()}
-                  selected={menu.id === "Message"}
+                  selected={index === tempData.selectedSection}
                 >
                   <ListItemIcon
                     sx={{
