@@ -17,65 +17,9 @@ import { socket } from "@/app/components/socket.connection";
 import { useDispatch } from "react-redux";
 import { handleAddFriendDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import { NotificationBell } from "./components/pending-friends-list.component";
-import { stringify } from "querystring";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 
-// const userMessageData = [
-//   {
-//     first_name: "Pragnesh",
-//     last_name: "Prajapati",
-//     user_id: 1,
-//     conversation_id: 1,
-//     last_chat: "Yo",
-//     last_chat_time: "2024-02-08 05:22:39",
-//     is_online: true,
-//     profile_picture:
-//       "https://plus.unsplash.com/premium_photo-1707403865913-d8ca5c2962dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   },
-//   {
-//     first_name: "Bhavin",
-//     last_name: "Bhuva",
-//     user_id: 2,
-//     conversation_id: 2,
-//     last_chat: "Hello",
-//     last_chat_time: "2024-02-12 11:22:39",
-//     is_online: false,
-//     profile_picture:
-//       "https://plus.unsplash.com/premium_photo-1683842190286-204c3d93a5f6?q=80&w=1984&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   },
-//   {
-//     first_name: "Jainil",
-//     last_name: "Solanki",
-//     user_id: 3,
-//     conversation_id: 3,
-//     last_chat: "Hi !",
-//     last_chat_time: "2024-02-12 13:22:39",
-//     is_online: true,
-//     profile_picture: "",
-//   },
-//   {
-//     first_name: "Darshan",
-//     last_name: "Patel",
-//     user_id: 4,
-//     conversation_id: 4,
-//     last_chat: "Lmao !",
-//     last_chat_time: "2024-01-12 13:22:39",
-//     is_online: true,
-//     profile_picture:
-//       "https://images.unsplash.com/photo-1586182987320-4f376d39d787?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-//   },
-//   {
-//     first_name: "Mit",
-//     last_name: "Kathrotiya",
-//     user_id: 5,
-//     conversation_id: 5,
-//     last_chat: "Hooo hooo hooo",
-//     last_chat_time: "2024-02-01 13:22:39",
-//     is_online: false,
-//     profile_picture: "",
-//   },
-// ];
 const ChatPanel = () => {
   const dispatch = useDispatch();
   const [friendsList, setFriendsList] = useState([]);

@@ -1,5 +1,4 @@
 "use client";
-import useCustomSnackbar from "@/app/hooks/useSnackbar";
 import {
   Avatar,
   Box,

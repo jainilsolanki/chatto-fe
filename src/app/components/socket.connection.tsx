@@ -3,21 +3,21 @@
 import { useEffect } from "react";
 import { socketURL } from "../data/constants-data";
 import { io } from "socket.io-client";
-import store from "../services/redux";
+import { userData } from "../data/utils";
 export let socket: any;
 const SocketConnection = () => {
   useEffect(() => {
-    if (store.getState().userData.accessToken)
+    if (userData?.accessToken)
       socket = io(socketURL, {
         query: {
-          token: store.getState().userData.accessToken,
+          token: userData?.accessToken,
         },
         transports: ["websocket", "polling"],
       });
     return () => {
       socket?.disconnect();
     };
-  }, []);
+  }, [userData]);
   return <></>;
 };
 export default SocketConnection;

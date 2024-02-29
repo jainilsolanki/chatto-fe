@@ -1,8 +1,8 @@
+import { userData } from "@/app/data/utils";
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
-import store from "../../redux";
 
 export function axiosRequestInterceptor(config: InternalAxiosRequestConfig) {
-  const token = store.getState().userData.accessToken;
+  const token = userData?.accessToken;
   config.headers.Authorization = `Bearer ${token}`;
 
   return config;

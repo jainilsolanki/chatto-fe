@@ -35,6 +35,7 @@ import {
 } from "../services/redux/slices/temp-data.slice";
 import { clearOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
 import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.slice";
+import { userData } from "../data/utils";
 type MenuItemType = {
   id: string;
   name: string;
@@ -47,7 +48,6 @@ const drawerWidth = 90;
 export default function Sidebar() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const userData = useSelector((state: any) => state.userData);
   const tempData = useSelector((state: any) => state.tempData);
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
     null
@@ -55,7 +55,7 @@ export default function Sidebar() {
   const [copyIcon, setCopyIcon] = useState(true);
   const [status, setStatus] = useState(true);
   const openPop = Boolean(anchorElPop);
-  const id = openPop ? "simple-popover" : undefined;
+  const popOverId = openPop ? "simple-popover" : undefined;
   const handleClickPop = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElPop(event.currentTarget);
   };
@@ -120,7 +120,7 @@ export default function Sidebar() {
         dispatch(clearOnGoingChatData());
         dispatch(clearDialogConfigSlice());
         destroyCookie(null, "userData", { path: "/" });
-        socket.disconnect();
+        socket?.disconnect();
       },
     },
   ];
@@ -158,7 +158,7 @@ export default function Sidebar() {
         <Stack justifyContent={"center"} alignItems={"center"}>
           <Avatar
             onClick={(e: any) => handleClickPop(e)}
-            aria-describedby={id}
+            aria-describedby={popOverId}
             sx={{
               my: 3,
               width: 52,
@@ -235,7 +235,7 @@ export default function Sidebar() {
       </Drawer>
 
       <Popover
-        id={id}
+        id={popOverId}
         open={openPop}
         anchorEl={anchorElPop}
         onClose={handleClosePop}
@@ -286,14 +286,14 @@ export default function Sidebar() {
               <Stack
                 onClick={() => {
                   if (copyIcon) {
-                    CopyToClipboard(userData.user_code);
+                    CopyToClipboard(userData?.user_code);
                   }
                 }}
               >
                 <Typography fontWeight={"bold"}>
-                  {userData.first_name} {userData.last_name}
+                  {userData?.first_name} {userData?.last_name}
                 </Typography>
-                <Typography>#{userData.user_code}</Typography>
+                <Typography>#{userData?.user_code}</Typography>
               </Stack>
             </LightTooltip>
           </Stack>
