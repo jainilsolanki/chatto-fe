@@ -27,7 +27,7 @@ export default function LoginPageUI({ login }) {
     try {
       await login(formData);
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage("You have entered an invalid email or password");
     }
   };
   return (
