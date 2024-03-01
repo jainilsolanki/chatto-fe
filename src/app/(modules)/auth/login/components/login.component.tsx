@@ -19,7 +19,17 @@ import { GOOGLE_LOGO, LOGIN_BANNER } from "@/app/data/assets-data";
 export default function LoginPageUI({ login }) {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const [errorMessage, setErrorMessage] = useState("");
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    try {
+      await login(formData);
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
   return (
     <>
       <AuthLayout
@@ -33,7 +43,7 @@ export default function LoginPageUI({ login }) {
                 Login to access your chat account
               </Typography>
             </Stack>
-            <form action={login}>
+            <form onSubmit={handleSubmit}>
               <Stack mt={3} gap={3}>
                 <TextField
                   name="email"
@@ -43,6 +53,8 @@ export default function LoginPageUI({ login }) {
                   placeholder="Email Address"
                 />
                 <TextField
+                  error={errorMessage ? true : false}
+                  helperText={errorMessage && errorMessage}
                   name="password"
                   type={showPassword ? "text" : "password"}
                   label="Enter your password"

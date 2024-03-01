@@ -1,13 +1,20 @@
+import { baseURL } from "@/app/data/constants-data";
 import { GlobalInstance } from "..";
 
 export const AuthAPI = {
-  login: async (data: any) => {
-    const request = await GlobalInstance.request({
-      url: "/api/login",
+  //fetch because running on server side
+  login: async (email, password) => {
+    const request = await fetch(`${baseURL}/api/login`, {
+      headers: {
+        "Content-type": "application/json",
+      },
       method: "POST",
-      data: data,
+      body: JSON.stringify({
+        email,
+        password,
+      }),
     });
-    const response = await request.data;
+    const response = await request.json();
     return response;
   },
   signup: async (data: any) => {

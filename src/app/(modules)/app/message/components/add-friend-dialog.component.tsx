@@ -32,7 +32,7 @@ export default function AddFriendDialog() {
     if (userCode.length === 6)
       try {
         const response = await FriendAPI.sendFriendRequest({
-          user_code: userCode,
+          user_code: userCode.toLowerCase(),
         });
 
         showSnackbar(response.message, "success");

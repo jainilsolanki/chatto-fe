@@ -1,18 +1,19 @@
-import { AuthAPI } from "@/app/services/axios/apis/auth.api";
 import LoginPageUI from "./components/login.component";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { AuthAPI } from "@/app/services/axios/apis/auth.api";
 
 export default function LoginPage() {
   const login = async (formData: FormData) => {
     "use server";
-    const response = await AuthAPI.login({
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
+    const response = await AuthAPI.login(
+      formData.get("email"),
+      formData.get("password")
+    );
 
-    const { id, first_name, last_name, email, user_code } = response.data.user;
     if (response.status) {
+      const { id, first_name, last_name, email, user_code } =
+        response.data.user;
       cookies().set({
         name: "userData",
         value: JSON.stringify({
@@ -30,7 +31,7 @@ export default function LoginPage() {
 
       redirect("/app/message");
     } else {
-      console.log(response);
+      throw new Error(response.message);
     }
   };
 
