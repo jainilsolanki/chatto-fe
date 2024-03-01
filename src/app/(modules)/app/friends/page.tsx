@@ -2,6 +2,7 @@ import { baseURL } from "@/app/data/constants-data";
 import AppWrapper from "@/app/wrappers/app.wrapper";
 import { cookies } from "next/headers";
 import React from "react";
+import FriendItem from "./components/friend-item";
 
 async function getAllFriendsList(token) {
   try {
@@ -22,10 +23,14 @@ export default async function Friends() {
   const data = await getAllFriendsList(
     JSON.parse(cookies().get("userData").value).accessToken
   );
-  console.log("all friends", data.friends[1]);
+  // console.log("all friends", data);
   return (
     <AppWrapper>
-      <h1 style={{ margin: "auto", textAlign: "center" }}>Only Friends</h1>
+      {/* <h1 style={{ margin: "auto", textAlign: "center" }}>Only Friends</h1> */}
+      {data.friends.map((friend) => {
+        console.log("friend", friend);
+        return <FriendItem key={friend.id} />;
+      })}
     </AppWrapper>
   );
 }

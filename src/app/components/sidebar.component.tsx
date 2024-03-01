@@ -23,7 +23,6 @@ import AssistantTwoToneIcon from "@mui/icons-material/AssistantTwoTone";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
 import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
-import { clearUserData } from "../services/redux/slices/user-data.slice";
 import { destroyCookie } from "nookies";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -115,7 +114,6 @@ export default function Sidebar() {
       icon: <ExitToAppTwoToneIcon />,
       onClick: () => {
         router.push("/auth/login");
-        dispatch(clearUserData());
         dispatch(clearTempData());
         dispatch(clearOnGoingChatData());
         dispatch(clearDialogConfigSlice());

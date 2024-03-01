@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
-import userDataSlice, { userDataInitialState } from "./slices/user-data.slice";
 import storage from "redux-persist/lib/storage";
 import expireReducer from "redux-persist-expire";
 import dialogConfigSlice, {
@@ -14,7 +13,6 @@ import ongoingChatDataSlice, {
 import tempDataSlice, { tempDataInitialState } from "./slices/temp-data.slice";
 
 const resetAllInitialSlices = {
-  ...userDataInitialState,
   ...tempDataInitialState,
   ...onGoingChatDataInitialState,
   ...dialogConfigInitialState,
@@ -24,18 +22,17 @@ const persistConfig = {
   key: "root",
   storage,
   transforms: [
-    expireReducer("userData", {
+    expireReducer("tempData", {
       //expire in 15 days
       expireSeconds: 15 * 24 * 60 * 60,
       expiredState: resetAllInitialSlices,
       autoExpire: true,
     }),
   ],
-  whitelist: ["userData", "tempData"],
+  whitelist: ["tempData"],
 };
 const reducers = combineReducers({
   //Persistent
-  userData: userDataSlice,
   tempData: tempDataSlice,
 
   // Temporary

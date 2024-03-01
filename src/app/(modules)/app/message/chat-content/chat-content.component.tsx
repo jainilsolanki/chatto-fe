@@ -18,18 +18,21 @@ import { useSocketEmit } from "@/app/hooks/useSocketEmit";
 import { useEffect, useRef, useState } from "react";
 import { socket } from "@/app/components/socket.connection";
 import { updateOnGoingChatList } from "@/app/services/redux/slices/ongoing-chat-data.slice";
+import { parseCookies } from "nookies";
+import { userData } from "@/app/data/utils";
 
 const ChatContent = () => {
   const { emitEvent } = useSocketEmit();
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
-  const userData = useSelector((state: any) => state.userData);
   const [messageToSend, setMessageToSend] = useState("");
   const [initialLoading, setInitialLoading] = useState(true);
+  const cookies = parseCookies();
   useEffect(() => {
     function onMessages(value: any) {
       const { chat } = value;
+      console.log("received chat socket");
       dispatch(updateOnGoingChatList(chat));
       if (initialLoading) setInitialLoading(false);
     }
@@ -82,7 +85,8 @@ const ChatContent = () => {
                 index === 0 ||
                 chat.sender.id !==
                   onGoingChatData.chatList[index - 1].sender.id;
-              const isCurrentUser = chat.sender.id === userData.id;
+              const isCurrentUser =
+                chat.sender.id === JSON.parse(cookies["userData"]).id;
               const isDifferentDay =
                 !prevChat ||
                 !moment(chat.createdAt).isSame(prevChat.createdAt, "day");
@@ -113,7 +117,7 @@ const ChatContent = () => {
                       alignItems: "center",
                       display: "flex",
                       justifyContent:
-                        chat.sender.id === userData.id
+                        chat.sender.id === JSON.parse(cookies["userData"]).id
                           ? "flex-end"
                           : "flex-start",
                       gap: 1,
@@ -182,8 +186,8 @@ const ChatContent = () => {
                       }
                       alt={"No Image"}
                     >
-                      {userData.first_name.charAt(0).toUpperCase() +
-                        userData.last_name.charAt(0).toUpperCase()}
+                      {userData?.first_name?.charAt(0)?.toUpperCase() +
+                        userData?.last_name?.charAt(0)?.toUpperCase()}
                     </Avatar>
                   </Box>
                 </Box>
