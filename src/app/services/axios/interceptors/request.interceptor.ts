@@ -1,8 +1,9 @@
-import { userData } from "@/app/data/utils";
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { parseCookies } from "nookies";
 
 export function axiosRequestInterceptor(config: InternalAxiosRequestConfig) {
-  const token = userData?.accessToken;
+  const cookies = parseCookies();
+  const token = JSON.parse(cookies["userData"]).accessToken;
   config.headers.Authorization = `Bearer ${token}`;
 
   return config;
