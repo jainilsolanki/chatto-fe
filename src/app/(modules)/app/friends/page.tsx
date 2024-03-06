@@ -23,7 +23,6 @@ export default async function Friends() {
   const data = await getAllFriendsList(
     JSON.parse(cookies().get("userData").value).accessToken
   );
-  // console.log("all friends", data);
   return (
     <AppWrapper>
       {/* <h1 style={{ margin: "auto", textAlign: "center" }}>Only Friends</h1> */}

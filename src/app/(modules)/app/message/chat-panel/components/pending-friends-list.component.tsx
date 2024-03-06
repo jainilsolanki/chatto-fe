@@ -24,7 +24,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
 import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import { updateConversationId } from "@/app/services/redux/slices/temp-data.slice";
-const FriendItem = ({ friend, handleClosePop }: any) => {
+const FriendItem = ({ friend, handleClosePop, getFriendsList }: any) => {
   const dispatch = useDispatch();
   const handleNotificationClick = (notification: any) => {
     handleClosePop();
@@ -36,9 +36,9 @@ const FriendItem = ({ friend, handleClosePop }: any) => {
         status: "accepted",
       });
       if (response.status) {
-        handleClosePop();
         dispatch(handleBeginConversationDialogState(true));
         dispatch(updateConversationId(response.conversationId));
+        getFriendsList();
       }
     } catch (e) {
       console.log(e);
@@ -50,7 +50,9 @@ const FriendItem = ({ friend, handleClosePop }: any) => {
         id,
         status: "rejected",
       });
-      console.log(response);
+      if (response.status) {
+        getFriendsList();
+      }
     } catch (e) {
       console.log(e);
     }
@@ -134,7 +136,11 @@ const FriendItem = ({ friend, handleClosePop }: any) => {
   );
 };
 
-export const FriendsList = ({ friendsListData, handleClosePop }: any) => {
+export const FriendsList = ({
+  friendsListData,
+  handleClosePop,
+  getFriendsList,
+}: any) => {
   return (
     <Paper
       sx={{
@@ -160,6 +166,7 @@ export const FriendsList = ({ friendsListData, handleClosePop }: any) => {
               key={friend.from_user_id}
               friend={friend}
               handleClosePop={handleClosePop}
+              getFriendsList={getFriendsList}
             />
           ))}
         </List>
@@ -247,6 +254,7 @@ export const NotificationBell = () => {
         <FriendsList
           friendsListData={friendsListData}
           handleClosePop={handleClosePop}
+          getFriendsList={getFriendsList}
         />
       </Popover>
     </>
