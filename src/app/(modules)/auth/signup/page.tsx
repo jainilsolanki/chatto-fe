@@ -32,7 +32,7 @@ export default function SignupPage() {
     last_name: "",
     email: "",
     password: "",
-    department_name: "Sales",
+    department_name: "Development",
   });
   const [showPassword, setShowPassword] = useState(false);
   const { showSnackbar, SnackbarComponent } = useCustomSnackbar();
@@ -49,7 +49,7 @@ export default function SignupPage() {
         }, 1000);
       }
     } catch (e: any) {
-      showSnackbar(e.response.data.message, "error");
+      showSnackbar(e?.response?.data.message, "error");
       console.error(e);
     }
   };

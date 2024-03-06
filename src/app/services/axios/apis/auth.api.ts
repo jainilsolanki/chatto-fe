@@ -21,7 +21,7 @@ export const AuthAPI = {
     const request = await GlobalInstance.request({
       url: "/api/signup",
       method: "POST",
-      data: data,
+      data,
     });
     const response = await request.data;
     return response;
