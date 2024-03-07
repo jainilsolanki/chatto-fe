@@ -24,6 +24,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
 import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import { updateConversationId } from "@/app/services/redux/slices/temp-data.slice";
+import { socket } from "@/app/components/socket.connection";
 const FriendItem = ({ friend, handleClosePop, getFriendsList }: any) => {
   const dispatch = useDispatch();
   const handleNotificationClick = (notification: any) => {
@@ -204,6 +205,15 @@ export const NotificationBell = () => {
   };
   useEffect(() => {
     getFriendsList();
+    function onNewFriendRequest(value: any) {
+      getFriendsList();
+    }
+
+    socket?.on("friends-count", onNewFriendRequest);
+
+    return () => {
+      socket?.off("friends-count", onNewFriendRequest);
+    };
   }, []);
   function notificationsLabel(count: number) {
     if (count === 0) {

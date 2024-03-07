@@ -28,7 +28,7 @@ export default async function Friends() {
       {/* <h1 style={{ margin: "auto", textAlign: "center" }}>Only Friends</h1> */}
       {data.friends.map((friend) => {
         console.log("friend", friend);
-        return <FriendItem key={friend.id} />;
+        return <></>;
       })}
     </AppWrapper>
   );
