@@ -13,11 +13,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import AuthLayout from "@/app/components/auth.layout";
 import { GOOGLE_LOGO, SIGNUP_BANNER } from "@/app/data/assets-data";
 import { AuthAPI } from "@/app/services/axios/apis/auth.api";
 import { useRouter } from "next/navigation";
 import useCustomSnackbar from "@/app/hooks/useSnackbar";
+import AuthLayout from "@/app/components/layouts/auth.layout";
 type UserData = {
   first_name: string;
   last_name: string;

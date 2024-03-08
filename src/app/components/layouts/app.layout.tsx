@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import useCustomSnackbar from "../hooks/useSnackbar";
+import useCustomSnackbar from "../../hooks/useSnackbar";
 
 const AppLayout = ({ leftPanel, rightPanel }: any) => {
   return (

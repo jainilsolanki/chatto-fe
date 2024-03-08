@@ -2,8 +2,22 @@ import { baseURL } from "@/app/data/constants-data";
 import AppWrapper from "@/app/wrappers/app.wrapper";
 import { cookies } from "next/headers";
 import React from "react";
-import FriendItem from "./components/friend-item";
 
+import AppLayout from "@/app/components/layouts/app.layout";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { VOID } from "@/app/data/assets-data";
+
+import { getTimeDifference } from "@/app/data/utils";
+import FriendsPanel from "./friends-panel/friends-panel.component";
+import ChatContent from "../message/chat-content/chat-content.component";
 async function getAllFriendsList(token) {
   try {
     const request = await fetch(`${baseURL}/friend/list`, {
@@ -23,13 +37,13 @@ export default async function Friends() {
   const data = await getAllFriendsList(
     JSON.parse(cookies().get("userData").value).accessToken
   );
+  const friendsList = data.friends;
   return (
     <AppWrapper>
-      {/* <h1 style={{ margin: "auto", textAlign: "center" }}>Only Friends</h1> */}
-      {data.friends.map((friend) => {
-        console.log("friend", friend);
-        return <></>;
-      })}
+      <AppLayout
+        leftPanel={<FriendsPanel friendsList={friendsList} />}
+        rightPanel={<ChatContent />}
+      />
     </AppWrapper>
   );
 }

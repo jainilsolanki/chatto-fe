@@ -1,5 +1,5 @@
 import AppWrapper from "@/app/wrappers/app.wrapper";
-import AppLayout from "@/app/components/app.layout";
+import AppLayout from "@/app/components/layouts/app.layout";
 import ChatPanel from "./chat-panel/chat-panel.component";
 import ChatContent from "./chat-content/chat-content.component";
 import AddFriendDialog from "./components/add-friend-dialog.component";

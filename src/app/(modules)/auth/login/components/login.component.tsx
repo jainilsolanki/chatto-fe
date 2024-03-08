@@ -13,8 +13,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import AuthLayout from "@/app/components/auth.layout";
 import { GOOGLE_LOGO, LOGIN_BANNER } from "@/app/data/assets-data";
+import AuthLayout from "@/app/components/layouts/auth.layout";
 
 export default function LoginPageUI({ login }) {
   const [showPassword, setShowPassword] = useState(false);
