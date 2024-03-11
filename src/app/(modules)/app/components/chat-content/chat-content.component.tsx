@@ -20,7 +20,7 @@ import { socket } from "@/app/components/socket.connection";
 import { updateOnGoingChatList } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import { parseCookies } from "nookies";
 import { userData } from "@/app/data/utils";
-
+import CryptoJS from "crypto-js";
 const ChatContent = () => {
   const { emitEvent } = useSocketEmit();
   const dispatch = useDispatch();
@@ -29,6 +29,7 @@ const ChatContent = () => {
   const [messageToSend, setMessageToSend] = useState("");
   const [initialLoading, setInitialLoading] = useState(true);
   const cookies = parseCookies();
+
   useEffect(() => {
     function onMessages(value: any) {
       const { chat } = value;
@@ -61,6 +62,17 @@ const ChatContent = () => {
     });
 
     setMessageToSend("");
+  };
+
+  const decryptMessage = (encryptedMessage: string | undefined) => {
+    if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
+
+    const bytes = CryptoJS.AES.decrypt(
+      encryptedMessage,
+      String(onGoingChatData.conversationId)
+    );
+    const decryptedMessage = bytes.toString(CryptoJS.enc.Utf8);
+    return decryptedMessage;
   };
 
   return onGoingChatData ? (
@@ -163,7 +175,7 @@ const ChatContent = () => {
                       }}
                     >
                       <Typography variant="body1" sx={{ color: "#333" }}>
-                        {chat.content}
+                        {decryptMessage(chat.content)}
                       </Typography>
                       <Typography variant="caption" sx={{ color: "#888" }}>
                         {moment(chat.createdAt).format("hh:mm A")}

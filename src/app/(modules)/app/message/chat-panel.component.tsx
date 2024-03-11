@@ -1,11 +1,5 @@
 "use client";
-import {
-  Avatar,
-  Badge,
-  Box,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getTimeDifference } from "@/app/data/utils";
 import { VOID } from "@/app/data/assets-data";
@@ -14,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import PanelHeader from "../components/panel-header/panel-header.component";
-
+import CryptoJS from "crypto-js";
 const ChatPanel = () => {
   const dispatch = useDispatch();
   const [friendsList, setFriendsList] = useState([]);
@@ -47,6 +41,20 @@ const ChatPanel = () => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const decryptMessage = (
+    encryptedMessage: string | undefined,
+    conversationId: string
+  ) => {
+    if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
+
+    const bytes = CryptoJS.AES.decrypt(
+      encryptedMessage,
+      String(conversationId)
+    );
+    const decryptedMessage = bytes.toString(CryptoJS.enc.Utf8);
+    return decryptedMessage;
   };
   return (
     <>
@@ -132,7 +140,10 @@ const ChatPanel = () => {
                   {user.user.first_name} {user.user.last_name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {user.chats.content}
+                  {decryptMessage(
+                    user.chats.content,
+                    user.conversationDetails.id
+                  )}
                 </Typography>
               </Box>
               <Typography
