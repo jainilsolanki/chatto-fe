@@ -1,87 +1,81 @@
 "use client";
-import { VOID } from "@/app/data/assets-data";
-import { getTimeDifference } from "@/app/data/utils";
 import {
   Avatar,
   Badge,
   Box,
-  Divider,
-  IconButton,
   Stack,
   Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwoTone";
-import { NotificationBell } from "../../message/chat-panel/components/pending-friends-list.component";
-import FriendOptions from "./components/friend-options.component";
-import { useState } from "react";
-export default function FriendsPanel({ friendsList }) {
-  const [currentFriend, setCurrentFriend] = useState<any>(null);
+import React, { useEffect, useState } from "react";
+import { getTimeDifference } from "@/app/data/utils";
+import { VOID } from "@/app/data/assets-data";
+import { socket } from "@/app/components/socket.connection";
+import { useDispatch } from "react-redux";
+import { FriendAPI } from "@/app/services/axios/apis/friend.api";
+import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
+import PanelHeader from "../components/panel-header/panel-header.component";
 
+const ChatPanel = () => {
+  const dispatch = useDispatch();
+  const [friendsList, setFriendsList] = useState([]);
+  useEffect(() => {
+    function onFriendsList(value: any) {
+      // setFooEvents(fooEvents.concat(value));
+      const { conversationList } = value;
+      console.log("list value: ", value.conversationList);
+      setFriendsList(conversationList);
+    }
+
+    socket?.on("conversation-list", onFriendsList);
+
+    return () => {
+      socket?.off("conversation-list", onFriendsList);
+    };
+  }, []);
+
+  const getSingleChatData = async (data) => {
+    try {
+      const response = await FriendAPI.getSingleChatData(data);
+      console.log(response);
+      dispatch(
+        saveOnGoingChatData({
+          conversationId: Number(response.conversationId),
+          chatList: response.chatList,
+          messageReceiver: response.messageReceiver,
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
-      <Stack
-        justifyContent={"center"}
-        flexDirection={"column"}
-        p={1}
-        height={"fit-content"}
-        gap={2}
-      >
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-        >
-          <Typography variant="h5" fontWeight={"bold"}>
-            Only Friends
-          </Typography>
-          <Stack direction={"row"}>
-            <NotificationBell />
-            <IconButton>
-              <SearchIcon />
-            </IconButton>
-            <IconButton>
-              <AddCircleOutlineTwoToneIcon />
-            </IconButton>
-          </Stack>
-        </Stack>
-      </Stack>
-      <Divider />
+      {/* Panel Header */}
+      <PanelHeader title={"Messages"} />
       {/* Chat List */}
       <Stack
         height={"calc(80vh - 40px)"}
         sx={{
           overflow: "auto",
+          "& :hover": {
+            background: friendsList.length !== 0 ? "#d3eae8" : "unset",
+            cursor: "pointer",
+          },
         }}
         p={1}
       >
         {friendsList.length !== 0 ? (
-          friendsList.map((friend) => (
+          friendsList.map((user) => (
             <Box
-              key={friend.user.id}
+              key={user.user.id}
               display="flex"
               alignItems="center"
               py={1}
               px={1}
               sx={{
                 borderRadius: 5,
-                background:
-                  friendsList.length !== 0 &&
-                  currentFriend &&
-                  friend.user.id === currentFriend.user.id
-                    ? "#d3eae8"
-                    : "unset",
-                "& .MuiSvgIcon-root": {
-                  display:
-                    friendsList.length !== 0 &&
-                    currentFriend &&
-                    friend.user.id === currentFriend.user.id
-                      ? "block"
-                      : "none",
-                },
               }}
-              onMouseOver={() => setCurrentFriend(friend)}
-              onMouseOut={() => setCurrentFriend(null)}
+              onClick={() => getSingleChatData(user.conversationDetails.id)}
             >
               <Badge
                 overlap="circular"
@@ -126,22 +120,28 @@ export default function FriendsPanel({ friendsList }) {
                     height: 45,
                     borderRadius: 4,
                   }}
-                  src={friend.user.profile_picture}
+                  src={user.profile_picture}
                   alt={"No Image"}
                 >
-                  {friend.user.first_name.charAt(0).toUpperCase() +
-                    friend.user.last_name.charAt(0).toUpperCase()}
+                  {user.user.first_name.charAt(0).toUpperCase() +
+                    user.user.last_name.charAt(0).toUpperCase()}
                 </Avatar>
               </Badge>
               <Box flexGrow={1}>
                 <Typography variant="body1" fontWeight={"bold"}>
-                  {friend.user.first_name} {friend.user.last_name}
+                  {user.user.first_name} {user.user.last_name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Friend since {getTimeDifference(friend.createdAt)}
+                  {user.chats.content}
                 </Typography>
               </Box>
-              <FriendOptions currentFriend={currentFriend} />
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                alignSelf={"flex-start"}
+              >
+                {getTimeDifference(user.chats.createdAt)}
+              </Typography>
             </Box>
           ))
         ) : (
@@ -153,15 +153,17 @@ export default function FriendsPanel({ friendsList }) {
           >
             <img
               src={VOID}
-              alt="You have no friends yet ! Start adding some"
+              alt="No Pending messages or chats"
               style={{ maxWidth: 120, maxHeight: 120 }}
             />
             <Typography variant="body1" fontSize={18}>
-              You have no friends yet ! Start adding some already
+              No messages found
             </Typography>
           </Stack>
         )}
       </Stack>
     </>
   );
-}
+};
+
+export default ChatPanel;

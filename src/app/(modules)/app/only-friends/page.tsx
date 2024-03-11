@@ -4,8 +4,8 @@ import { cookies } from "next/headers";
 import React from "react";
 import AppLayout from "@/app/components/layouts/app.layout";
 import FriendsPanel from "./friends-panel/friends-panel.component";
-import ChatContent from "../message/chat-content/chat-content.component";
-async function getAllFriendsList(token:string) {
+import ChatContent from "../components/chat-content/chat-content.component";
+async function getAllFriendsList(token: string) {
   try {
     const request = await fetch(`${baseURL}/friend/list`, {
       headers: {

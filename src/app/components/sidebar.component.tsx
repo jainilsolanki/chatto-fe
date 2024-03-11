@@ -96,7 +96,7 @@ export default function Sidebar() {
       icon: <Groups2TwoToneIcon />,
       onClick: () => {
         dispatch(updateSelectedSection(2));
-        router.push("/app/friends");
+        router.push("/app/only-friends");
       },
     },
     {

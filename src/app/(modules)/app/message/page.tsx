@@ -1,9 +1,7 @@
 import AppWrapper from "@/app/wrappers/app.wrapper";
 import AppLayout from "@/app/components/layouts/app.layout";
-import ChatPanel from "./chat-panel/chat-panel.component";
-import ChatContent from "./chat-content/chat-content.component";
-import AddFriendDialog from "./components/add-friend-dialog.component";
-import StartConversationConfirmationDialog from "./components/start-converstation.dialog";
+import ChatPanel from "./chat-panel.component";
+import ChatContent from "../components/chat-content/chat-content.component";
 
 export default function Message() {
   return (
@@ -11,8 +9,6 @@ export default function Message() {
       <AppWrapper>
         <AppLayout leftPanel={<ChatPanel />} rightPanel={<ChatContent />} />
       </AppWrapper>
-      <AddFriendDialog />
-      <StartConversationConfirmationDialog />
     </>
   );
 }
