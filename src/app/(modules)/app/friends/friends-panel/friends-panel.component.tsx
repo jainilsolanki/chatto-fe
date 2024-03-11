@@ -141,7 +141,7 @@ export default function FriendsPanel({ friendsList }) {
                   Friend since {getTimeDifference(friend.createdAt)}
                 </Typography>
               </Box>
-              <FriendOptions setCurrentFriend={setCurrentFriend} />
+              <FriendOptions currentFriend={currentFriend} />
             </Box>
           ))
         ) : (

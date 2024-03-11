@@ -2,6 +2,7 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
   Divider,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -13,21 +14,43 @@ import {
 import { useState } from "react";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 import PersonRemoveAlt1OutlinedIcon from "@mui/icons-material/PersonRemoveAlt1Outlined";
-export default function FriendOptions({ setCurrentFriend }) {
+import { FriendAPI } from "@/app/services/axios/apis/friend.api";
+import { useDispatch } from "react-redux";
+import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
+export default function FriendOptions({ currentFriend }) {
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
     null
   );
+  const dispatch = useDispatch();
   const openPop = Boolean(anchorElPop);
   const popOverId = openPop ? "simple-popover" : undefined;
-  const handleClickPop = (event: React.MouseEvent<HTMLButtonElement>) => {
+  function handleClickPop(event: React.MouseEvent<HTMLButtonElement>) {
     console.log("open caled");
+    event.stopPropagation();
     setAnchorElPop(event.currentTarget);
-  };
-  const handleClosePop = () => {
+  }
+  function handleClosePop() {
     setAnchorElPop(null);
     console.log("close caled");
-    setCurrentFriend(null);
+  }
+
+  const startMessaging = async (data) => {
+    try {
+      const response = await FriendAPI.getSingleChatData(data);
+      console.log(response);
+      handleClosePop();
+      dispatch(
+        saveOnGoingChatData({
+          conversationId: Number(response.conversationId),
+          chatList: response.chatList,
+          messageReceiver: response.messageReceiver,
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
   };
+
   return (
     <>
       <MoreHorizIcon
@@ -71,7 +94,10 @@ export default function FriendOptions({ setCurrentFriend }) {
             }}
           >
             <ListItem key={"Profile"} disablePadding sx={{ display: "block" }}>
-              <ListItemButton dense>
+              <ListItemButton
+                dense
+                onClick={() => startMessaging(currentFriend.conversation_id)}
+              >
                 <ListItemIcon>
                   <ReviewsOutlinedIcon sx={{ fontSize: 20 }} />
                 </ListItemIcon>
