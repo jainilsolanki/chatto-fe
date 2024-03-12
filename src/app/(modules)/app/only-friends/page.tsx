@@ -1,10 +1,11 @@
 import { baseURL } from "@/app/data/constants-data";
 import AppWrapper from "@/app/wrappers/app.wrapper";
 import { cookies } from "next/headers";
-import React from "react";
+import React, { Suspense } from "react";
 import AppLayout from "@/app/components/layouts/app.layout";
 import FriendsPanel from "./friends-panel/friends-panel.component";
 import ChatContent from "../components/chat-content/chat-content.component";
+import PanelListSkeletons from "../components/panel-list-skeletons.component";
 async function getAllFriendsList(token: string) {
   try {
     const request = await fetch(`${baseURL}/friend/list`, {
@@ -29,7 +30,11 @@ export default async function Friends() {
   return (
     <AppWrapper>
       <AppLayout
-        leftPanel={<FriendsPanel friendsList={friendsList} />}
+        leftPanel={
+          <Suspense fallback={<PanelListSkeletons />}>
+            <FriendsPanel friendsList={friendsList} />
+          </Suspense>
+        }
         rightPanel={<ChatContent />}
       />
     </AppWrapper>

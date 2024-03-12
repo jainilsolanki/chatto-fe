@@ -18,6 +18,8 @@ import { AuthAPI } from "@/app/services/axios/apis/auth.api";
 import { useRouter } from "next/navigation";
 import useCustomSnackbar from "@/app/hooks/useSnackbar";
 import AuthLayout from "@/app/components/layouts/auth.layout";
+import { LoadingButton } from "@mui/lab";
+import useLoader from "@/app/hooks/useLoaders";
 type UserData = {
   first_name: string;
   last_name: string;
@@ -37,7 +39,9 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const { showSnackbar, SnackbarComponent } = useCustomSnackbar();
   const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const { showLoader, hideLoader, isLoading } = useLoader();
   const signup = async () => {
+    showLoader();
     try {
       const response = await AuthAPI.signup({
         ...userData,
@@ -51,6 +55,8 @@ export default function SignupPage() {
     } catch (e: any) {
       showSnackbar(e?.response?.data.message, "error");
       console.error(e);
+    } finally {
+      hideLoader();
     }
   };
   const updataUserData = (updatingState: string, value: string) => {
@@ -121,9 +127,14 @@ export default function SignupPage() {
                 onChange={(e) => updataUserData("password", e.target.value)}
               />
             </Stack>
-            <Button variant="contained" onClick={signup}>
+            <LoadingButton
+              variant="contained"
+              onClick={signup}
+              loading={isLoading}
+            >
               Sign up
-            </Button>
+            </LoadingButton>
+
             <Stack
               direction={"row"}
               justifyContent={"center"}

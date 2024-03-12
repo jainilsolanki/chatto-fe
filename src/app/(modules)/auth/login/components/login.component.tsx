@@ -15,19 +15,24 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { GOOGLE_LOGO, LOGIN_BANNER } from "@/app/data/assets-data";
 import AuthLayout from "@/app/components/layouts/auth.layout";
+import { LoadingButton } from "@mui/lab";
+import useLoader from "@/app/hooks/useLoaders";
 
 export default function LoginPageUI({ login }) {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const { showLoader, hideLoader, isLoading } = useLoader();
   const handleSubmit = async (e) => {
+    showLoader();
     e.preventDefault();
     const formData = new FormData(e.target);
     try {
       await login(formData);
     } catch (error) {
       setErrorMessage("You have entered an invalid email or password");
+    } finally {
+      hideLoader();
     }
   };
   return (
@@ -89,9 +94,13 @@ export default function LoginPageUI({ login }) {
                 >
                   Forgot Password?
                 </Typography>
-                <Button variant="contained" type="submit">
+                <LoadingButton
+                  variant="contained"
+                  type="submit"
+                  loading={isLoading}
+                >
                   Login
-                </Button>
+                </LoadingButton>
               </Stack>
             </form>
             <Stack
