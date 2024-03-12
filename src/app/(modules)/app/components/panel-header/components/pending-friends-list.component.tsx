@@ -1,4 +1,4 @@
-import { AccessTime,  } from "@mui/icons-material";
+import { AccessTime } from "@mui/icons-material";
 import {
   Avatar,
   Badge,
@@ -25,11 +25,17 @@ import { useDispatch } from "react-redux";
 import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import { updateConversationId } from "@/app/services/redux/slices/temp-data.slice";
 import { socket } from "@/app/components/socket.connection";
-const FriendItem = ({ friend, handleClosePop, getFriendsList }: any) => {
+const FriendItem = ({
+  friend,
+  handleClosePop,
+  getFriendsList,
+  dataLength,
+}: any) => {
   const dispatch = useDispatch();
   const handleNotificationClick = (notification: any) => {
     handleClosePop();
   };
+  console.log(dataLength);
   const acceptFriendRequest = async (id) => {
     try {
       const response = await FriendAPI.sendFriendRequestResponse({
@@ -37,6 +43,9 @@ const FriendItem = ({ friend, handleClosePop, getFriendsList }: any) => {
         status: "accepted",
       });
       if (response.status) {
+        if (dataLength === 1) {
+          handleClosePop();
+        }
         dispatch(handleBeginConversationDialogState(true));
         dispatch(updateConversationId(response.conversationId));
         getFriendsList();
@@ -52,7 +61,12 @@ const FriendItem = ({ friend, handleClosePop, getFriendsList }: any) => {
         status: "rejected",
       });
       if (response.status) {
-        getFriendsList();
+        if (dataLength === 1) {
+          handleClosePop();
+        }
+        setTimeout(() => {
+          getFriendsList();
+        }, 500);
       }
     } catch (e) {
       console.log(e);
@@ -93,8 +107,8 @@ const FriendItem = ({ friend, handleClosePop, getFriendsList }: any) => {
             src={friend.req_from.profile_picture}
             alt={"No Image"}
           >
-            {friend.req_from.first_name.charAt(0) +
-              friend.req_from.last_name.charAt(0)}
+            {friend.req_from.first_name.charAt(0).toUpperCase() +
+              friend.req_from.last_name.charAt(0).toUpperCase()}
           </Avatar>
         </ListItemAvatar>
 
@@ -168,6 +182,7 @@ export const FriendsList = ({
               friend={friend}
               handleClosePop={handleClosePop}
               getFriendsList={getFriendsList}
+              dataLength={friendsListData.length}
             />
           ))}
         </List>

@@ -18,9 +18,8 @@ import { useSocketEmit } from "@/app/hooks/useSocketEmit";
 import { useEffect, useRef, useState } from "react";
 import { socket } from "@/app/components/socket.connection";
 import { updateOnGoingChatList } from "@/app/services/redux/slices/ongoing-chat-data.slice";
-import { parseCookies } from "nookies";
-import { userData } from "@/app/data/utils";
 import CryptoJS from "crypto-js";
+import useUserData from "@/app/hooks/useUserData";
 const ChatContent = () => {
   const { emitEvent } = useSocketEmit();
   const dispatch = useDispatch();
@@ -28,8 +27,7 @@ const ChatContent = () => {
   const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   const [messageToSend, setMessageToSend] = useState("");
   const [initialLoading, setInitialLoading] = useState(true);
-  const cookies = parseCookies();
-
+  const { userData } = useUserData();
   useEffect(() => {
     function onMessages(value: any) {
       const { chat } = value;
@@ -97,8 +95,7 @@ const ChatContent = () => {
                 index === 0 ||
                 chat.sender.id !==
                   onGoingChatData.chatList[index - 1].sender.id;
-              const isCurrentUser =
-                chat.sender.id === JSON.parse(cookies["userData"]).id;
+              const isCurrentUser = chat.sender.id === userData?.id;
               const isDifferentDay =
                 !prevChat ||
                 !moment(chat.createdAt).isSame(prevChat.createdAt, "day");
@@ -129,7 +126,7 @@ const ChatContent = () => {
                       alignItems: "center",
                       display: "flex",
                       justifyContent:
-                        chat.sender.id === JSON.parse(cookies["userData"]).id
+                        chat.sender.id === userData?.id
                           ? "flex-end"
                           : "flex-start",
                       gap: 1,
@@ -312,8 +309,8 @@ const ChatContent = () => {
                       <Box sx={{ position: "absolute" }}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="30"
-                          height="30"
+                          width="25"
+                          height="25"
                           viewBox="0 0 30 30"
                           fill="none"
                         >

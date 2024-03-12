@@ -34,7 +34,7 @@ import {
 } from "../services/redux/slices/temp-data.slice";
 import { clearOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
 import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.slice";
-import { userData } from "../data/utils";
+import useUserData from "../hooks/useUserData";
 type MenuItemType = {
   id: string;
   name: string;
@@ -58,7 +58,7 @@ export default function Sidebar() {
   const handleClickPop = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElPop(event.currentTarget);
   };
-
+  const { userData } = useUserData();
   const CopyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -113,12 +113,14 @@ export default function Sidebar() {
       name: "Logout",
       icon: <ExitToAppTwoToneIcon />,
       onClick: () => {
-        router.push("/auth/login");
-        dispatch(clearTempData());
-        dispatch(clearOnGoingChatData());
-        dispatch(clearDialogConfigSlice());
         destroyCookie(null, "userData", { path: "/" });
+        router.push("/auth/login");
         socket?.disconnect();
+        setTimeout(() => {
+          dispatch(clearTempData());
+          dispatch(clearOnGoingChatData());
+          dispatch(clearDialogConfigSlice());
+        }, 500);
       },
     },
   ];

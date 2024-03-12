@@ -1,5 +1,3 @@
-import { parseCookies } from "nookies";
-
 export const getTimeDifference = (lastChatTime: string): string => {
   const diffInMs: number =
     new Date().getTime() - new Date(lastChatTime).getTime();
@@ -13,23 +11,3 @@ export const getTimeDifference = (lastChatTime: string): string => {
   if (minutes > 0) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
   return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
 };
-
-export const getUserDataFromCookie = () => {
-  const cookies = parseCookies();
-  const userDataCookie = cookies["userData"];
-
-  if (userDataCookie) {
-    try {
-      const userData = JSON.parse(userDataCookie);
-      return userData;
-    } catch (error) {
-      console.log("Error parsing userData cookie:", error);
-      return null;
-    }
-  } else {
-    console.log("userData cookie not found.");
-    return null;
-  }
-};
-
-export const userData = getUserDataFromCookie();

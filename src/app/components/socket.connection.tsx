@@ -3,21 +3,23 @@
 import { useEffect } from "react";
 import { socketURL } from "../data/constants-data";
 import { io } from "socket.io-client";
-import { userData } from "../data/utils";
+import { parseCookies } from "nookies";
 export let socket: any;
 const SocketConnection = () => {
+  const cookies = parseCookies();
+  const accessToken = JSON.parse(cookies["userData"] ?? null).accessToken;
   useEffect(() => {
-    if (userData?.accessToken)
+    if (accessToken)
       socket = io(socketURL, {
         query: {
-          token: userData?.accessToken,
+          token: accessToken,
         },
         transports: ["websocket", "polling"],
       });
     return () => {
       socket?.disconnect();
     };
-  }, [userData]);
+  }, [accessToken]);
   return <></>;
 };
 export default SocketConnection;

@@ -34,7 +34,7 @@ export default function AddFriendDialog() {
         const response = await FriendAPI.sendFriendRequest({
           user_code: userCode.toLowerCase(),
         });
-
+        handleClose();
         showSnackbar(response.message, "success");
       } catch (e: any) {
         showSnackbar(e.response.data.message, "error");
