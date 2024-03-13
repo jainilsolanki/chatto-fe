@@ -25,11 +25,14 @@ export default function AddFriendDialog() {
   const [userCode, setUserCode] = useState<string>("");
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
   const { showSnackbar, SnackbarComponent } = useCustomSnackbar();
+  const [error, setError] = useState(false);
   const handleClose = () => {
     dispatch(handleAddFriendDialogState(false));
+    setError(false);
   };
   const sendFriendRequest = async () => {
-    if (userCode.length === 6)
+    if (userCode.length === 6) {
+      setError(false);
       try {
         const response = await FriendAPI.sendFriendRequest({
           user_code: userCode.toLowerCase(),
@@ -40,6 +43,9 @@ export default function AddFriendDialog() {
         showSnackbar(e.response.data.message, "error");
         console.log(e);
       }
+    } else {
+      setError(true);
+    }
   };
   return (
     <>
@@ -77,21 +83,35 @@ export default function AddFriendDialog() {
               <Typography fontSize={18} fontWeight={"medium"}>
                 Enter your friend's user code
               </Typography>
-              <PinInput
-                length={6}
-                focus
-                type="custom"
-                placeholder="U"
-                inputStyle={{
-                  borderRadius: 4,
-                  background: "#F6F6F6",
-                  border: "none",
-                  fontSize: 16,
+              <Stack
+                onKeyDown={(ev) => {
+                  if (ev.key === "Enter") {
+                    ev.preventDefault();
+                    sendFriendRequest();
+                  }
                 }}
-                inputFocusStyle={{ border: "1px solid #21978B" }}
-                onChange={(e: string) => setUserCode(e)}
-                onComplete={(e: string) => setUserCode(e)}
-              />
+              >
+                <PinInput
+                  length={6}
+                  focus
+                  type="custom"
+                  placeholder="U"
+                  inputStyle={{
+                    borderRadius: 4,
+                    background: "#F6F6F6",
+                    border: "none",
+                    fontSize: 16,
+                  }}
+                  inputFocusStyle={{ border: "1px solid #21978B" }}
+                  onChange={(e: string) => setUserCode(e)}
+                  onComplete={(e: string) => setUserCode(e)}
+                />
+              </Stack>
+              {error && (
+                <Typography color={"error"} variant="caption">
+                  Please fill the entire UCode
+                </Typography>
+              )}
               <DialogContentText mt={3} fontWeight={"bold"}>
                 Note: You can find your user code in your profile
               </DialogContentText>

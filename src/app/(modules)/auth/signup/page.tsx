@@ -79,7 +79,16 @@ export default function SignupPage() {
               </Typography>
             </Stack>
 
-            <Stack mt={3} gap={3}>
+            <Stack
+              mt={3}
+              gap={3}
+              onKeyDown={(ev) => {
+                if (ev.key === "Enter") {
+                  ev.preventDefault();
+                  signup();
+                }
+              }}
+            >
               <Stack direction={"row"} gap={3}>
                 <TextField
                   label="Enter your first name"

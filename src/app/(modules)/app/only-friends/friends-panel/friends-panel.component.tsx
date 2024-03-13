@@ -5,9 +5,27 @@ import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
 import FriendOptions from "./components/friend-options.component";
 import { useState } from "react";
 import PanelHeader from "../../components/panel-header/panel-header.component";
+import { FriendAPI } from "@/app/services/axios/apis/friend.api";
+import { useDispatch } from "react-redux";
+import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 export default function FriendsPanel({ friendsList }) {
   const [currentFriend, setCurrentFriend] = useState<any>(null);
-
+  const dispatch = useDispatch();
+  const startMessaging = async (data) => {
+    try {
+      const response = await FriendAPI.getSingleChatData(data);
+      console.log("outside start msg function", response);
+      dispatch(
+        saveOnGoingChatData({
+          conversationId: Number(response.conversationId),
+          chatList: response.chatList,
+          messageReceiver: response.messageReceiver,
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
       {/* Panel Header */}
@@ -44,9 +62,14 @@ export default function FriendsPanel({ friendsList }) {
                       ? "block"
                       : "none",
                 },
+                cursor: "pointer",
               }}
               onMouseOver={() => setCurrentFriend(friend)}
               onMouseOut={() => setCurrentFriend(null)}
+              onClick={(e) => {
+                e.stopPropagation();
+                startMessaging(friend.conversation_id);
+              }}
             >
               <Badge
                 overlap="circular"

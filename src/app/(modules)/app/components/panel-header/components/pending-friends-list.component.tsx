@@ -221,6 +221,7 @@ export const NotificationBell = () => {
   useEffect(() => {
     getFriendsList();
     function onNewFriendRequest(value: any) {
+      console.log("received new friend request");
       getFriendsList();
     }
 

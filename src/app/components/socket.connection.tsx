@@ -3,11 +3,11 @@
 import { useEffect } from "react";
 import { socketURL } from "../data/constants-data";
 import { io } from "socket.io-client";
-import { parseCookies } from "nookies";
+import useUserData from "../hooks/useUserData";
 export let socket: any;
 const SocketConnection = () => {
-  const cookies = parseCookies();
-  const accessToken = JSON.parse(cookies["userData"] ?? null).accessToken;
+  const { userData } = useUserData();
+  const accessToken = userData ? userData.accessToken : null;
   useEffect(() => {
     if (accessToken)
       socket = io(socketURL, {
@@ -19,7 +19,7 @@ const SocketConnection = () => {
     return () => {
       socket?.disconnect();
     };
-  }, [accessToken]);
+  }, [userData]);
   return <></>;
 };
 export default SocketConnection;

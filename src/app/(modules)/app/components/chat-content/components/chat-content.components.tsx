@@ -9,25 +9,25 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import ChatContentHeader from "./chat-content-header.component";
 import moment from "moment";
-import ChatContentHeader from "./components/chat-content-header.component";
-import EmptyChat from "./components/empty-chat.component";
-import NoActiveChat from "./components/no-active-chat.component";
+import EmptyChat from "./empty-chat.component";
 import { useDispatch, useSelector } from "react-redux";
+import useUserData from "@/app/hooks/useUserData";
 import { useSocketEmit } from "@/app/hooks/useSocketEmit";
 import { useEffect, useRef, useState } from "react";
-import { socket } from "@/app/components/socket.connection";
 import { updateOnGoingChatList } from "@/app/services/redux/slices/ongoing-chat-data.slice";
+import { socket } from "@/app/components/socket.connection";
 import CryptoJS from "crypto-js";
-import useUserData from "@/app/hooks/useUserData";
-const ChatContent = () => {
+export default function ChatContent() {
+  const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
+  const { userData } = useUserData();
   const { emitEvent } = useSocketEmit();
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
-  const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   const [messageToSend, setMessageToSend] = useState("");
   const [initialLoading, setInitialLoading] = useState(true);
-  const { userData } = useUserData();
+
   useEffect(() => {
     function onMessages(value: any) {
       const { chat } = value;
@@ -41,7 +41,7 @@ const ChatContent = () => {
     return () => {
       socket?.off("chat-list", onMessages);
     };
-  }, []);
+  }, [onGoingChatData]);
 
   useEffect(() => {
     if (onGoingChatData?.chatList?.length) {
@@ -72,8 +72,7 @@ const ChatContent = () => {
     const decryptedMessage = bytes.toString(CryptoJS.enc.Utf8);
     return decryptedMessage;
   };
-
-  return onGoingChatData ? (
+  return (
     <>
       {/* Ongoing Chat Header */}
       <ChatContentHeader messageReceiver={onGoingChatData.messageReceiver} />
@@ -353,9 +352,5 @@ const ChatContent = () => {
         </Box>
       </Stack>
     </>
-  ) : (
-    //No Active Chat Message
-    <NoActiveChat />
   );
-};
-export default ChatContent;
+}

@@ -4,8 +4,8 @@ import { cookies } from "next/headers";
 import React, { Suspense } from "react";
 import AppLayout from "@/app/components/layouts/app.layout";
 import FriendsPanel from "./friends-panel/friends-panel.component";
-import ChatContent from "../components/chat-content/chat-content.component";
 import PanelListSkeletons from "../components/panel-list-skeletons.component";
+import ChatContentPanel from "../components/chat-content/chat-content-panel.component";
 async function getAllFriendsList(token: string) {
   try {
     const request = await fetch(`${baseURL}/friend/list`, {
@@ -35,7 +35,7 @@ export default async function Friends() {
             <FriendsPanel friendsList={friendsList} />
           </Suspense>
         }
-        rightPanel={<ChatContent />}
+        rightPanel={<ChatContentPanel />}
       />
     </AppWrapper>
   );

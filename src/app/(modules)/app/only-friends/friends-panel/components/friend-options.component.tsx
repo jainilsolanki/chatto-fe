@@ -28,16 +28,16 @@ export default function FriendOptions({ currentFriend }) {
     event.stopPropagation();
     setAnchorElPop(event.currentTarget);
   }
-  function handleClosePop() {
+  function handleClosePop(e: any) {
+    e.stopPropagation();
     setAnchorElPop(null);
-    console.log("close caled");
   }
 
   const startMessaging = async (data) => {
     try {
       const response = await FriendAPI.getSingleChatData(data);
       console.log(response);
-      handleClosePop();
+      setAnchorElPop(null);
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),
@@ -57,7 +57,6 @@ export default function FriendOptions({ currentFriend }) {
           fontSize: 24,
           alignSelf: "flex-start",
           padding: 0.4,
-          cursor: "pointer",
           "&:hover": {
             background: "rgba(0, 0, 0, 0.1)",
             borderRadius: "50%",
@@ -65,7 +64,10 @@ export default function FriendOptions({ currentFriend }) {
           background: anchorElPop ? "rgba(0, 0, 0, 0.1)" : "transparent",
           borderRadius: "50%",
         }}
-        onClick={(e: any) => handleClickPop(e)}
+        onClick={(e: any) => {
+          e.stopPropagation();
+          handleClickPop(e);
+        }}
       />
 
       <Popover
@@ -95,7 +97,10 @@ export default function FriendOptions({ currentFriend }) {
             <ListItem key={"Profile"} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 dense
-                onClick={() => startMessaging(currentFriend.conversation_id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  startMessaging(currentFriend.conversation_id);
+                }}
               >
                 <ListItemIcon>
                   <ReviewsOutlinedIcon sx={{ fontSize: 20 }} />
