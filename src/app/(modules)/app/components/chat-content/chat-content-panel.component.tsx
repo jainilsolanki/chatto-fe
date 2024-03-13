@@ -1,5 +1,5 @@
 "use client";
-import ChatContent from "./components/chat-content.components";
+import ChatContent from "./components/chat-content.component";
 import NoActiveChat from "./components/no-active-chat.component";
 import { useSelector } from "react-redux";
 
