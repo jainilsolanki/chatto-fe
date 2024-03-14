@@ -96,7 +96,7 @@ export default function ChatContent() {
       {/* Chat List */}
       <Stack
         height={"92vh"}
-        mt={2}
+        // mt={2}
         sx={{
           justifyContent: "space-between",
         }}
@@ -118,7 +118,7 @@ export default function ChatContent() {
                     <Box
                       sx={{
                         position: "sticky",
-                        top: 0,
+                        top: 16,
                         zIndex: 1,
                         textAlign: "center",
                         marginTop: "-18px",
