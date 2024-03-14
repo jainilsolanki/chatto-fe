@@ -104,7 +104,7 @@ export default function ChatContent() {
         <Stack overflow={"auto"}>
           {onGoingChatData.chatList.length !== 0 ? (
             Object.entries(groupedChats).map(
-              ([date, chats]: [date: any, chats: any]) => {
+              ([date, chats]: [date: any, chats: any], index: number) => {
                 let dayLabel = moment(date).calendar(null, {
                   sameDay: "[Today]",
                   lastDay: "[Yesterday]",
@@ -113,7 +113,7 @@ export default function ChatContent() {
                 });
                 return (
                   <Box key={date}>
-                    <Divider></Divider>
+                    {index !== 0 && <Divider></Divider>}
 
                     <Box
                       sx={{
