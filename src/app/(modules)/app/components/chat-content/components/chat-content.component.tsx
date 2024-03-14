@@ -72,6 +72,22 @@ export default function ChatContent() {
     const decryptedMessage = bytes.toString(CryptoJS.enc.Utf8);
     return decryptedMessage;
   };
+
+  function groupChatsByDate() {
+    const groupedChats = {};
+
+    onGoingChatData.chatList.forEach((chat) => {
+      const date = new Date(chat.createdAt).toISOString().split("T")[0];
+      if (!groupedChats[date]) {
+        groupedChats[date] = [];
+      }
+      groupedChats[date].push(chat);
+    });
+
+    return groupedChats;
+  }
+
+  const groupedChats = groupChatsByDate();
   return (
     <>
       {/* Ongoing Chat Header */}
@@ -84,127 +100,146 @@ export default function ChatContent() {
         sx={{
           justifyContent: "space-between",
         }}
-        p={1}
       >
         <Stack overflow={"auto"}>
           {onGoingChatData.chatList.length !== 0 ? (
-            onGoingChatData.chatList.map((chat: any, index: any) => {
-              const prevChat = onGoingChatData.chatList[index - 1];
-              const isDifferentSender =
-                index === 0 ||
-                chat.sender.id !==
-                  onGoingChatData.chatList[index - 1].sender.id;
-              const isCurrentUser = chat.sender.id === userData?.id;
-              const isDifferentDay =
-                !prevChat ||
-                !moment(chat.createdAt).isSame(prevChat.createdAt, "day");
-              let dayLabel = moment(chat.createdAt).calendar(null, {
-                sameDay: "[Today]",
-                lastDay: "[Yesterday]",
-                lastWeek: "[Last] dddd",
-                sameElse: "MMMM D, YYYY",
-              });
-              return (
-                <Box key={index}>
-                  {isDifferentDay && (
-                    <Divider
+            Object.entries(groupedChats).map(
+              ([date, chats]: [date: any, chats: any]) => {
+                let dayLabel = moment(date).calendar(null, {
+                  sameDay: "[Today]",
+                  lastDay: "[Yesterday]",
+                  lastWeek: "[Last] dddd",
+                  sameElse: "MMMM D, YYYY",
+                });
+                return (
+                  <Box key={date}>
+                    <Divider></Divider>
+
+                    <Box
                       sx={{
                         position: "sticky",
                         top: 0,
                         zIndex: 1,
-                        padding: "8px",
                         textAlign: "center",
-                        background: "#fafafa",
+                        marginTop: "-18px",
                       }}
                     >
-                      <Chip label={dayLabel} variant="outlined" />
-                    </Divider>
-                  )}
-                  <Box
-                    sx={{
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent:
-                        chat.sender.id === userData?.id
-                          ? "flex-end"
-                          : "flex-start",
-                      gap: 1,
-                    }}
-                  >
-                    <Avatar
-                      sx={{
-                        // bgcolor: getRandomColor(),
-                        width: 40,
-                        height: 40,
-                        borderRadius: 4,
-                        visibility:
-                          !isCurrentUser && isDifferentSender
-                            ? "visible"
-                            : "hidden",
-                      }}
-                      src={onGoingChatData.messageReceiver.profile_picture}
-                      alt={"No Image"}
-                    >
-                      {onGoingChatData.messageReceiver.first_name
-                        .charAt(0)
-                        .toUpperCase() +
-                        onGoingChatData.messageReceiver.last_name
-                          .charAt(0)
-                          .toUpperCase()}
-                    </Avatar>
+                      <Chip
+                        label={dayLabel}
+                        variant="outlined"
+                        // size="small"
+                        // sx={{ fontSize: 12 }}
 
-                    <Box
-                      sx={{
-                        wordBreak: "break-all",
-                        margin: "8px",
-                        borderRadius: 4,
-                        textAlign: isCurrentUser ? "right" : "left",
-                        backgroundColor: isCurrentUser ? "#d3eae8" : "#F6F6F6",
-                        color: isCurrentUser ? "#FFFFFF" : "#333333",
-                        padding: "10px 15px",
-                        display: "flex",
-                        justifyContent: isCurrentUser
-                          ? "flex-end"
-                          : "flex-start",
-                        position: "relative",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <Typography variant="body1" sx={{ color: "#333" }}>
-                        {decryptMessage(chat.content)}
-                      </Typography>
-                      <Typography variant="caption" sx={{ color: "#888" }}>
-                        {moment(chat.createdAt).format("hh:mm A")}
-                      </Typography>
+                        sx={{ background: "#fafafa" }}
+                      />
                     </Box>
 
-                    <Avatar
-                      sx={{
-                        // bgcolor: getRandomColor(),
-                        width: 40,
-                        height: 40,
-                        borderRadius: 4,
-                        visibility:
-                          isCurrentUser && isDifferentSender
-                            ? "visible"
-                            : "hidden",
-                      }}
-                      src={
-                        "https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                      }
-                      alt={"No Image"}
-                    >
-                      {userData?.first_name?.charAt(0)?.toUpperCase() +
-                        userData?.last_name?.charAt(0)?.toUpperCase()}
-                    </Avatar>
+                    {chats.map((chat: any, index: any) => {
+                      const isDifferentSender =
+                        index === 0 ||
+                        chat.sender.id !==
+                          onGoingChatData.chatList[index - 1].sender.id;
+                      const isCurrentUser = chat.sender.id === userData?.id;
+
+                      return (
+                        <Box key={index} p={1}>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                              justifyContent:
+                                chat.sender.id === userData?.id
+                                  ? "flex-end"
+                                  : "flex-start",
+                              gap: 1,
+                            }}
+                          >
+                            <Avatar
+                              sx={{
+                                // bgcolor: getRandomColor(),
+                                width: 40,
+                                height: 40,
+                                borderRadius: 4,
+                                visibility:
+                                  !isCurrentUser && isDifferentSender
+                                    ? "visible"
+                                    : "hidden",
+                              }}
+                              src={
+                                onGoingChatData.messageReceiver.profile_picture
+                              }
+                              alt={"No Image"}
+                            >
+                              {onGoingChatData.messageReceiver.first_name
+                                .charAt(0)
+                                .toUpperCase() +
+                                onGoingChatData.messageReceiver.last_name
+                                  .charAt(0)
+                                  .toUpperCase()}
+                            </Avatar>
+                            <Box
+                              sx={{
+                                wordBreak: "break-all",
+                                margin: "8px",
+                                borderRadius: 4,
+                                textAlign: isCurrentUser ? "right" : "left",
+                                backgroundColor: isCurrentUser
+                                  ? "#d3eae8"
+                                  : "#F6F6F6",
+                                color: isCurrentUser ? "#FFFFFF" : "#333333",
+                                padding: "10px 15px",
+                                display: "flex",
+                                justifyContent: isCurrentUser
+                                  ? "flex-end"
+                                  : "flex-start",
+                                position: "relative",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <Typography
+                                variant="body1"
+                                sx={{ color: "#333" }}
+                              >
+                                {decryptMessage(chat.content)}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                sx={{ color: "#888" }}
+                              >
+                                {moment(chat.createdAt).format("hh:mm A")}
+                              </Typography>
+                            </Box>
+                            <Avatar
+                              sx={{
+                                // bgcolor: getRandomColor(),
+                                width: 40,
+                                height: 40,
+                                borderRadius: 4,
+                                visibility:
+                                  isCurrentUser && isDifferentSender
+                                    ? "visible"
+                                    : "hidden",
+                              }}
+                              src={
+                                "https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                              }
+                              alt={"No Image"}
+                            >
+                              {userData?.first_name?.charAt(0)?.toUpperCase() +
+                                userData?.last_name?.charAt(0)?.toUpperCase()}
+                            </Avatar>
+                          </Box>
+                        </Box>
+                      );
+                    })}
+                    <div ref={ref} />
                   </Box>
-                </Box>
-              );
-            })
+                );
+              }
+            )
           ) : (
             <EmptyChat />
           )}
-          <div ref={ref} />
         </Stack>
         {/* Message Textfield */}
         <Box
