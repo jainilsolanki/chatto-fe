@@ -211,27 +211,29 @@ export default function Sidebar() {
             ))}
           </List>
         </Stack>
-        <ListItem key={"Settings"} disablePadding sx={{ display: "block" }}>
-          <ListItemButton
-            sx={{
-              minHeight: 48,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              px: 2.5,
-            }}
-          >
-            <ListItemIcon
+        <List>
+          <ListItem key={"Settings"} disablePadding sx={{ display: "block" }}>
+            <ListItemButton
               sx={{
-                ml: 0,
-                justifyContent: "center",
+                minHeight: 48,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                px: 2.5,
               }}
             >
-              <SettingsTwoToneIcon />
-            </ListItemIcon>
-            <Typography fontSize={10}>Settings</Typography>
-          </ListItemButton>
-        </ListItem>
+              <ListItemIcon
+                sx={{
+                  ml: 0,
+                  justifyContent: "center",
+                }}
+              >
+                <SettingsTwoToneIcon />
+              </ListItemIcon>
+              <Typography fontSize={10}>Settings</Typography>
+            </ListItemButton>
+          </ListItem>
+        </List>
       </Drawer>
 
       <Popover
