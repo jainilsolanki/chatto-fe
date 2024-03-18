@@ -59,8 +59,7 @@ export default function MessageField() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        mt: 2,
-        p: 1,
+        px: 1,
       }}
     >
       <Box
