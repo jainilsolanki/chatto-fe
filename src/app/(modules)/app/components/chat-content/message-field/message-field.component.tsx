@@ -66,7 +66,7 @@ export default function MessageField() {
         sx={{
           display: "flex",
           alignItems: "flex-start",
-          background: "#fff",
+          // background: "#fff",
           borderRadius: 4,
           width: "100%",
           border: "2px solid lightgrey",
