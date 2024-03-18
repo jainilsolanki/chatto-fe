@@ -16,8 +16,8 @@ export default function SendMessageButton({ sendMessage, messageToSend }) {
       <Box>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="40"
-          height="40"
+          width="35"
+          height="35"
           viewBox="0 0 40 40"
           fill="none"
         >
@@ -26,7 +26,12 @@ export default function SendMessageButton({ sendMessage, messageToSend }) {
               width="40"
               height="40"
               rx="20"
-              fill={messageToSend.trim().length !== 0 ? "#21978B" : "gray"}
+              fill={
+                messageToSend.replace(/<(.|\n)*?>/g, "").trim()
+                  .length !== 0
+                  ? "#21978B"
+                  : "gray"
+              }
             />
           </g>
           <defs>

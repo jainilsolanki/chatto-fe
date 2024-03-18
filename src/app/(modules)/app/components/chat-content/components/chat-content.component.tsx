@@ -116,8 +116,7 @@ export default function ChatContent() {
                     {chats.map((chat: any, index: any) => {
                       const isDifferentSender =
                         index === 0 ||
-                        chat.sender.id !==
-                          onGoingChatData.chatList[index - 1].sender.id;
+                        chat.sender.id !== chats[index - 1].sender.id;
                       const isCurrentUser = chat.sender.id === userData?.id;
 
                       return (
