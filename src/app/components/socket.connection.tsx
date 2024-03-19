@@ -45,18 +45,20 @@ const SocketConnection = () => {
       const { message } = value;
       console.log("onMessageNotification", message);
       const content = message.content.replace(/(<([^>]+)>)/gi, "");
-      addNotification({
-        title: `New message from ${message.username}`,
-        message: content,
-        theme: "darkblue",
-        native: true,
-        icon: "/assets/logos/logo.png",
-        onClick: () => {
-          window && window.focus();
-          getSingleChatData(message.conversationId);
-        },
-        vibrate: [100000],
-      });
+      if (document.visibilityState !== "visible") {
+        addNotification({
+          title: `New message from ${message.username}`,
+          message: content,
+          theme: "darkblue",
+          native: true,
+          icon: "/assets/logos/logo.png",
+          onClick: () => {
+            window && window.focus();
+            getSingleChatData(message.conversationId);
+          },
+          vibrate: [100000],
+        });
+      }
     }
 
     socket?.on("message-notification", onMessageNotification);
