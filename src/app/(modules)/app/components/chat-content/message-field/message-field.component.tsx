@@ -42,8 +42,15 @@ export default function MessageField() {
 
   const sendMessage = () => {
     if (messageToSend.replace(/<(.|\n)*?>/g, "").trim().length === 0) return;
+    let processedMessage = messageToSend.trim();
+
+    processedMessage = processedMessage.replace(
+      /^((<p><br><\/p>)*)|((<p><br><\/p>)*$)/g,
+      ""
+    );
+
     emitEvent("message", {
-      message: messageToSend.trim(),
+      message: processedMessage,
       conversationId: onGoingChatData.conversationId,
     });
     const quill = quillRef.current.getEditor();
@@ -87,7 +94,7 @@ export default function MessageField() {
           }}
           placeholder="Type something..."
           onKeyDown={(ev) => {
-            if (ev.key === "Enter") {
+            if (ev.key === "Enter" && ev.ctrlKey) {
               ev.preventDefault();
               sendMessage();
             }

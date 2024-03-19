@@ -60,3 +60,12 @@ a {
 .ql-editor.ql-blank::before {
   font-style: normal !important;
 }
+
+.contentReactQuill > .ql-container > .ql-editor {
+  padding: 0 !important;
+}
+
+.ql-editor ol,
+.ql-editor ul {
+  padding-left: 0 !important;
+}

@@ -10,6 +10,7 @@ import { updateOnGoingChatList } from "@/app/services/redux/slices/ongoing-chat-
 import { socket } from "@/app/components/socket.connection";
 import CryptoJS from "crypto-js";
 import MessageField from "../message-field/message-field.component";
+import ReactQuill from "react-quill";
 export default function ChatContent() {
   const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   const { userData } = useUserData();
@@ -178,8 +179,14 @@ export default function ChatContent() {
                                 variant="body1"
                                 sx={{ color: "#333" }}
                               >
-                                {decryptMessage(chat.content)}
+                                <ReactQuill
+                                  value={decryptMessage(chat.content)}
+                                  readOnly
+                                  theme="bubble"
+                                  className="contentReactQuill"
+                                />
                               </Typography>
+
                               <Typography
                                 variant="caption"
                                 sx={{ color: "#888" }}
