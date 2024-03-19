@@ -21,7 +21,7 @@ export default function ChatContent() {
   useEffect(() => {
     function onMessages(value: any) {
       const { chat } = value;
-      console.log("received chat socket");
+      console.log("received chat socket", value);
       dispatch(updateOnGoingChatList(chat));
       if (initialLoading) setInitialLoading(false);
     }

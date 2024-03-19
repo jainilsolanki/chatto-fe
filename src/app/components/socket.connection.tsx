@@ -46,20 +46,35 @@ const SocketConnection = () => {
       const { message } = value;
       console.log("onMessageNotification", message);
       const content = message.content.replace(/(<([^>]+)>)/gi, "");
-      if (message.conversationId !== onGoingChatData.conversationId) {
-        addNotification({
-          title: `New message from ${message.username}`,
-          message: content,
-          theme: "darkblue",
-          native: true,
-          icon: "/assets/logos/logo.png",
-          onClick: () => {
-            window && window.focus();
-            getSingleChatData(message.conversationId);
-          },
-          vibrate: [100000],
-        });
-      }
+      // if (message.conversationId !== onGoingChatData?.conversationId) {
+      addNotification({
+        title: `New message from ${message.username}`,
+        message: content,
+        theme: "darkblue",
+        native: true,
+        icon: "/assets/logos/logo.png",
+        onClick: () => {
+          window && window.focus();
+          getSingleChatData(message.conversationId);
+        },
+        vibrate: [100000],
+        silent: false,
+      });
+      // } else {
+      //   addNotification({
+      //     title: `New message from ${message.username}`,
+      //     message: content,
+      //     theme: "darkblue",
+      //     native: true,
+      //     icon: "/assets/logos/logo.png",
+      //     onClick: () => {
+      //       window && window.focus();
+      //       getSingleChatData(message.conversationId);
+      //     },
+      //     vibrate: [100000],
+      //     silent: false,
+      //   });
+      // }
     }
 
     socket?.on("message-notification", onMessageNotification);
