@@ -5,13 +5,14 @@ import { io } from "socket.io-client";
 import useUserData from "../hooks/useUserData";
 import addNotification from "react-push-notification";
 import { FriendAPI } from "../services/axios/apis/friend.api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
 export let socket: any;
 const SocketConnection = () => {
   const { userData } = useUserData();
   const accessToken = userData ? userData.accessToken : null;
   const dispatch = useDispatch();
+  const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   useEffect(() => {
     if (accessToken)
       socket = io(socketURL, {
@@ -45,7 +46,7 @@ const SocketConnection = () => {
       const { message } = value;
       console.log("onMessageNotification", message);
       const content = message.content.replace(/(<([^>]+)>)/gi, "");
-      if (document.visibilityState !== "visible") {
+      if (message.conversationId !== onGoingChatData.conversationId) {
         addNotification({
           title: `New message from ${message.username}`,
           message: content,
