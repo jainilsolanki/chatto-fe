@@ -11,6 +11,7 @@ import PanelHeader from "../components/panel-header/panel-header.component";
 import CryptoJS from "crypto-js";
 import useLoader from "@/app/hooks/useLoaders";
 import PanelListSkeletons from "../components/panel-list-skeletons.component";
+import ReactQuill from "react-quill";
 const ChatPanel = () => {
   const dispatch = useDispatch();
   const [friendsList, setFriendsList] = useState([]);
@@ -167,10 +168,15 @@ const ChatPanel = () => {
                     }}
                   >
                     <Typography variant="body2" color="textSecondary" noWrap>
-                      {decryptMessage(
-                        user.chats.content,
-                        user.conversationDetails.id
-                      )}
+                      <ReactQuill
+                        value={decryptMessage(
+                          user.chats.content,
+                          user.conversationDetails.id
+                        )}
+                        readOnly
+                        theme="bubble"
+                        className="contentReactQuill"
+                      />
                     </Typography>
                   </Box>
                 </Stack>

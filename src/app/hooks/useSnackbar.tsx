@@ -25,11 +25,7 @@ const useCustomSnackbar = () => {
   };
 
   const SnackbarComponent = () => (
-    <Snackbar
-      open={open}
-      autoHideDuration={autoHideDuration}
-      onClose={handleClose}
-    >
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
       <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
         {message}
       </Alert>
