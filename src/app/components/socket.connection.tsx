@@ -7,10 +7,20 @@ import { FriendAPI } from "../services/axios/apis/friend.api";
 import { useDispatch } from "react-redux";
 import { saveOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
 export let socket: any;
+let preventNotification = false;
+let lastNotification: any = null;
 const SocketConnection = () => {
   const { userData } = useUserData();
   const accessToken = userData ? userData.accessToken : null;
   const dispatch = useDispatch();
+
+  const requestNotificationPermission = async () => {
+    try {
+      await Notification.requestPermission();
+    } catch (error) {
+      console.error("Failed to request notification permission:", error);
+    }
+  };
   useEffect(() => {
     if (accessToken)
       socket = io(socketURL, {
@@ -40,10 +50,16 @@ const SocketConnection = () => {
     }
   };
   useEffect(() => {
+    requestNotificationPermission();
     function onMessageNotification(value: any) {
       const { message } = value;
       console.log("onMessageNotification", message);
       const content = message.content.replace(/(<([^>]+)>)/gi, "");
+      if (preventNotification) {
+        lastNotification = value;
+        return;
+      }
+
       const notification = new Notification(
         `New message from ${message.username}`,
         {
@@ -52,9 +68,18 @@ const SocketConnection = () => {
           silent: false,
         }
       );
-      new Audio(
-        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-      ).play();
+      let aud = new Audio("/assets/notifications/notification.mp3");
+      preventNotification = true;
+      lastNotification = null;
+      aud.play().catch(() => {
+        preventNotification = false;
+        lastNotification !== null && onMessageNotification(lastNotification);
+      });
+      aud.onended = () => {
+        preventNotification = false;
+        lastNotification !== null && onMessageNotification(lastNotification);
+      };
+
       notification.onclick = () => {
         window && window.focus();
         getSingleChatData(message.conversationId);
