@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { socketURL } from "../data/constants-data";
 import { io } from "socket.io-client";
 import useUserData from "../hooks/useUserData";
-import addNotification from "react-push-notification";
 import { FriendAPI } from "../services/axios/apis/friend.api";
 import { useDispatch } from "react-redux";
 import { saveOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
@@ -45,18 +44,21 @@ const SocketConnection = () => {
       const { message } = value;
       console.log("onMessageNotification", message);
       const content = message.content.replace(/(<([^>]+)>)/gi, "");
-      addNotification({
-        title: `New message from ${message.username}`,
-        message: content,
-        theme: "darkblue",
-        native: true,
-        icon: "/assets/logos/logo.png",
-        onClick: () => {
-          window && window.focus();
-          getSingleChatData(message.conversationId);
-        },
-        vibrate: [100000],
-      });
+      const notification = new Notification(
+        `New message from ${message.username}`,
+        {
+          body: `${content}`,
+          icon: "/assets/logos/logo.png",
+          silent: false,
+        }
+      );
+      new Audio(
+        "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      ).play();
+      notification.onclick = () => {
+        window && window.focus();
+        getSingleChatData(message.conversationId);
+      };
     }
 
     socket?.on("message-notification", onMessageNotification);
