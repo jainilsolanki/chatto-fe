@@ -6,6 +6,7 @@ import useUserData from "../hooks/useUserData";
 import { FriendAPI } from "../services/axios/apis/friend.api";
 import { useDispatch } from "react-redux";
 import { saveOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
+import store from "../services/redux";
 export let socket: any;
 let preventNotification = false;
 let lastNotification: any = null;
@@ -13,7 +14,6 @@ const SocketConnection = () => {
   const { userData } = useUserData();
   const accessToken = userData ? userData.accessToken : null;
   const dispatch = useDispatch();
-
   const requestNotificationPermission = async () => {
     try {
       await Notification.requestPermission();
@@ -53,7 +53,19 @@ const SocketConnection = () => {
     requestNotificationPermission();
     function onMessageNotification(value: any) {
       const { message } = value;
-      console.log("onMessageNotification", message);
+      console.log(
+        "onMessageNotification",
+        message,
+        "store?.getState()?.onGoingChatData?.conversationId",
+        store?.getState()?.onGoingChatData?.conversationId
+      );
+      //code for checking notification access
+      if (
+        message.conversationId ===
+        store?.getState()?.onGoingChatData?.conversationId
+      )
+        return;
+
       const content = message.content.replace(/(<([^>]+)>)/gi, "");
       if (preventNotification) {
         lastNotification = value;
