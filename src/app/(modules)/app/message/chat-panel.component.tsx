@@ -59,7 +59,9 @@ const ChatPanel = () => {
       String(conversationId)
     );
     const decryptedMessage = bytes.toString(CryptoJS.enc.Utf8);
-    return decryptedMessage;
+    //removed all html and kept only normal texts
+    const content = decryptedMessage.replace(/(<([^>]+)>)/gi, "");
+    return content;
   };
   return (
     <>
@@ -168,15 +170,10 @@ const ChatPanel = () => {
                     }}
                   >
                     <Typography variant="body2" color="textSecondary" noWrap>
-                      <ReactQuill
-                        value={decryptMessage(
-                          user.chats.content,
-                          user.conversationDetails.id
-                        )}
-                        readOnly
-                        theme="bubble"
-                        className="contentReactQuill"
-                      />
+                      {decryptMessage(
+                        user.chats.content,
+                        user.conversationDetails.id
+                      )}
                     </Typography>
                   </Box>
                 </Stack>
