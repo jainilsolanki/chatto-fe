@@ -62,7 +62,8 @@ const SocketConnection = () => {
       //code for checking notification access
       if (
         message.conversationId ===
-        store?.getState()?.onGoingChatData?.conversationId
+          store?.getState()?.onGoingChatData?.conversationId &&
+        document.visibilityState === "visible"
       )
         return;
 
