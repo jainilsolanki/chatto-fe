@@ -20,17 +20,16 @@ export default function ChatContent() {
 
   useEffect(() => {
     function onMessages(value: any) {
-      console.log("socket", socket);
-      const { chat } = value;
-      console.log("received chat socket", value);
-      dispatch(updateOnGoingChatList(chat));
+      const { last_chat } = value;
+      console.log("received chat socket", last_chat);
+      dispatch(updateOnGoingChatList(last_chat));
       if (initialLoading) setInitialLoading(false);
     }
 
-    socket?.on("chat-list", onMessages);
+    socket?.on(`last-chat-${onGoingChatData?.conversationId}`, onMessages);
 
     return () => {
-      socket?.off("chat-list", onMessages);
+      socket?.off(`last-chat-${onGoingChatData?.conversationId}`, onMessages);
     };
   }, [onGoingChatData]);
 

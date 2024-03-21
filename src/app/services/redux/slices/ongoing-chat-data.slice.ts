@@ -14,11 +14,11 @@ const onGoingChatData = createSlice({
         messageReceiver: action.payload.messageReceiver,
       };
     },
-    updateOnGoingChatList(state, action: PayloadAction<Chat[]>) {
+    updateOnGoingChatList(state, action: PayloadAction<Chat>) {
       let s = current(state);
       return {
         ...s,
-        chatList: action.payload,
+        chatList: [...s.chatList, action.payload],
       };
     },
     clearOnGoingChatData() {
