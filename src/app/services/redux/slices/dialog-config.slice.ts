@@ -4,6 +4,7 @@ import { DialogConfigType } from "../types/dialog-config.type";
 export const dialogConfigInitialState: DialogConfigType = {
   addFriendDialogState: false,
   beginConversationDialogState: false,
+  createGroupDialogState: false,
 };
 const dialogConfigSlice = createSlice({
   name: "dialogDataSlice",
@@ -17,6 +18,10 @@ const dialogConfigSlice = createSlice({
       let s = current(state);
       return { ...s, beginConversationDialogState: action.payload };
     },
+    handleCreateGroupDialogState(state, action: PayloadAction<boolean>) {
+      let s = current(state);
+      return { ...s, createGroupDialogState: action.payload };
+    },
     clearDialogConfigSlice() {
       return { ...dialogConfigInitialState };
     },
@@ -26,6 +31,7 @@ const dialogConfigSlice = createSlice({
 export const {
   handleAddFriendDialogState,
   handleBeginConversationDialogState,
+  handleCreateGroupDialogState,
   clearDialogConfigSlice,
 } = dialogConfigSlice.actions;
 

@@ -12,7 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { handleAddFriendDialogState } from "@/app/services/redux/slices/dialog-config.slice";
+import {
+  handleAddFriendDialogState,
+  handleCreateGroupDialogState,
+} from "@/app/services/redux/slices/dialog-config.slice";
 import AddFriendDialog from "./components/add-friend-dialog.component";
 import SearchIcon from "@mui/icons-material/Search";
 import { NotificationBell } from "./components/pending-friends-list.component";
@@ -21,6 +24,7 @@ import { useState } from "react";
 import PersonAddAlt1TwoToneIcon from "@mui/icons-material/PersonAddAlt1TwoTone";
 import GroupAddTwoToneIcon from "@mui/icons-material/GroupAddTwoTone";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import CreateGroupDialog from "./components/create-group-dialog.component";
 export default function PanelHeader({ title }: { title: string }) {
   const dispatch = useDispatch();
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
@@ -41,6 +45,11 @@ export default function PanelHeader({ title }: { title: string }) {
     handleClosePop();
   };
 
+  const openCreateNewGroupDialog = () => {
+    dispatch(handleCreateGroupDialogState(true));
+    handleClosePop();
+  };
+
   const addOptions = [
     {
       key: "send_friend_request",
@@ -55,8 +64,7 @@ export default function PanelHeader({ title }: { title: string }) {
       optionName: "Create new group",
       icon: <GroupAddTwoToneIcon sx={{ fontSize: 20 }} />,
       onClick: () => {
-        setAnchorElPop(null);
-        return;
+        openCreateNewGroupDialog();
       },
     },
   ];
@@ -153,6 +161,7 @@ export default function PanelHeader({ title }: { title: string }) {
       {dialogConfig.beginConversationDialogState && (
         <StartConversationConfirmationDialog />
       )}
+      {dialogConfig.createGroupDialogState && <CreateGroupDialog />}
     </>
   );
 }
