@@ -35,6 +35,7 @@ const SocketConnection = () => {
   }, [userData]);
 
   const getSingleChatData = async (data) => {
+    if (data === store?.getState()?.onGoingChatData?.conversationId) return;
     try {
       const response = await FriendAPI.getSingleChatData(data);
       console.log(response);
