@@ -1,5 +1,13 @@
 "use client";
-import { Avatar, Box, Chip, Divider, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Chip,
+  Divider,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import ChatContentHeader from "./chat-content-header.component";
 import moment from "moment";
 import EmptyChat from "./empty-chat.component";
@@ -17,7 +25,7 @@ export default function ChatContent() {
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const [initialLoading, setInitialLoading] = useState(true);
-
+  const theme = useTheme();
   useEffect(() => {
     function onMessages(value: any) {
       const { last_chat } = value;
@@ -110,7 +118,12 @@ export default function ChatContent() {
                         // size="small"
                         // sx={{ fontSize: 12 }}
 
-                        sx={{ background: "#fafafa" }}
+                        sx={{
+                          background:
+                            theme.palette.mode === "light"
+                              ? "#fafafa"
+                              : "#000000",
+                        }}
                       />
                     </Box>
 
@@ -163,8 +176,12 @@ export default function ChatContent() {
                                 borderRadius: 4,
                                 textAlign: isCurrentUser ? "right" : "left",
                                 backgroundColor: isCurrentUser
-                                  ? "#d3eae8"
-                                  : "#F6F6F6",
+                                  ? theme.palette.mode === "light"
+                                    ? theme.palette.primary.light
+                                    : theme.palette.primary.main
+                                  : theme.palette.mode === "light"
+                                  ? "#F6F6F6"
+                                  : theme.palette.primary.dark,
                                 color: isCurrentUser ? "#FFFFFF" : "#333333",
                                 padding: "10px 15px",
                                 display: "flex",
@@ -177,7 +194,12 @@ export default function ChatContent() {
                             >
                               <Typography
                                 variant="body1"
-                                sx={{ color: "#333" }}
+                                sx={{
+                                  color:
+                                    theme.palette.mode === "light"
+                                      ? "#333"
+                                      : "#fff",
+                                }}
                               >
                                 <ReactQuill
                                   value={decryptMessage(chat.content)}
@@ -189,7 +211,10 @@ export default function ChatContent() {
 
                               <Typography
                                 variant="caption"
-                                sx={{ color: "#888" }}
+                                sx={{ color:
+                                  theme.palette.mode === "light"
+                                    ? "#888"
+                                    : "#fff", }}
                               >
                                 {moment(chat.createdAt).format("hh:mm A")}
                               </Typography>

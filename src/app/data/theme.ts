@@ -1,11 +1,13 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
+import store from "../services/redux";
 
 export const theme = createTheme({
   palette: {
+    mode: store.getState().appData.theme ?? "light",
     primary: {
       main: "#21978B",
-      light: "#4F5665",
+      light: "#d3eae8",
       dark: "#323232",
     },
     secondary: {
@@ -15,6 +17,9 @@ export const theme = createTheme({
     common: {
       black: "#141414",
       white: "#FBFBFD",
+    },
+    background: {
+      default: "#FBFBFD",
     },
   },
   typography: {
@@ -26,53 +31,44 @@ export const theme = createTheme({
     h1: {
       fontSize: 72,
       lineHeight: "80px",
-      color: "#222222",
+
       fontWeight: "bold",
     },
     h2: {
       fontSize: 64,
       lineHeight: "72px",
-      color: "#222222",
     },
     h3: {
       fontSize: 52,
       lineHeight: "60px",
-      color: "#222222",
     },
     h4: {
       fontSize: 44,
       lineHeight: "52px",
-      color: "#222222",
     },
     h5: {
       fontSize: 36,
       lineHeight: "44px",
-      color: "#222222",
     },
     h6: {
       fontSize: 24,
       lineHeight: "36px",
-      color: "#222222",
     },
     subtitle1: {
       fontSize: 24,
       lineHeight: "32px",
-      color: "#222222",
     },
     subtitle2: {
       fontSize: 20,
       lineHeight: "32px",
-      color: "#222222",
     },
     body1: {
       fontSize: 16,
       lineHeight: "24px",
-      color: "#222222",
     },
     body2: {
       fontSize: 14,
       lineHeight: "24px",
-      color: "#222222",
     },
     // button: {
     //   textTransform: "none",
@@ -83,12 +79,10 @@ export const theme = createTheme({
     caption: {
       fontSize: 12,
       lineHeight: "20px",
-      color: "#222222",
     },
     overline: {
       fontSize: 18,
       lineHeight: "29px",
-      color: "#222222",
     },
   },
 });

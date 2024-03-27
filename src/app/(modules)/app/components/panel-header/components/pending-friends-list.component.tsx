@@ -13,6 +13,7 @@ import {
   Popover,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import { useEffect, useState } from "react";
@@ -32,6 +33,7 @@ const FriendItem = ({
   dataLength,
 }: any) => {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const handleNotificationClick = (notification: any) => {
     handleClosePop();
   };
@@ -92,7 +94,7 @@ const FriendItem = ({
             margin: "auto",
           },
           "&:hover": {
-            background: "#F6F6F6",
+            background: theme.palette.mode === "light" ? "#F6F6F6" : "#323232",
           },
         }}
       >

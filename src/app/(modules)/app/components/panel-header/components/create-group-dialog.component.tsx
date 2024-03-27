@@ -173,6 +173,7 @@ export default function CreateGroupDialog() {
                     display: "flex",
                     flexDirection: "column",
                     gap: 0.5,
+                    background:"transparent"
                   }}
                 >
                   <Stack

@@ -1,7 +1,7 @@
 "use client";
 import { VOID } from "@/app/data/assets-data";
 import { getTimeDifference } from "@/app/data/utils";
-import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Stack, Typography, useTheme } from "@mui/material";
 import FriendOptions from "./components/friend-options.component";
 import { useState } from "react";
 import PanelHeader from "../../components/panel-header/panel-header.component";
@@ -11,6 +11,7 @@ import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-da
 export default function FriendsPanel({ friendsList }) {
   const [currentFriend, setCurrentFriend] = useState<any>(null);
   const dispatch = useDispatch();
+  const theme = useTheme();
   const startMessaging = async (data) => {
     try {
       const response = await FriendAPI.getSingleChatData(data);
@@ -29,7 +30,7 @@ export default function FriendsPanel({ friendsList }) {
   return (
     <>
       {/* Panel Header */}
-      <PanelHeader title={"Only Friends"} />
+      <PanelHeader title={"Only Friends"} showOptions={true}/>
       {/* Chat List */}
       <Stack
         height={"calc(80vh - 40px)"}
@@ -52,7 +53,9 @@ export default function FriendsPanel({ friendsList }) {
                   friendsList.length !== 0 &&
                   currentFriend &&
                   friend.user.id === currentFriend.user.id
-                    ? "#d3eae8"
+                    ? theme.palette.mode === "light"
+                      ? theme.palette.primary.light
+                      : theme.palette.primary.main
                     : "unset",
                 "& .MuiSvgIcon-root": {
                   display:

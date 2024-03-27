@@ -35,6 +35,7 @@ import {
 import { clearOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
 import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.slice";
 import useUserData from "../hooks/useUserData";
+import { clearAppDataSlice } from "../services/redux/slices/app-data.slice";
 type MenuItemType = {
   id: string;
   name: string;
@@ -120,6 +121,7 @@ export default function Sidebar() {
           dispatch(clearTempData());
           dispatch(clearOnGoingChatData());
           dispatch(clearDialogConfigSlice());
+          dispatch(clearAppDataSlice());
         }, 500);
       },
     },
@@ -211,7 +213,15 @@ export default function Sidebar() {
             ))}
           </List>
         </Stack>
-        <List>
+        <List
+          sx={{
+            display: "block",
+            "& .Mui-selected": {
+              borderRadius: 4,
+              transform: "scale(0.8)",
+            },
+          }}
+        >
           <ListItem key={"Settings"} disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
@@ -221,6 +231,11 @@ export default function Sidebar() {
                 alignItems: "center",
                 px: 2.5,
               }}
+              onClick={() => {
+                dispatch(updateSelectedSection(5));
+                router.push("/app/settings");
+              }}
+              selected={5 === tempData.selectedSection}
             >
               <ListItemIcon
                 sx={{

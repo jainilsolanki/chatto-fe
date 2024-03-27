@@ -25,7 +25,13 @@ import PersonAddAlt1TwoToneIcon from "@mui/icons-material/PersonAddAlt1TwoTone";
 import GroupAddTwoToneIcon from "@mui/icons-material/GroupAddTwoTone";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CreateGroupDialog from "./components/create-group-dialog.component";
-export default function PanelHeader({ title }: { title: string }) {
+export default function PanelHeader({
+  title,
+  showOptions,
+}: {
+  title: string;
+  showOptions: boolean;
+}) {
   const dispatch = useDispatch();
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
@@ -85,15 +91,17 @@ export default function PanelHeader({ title }: { title: string }) {
           <Typography variant="h5" fontWeight={"bold"}>
             {title}
           </Typography>
-          <Stack direction={"row"} alignItems={"center"}>
-            <NotificationBell />
-            <IconButton>
-              <SearchIcon />
-            </IconButton>
-            <IconButton onClick={handleClickPop}>
-              <MoreHorizIcon />
-            </IconButton>
-          </Stack>
+          {showOptions && (
+            <Stack direction={"row"} alignItems={"center"}>
+              <NotificationBell />
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+              <IconButton onClick={handleClickPop}>
+                <MoreHorizIcon />
+              </IconButton>
+            </Stack>
+          )}
         </Stack>
         {/* <Divider /> */}
         {/* <TextField
@@ -110,53 +118,55 @@ export default function PanelHeader({ title }: { title: string }) {
       /> */}
       </Stack>
       <Divider />
-      <Popover
-        id={popOverId}
-        open={openPop}
-        anchorEl={anchorElPop}
-        onClose={handleClosePop}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        sx={{ width: 300 }}
-      >
-        <Stack width={300}>
-          <Divider />
-          <List
-            sx={{
-              "& .MuiListItemIcon-root": {
-                minWidth: 30,
-              },
-            }}
-          >
-            {addOptions.map((option) => {
-              return (
-                <ListItem
-                  key={option.key}
-                  disablePadding
-                  sx={{ display: "block" }}
-                >
-                  <ListItemButton
-                    dense
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      option.onClick();
-                    }}
+      {showOptions && (
+        <Popover
+          id={popOverId}
+          open={openPop}
+          anchorEl={anchorElPop}
+          onClose={handleClosePop}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          sx={{ width: 300 }}
+        >
+          <Stack width={300}>
+            <Divider />
+            <List
+              sx={{
+                "& .MuiListItemIcon-root": {
+                  minWidth: 30,
+                },
+              }}
+            >
+              {addOptions.map((option) => {
+                return (
+                  <ListItem
+                    key={option.key}
+                    disablePadding
+                    sx={{ display: "block" }}
                   >
-                    <ListItemIcon>{option.icon}</ListItemIcon>
-                    <ListItemText primary={option.optionName} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List>
-        </Stack>
-      </Popover>
+                    <ListItemButton
+                      dense
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        option.onClick();
+                      }}
+                    >
+                      <ListItemIcon>{option.icon}</ListItemIcon>
+                      <ListItemText primary={option.optionName} />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Stack>
+        </Popover>
+      )}
       {dialogConfig.addFriendDialogState && <AddFriendDialog />}
       {dialogConfig.beginConversationDialogState && (
         <StartConversationConfirmationDialog />

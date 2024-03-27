@@ -1,19 +1,28 @@
-import { Grid } from "@mui/material";
+import store from "@/app/services/redux";
+import { Grid, Paper } from "@mui/material";
 
 const AppLayout = ({ leftPanel, rightPanel }: any) => {
   return (
     <>
-      <Grid
-        container
-        sx={{ background: "#fafafa" }}
-        maxHeight={"100vh"}
-        overflow={"hidden"}
-      >
-        <Grid item xs={2.5} sx={{ borderRight: "1px solid rgba(0,0,0,0.12)" }}>
-          {leftPanel}
+      <Grid container maxHeight={"100vh"} overflow={"hidden"}>
+        <Grid
+          item
+          xs={2.5}
+          sx={{
+            borderRight:
+              store.getState().appData.theme === "light"
+                ? "1px solid rgba(0,0,0,0.12)"
+                : "1px solid rgba(0,0,0,0.8)",
+          }}
+        >
+          <Paper elevation={0} sx={{ borderRadius: "unset", height: "100%" }}>
+            {leftPanel}
+          </Paper>
         </Grid>
         <Grid item xs={9.5}>
-          {rightPanel}
+          <Paper elevation={0} sx={{ borderRadius: "unset", height: "100%" }}>
+            {rightPanel}
+          </Paper>
         </Grid>
       </Grid>
     </>
