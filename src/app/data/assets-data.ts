@@ -9,3 +9,5 @@ export const NO_FRIENDS = "/assets/banners/no-friends.svg";
 export const NO_PENDING_REQUESTS = "/assets/banners/no-notification.svg";
 export const CREATE_CHAT = "/assets/banners/create-chat.svg";
 export const HEY_EMOJI = "/assets/banners/hey-emoji.gif";
+export const DARK_THEME = "/assets/banners/dark-theme.png";
+export const LIGHT_THEME = "/assets/banners/light-theme.png";

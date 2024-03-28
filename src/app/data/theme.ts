@@ -1,26 +1,50 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
 import store from "../services/redux";
+import { PaletteMode } from "@mui/material";
 
-export const theme = createTheme({
+export const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
-    mode: store.getState().appData.theme ?? "light",
-    primary: {
-      main: "#21978B",
-      light: "#d3eae8",
-      dark: "#323232",
-    },
-    secondary: {
-      main: "#7B7FEA",
-      dark: "#3D3F79",
-    },
-    common: {
-      black: "#141414",
-      white: "#FBFBFD",
-    },
-    background: {
-      default: "#FBFBFD",
-    },
+    mode,
+    ...(mode === "light"
+      ? {
+          // palette values for light mode
+          primary: {
+            main: "#21978B",
+            light: "#d3eae8",
+            dark: "#323232",
+          },
+          secondary: {
+            main: "#7B7FEA",
+            dark: "#3D3F79",
+          },
+          common: {
+            black: "#141414",
+            white: "#FBFBFD",
+          },
+          background: {
+            default: "#FBFBFD",
+          },
+        }
+      : {
+          // palette values for dark mode
+          primary: {
+            main: "#21978B",
+            light: "#d3eae8",
+            dark: "#323232",
+          },
+          secondary: {
+            main: "#7B7FEA",
+            dark: "#3D3F79",
+          },
+          common: {
+            black: "#141414",
+            white: "#FBFBFD",
+          },
+          background: {
+            default: "#FBFBFD",
+          },
+        }),
   },
   typography: {
     fontSize: 16,

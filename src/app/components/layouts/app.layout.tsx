@@ -1,7 +1,8 @@
-import store from "@/app/services/redux";
-import { Grid, Paper } from "@mui/material";
+"use client"
+import { Grid, Paper, useTheme } from "@mui/material";
 
 const AppLayout = ({ leftPanel, rightPanel }: any) => {
+  const theme = useTheme();
   return (
     <>
       <Grid container maxHeight={"100vh"} overflow={"hidden"}>
@@ -10,7 +11,7 @@ const AppLayout = ({ leftPanel, rightPanel }: any) => {
           xs={2.5}
           sx={{
             borderRight:
-              store.getState().appData.theme === "light"
+              theme.palette.mode === "light"
                 ? "1px solid rgba(0,0,0,0.12)"
                 : "1px solid rgba(0,0,0,0.8)",
           }}

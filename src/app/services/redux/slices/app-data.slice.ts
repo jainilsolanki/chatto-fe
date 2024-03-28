@@ -1,9 +1,14 @@
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
-import { AppData } from "../types/app-data.type";
+import { AppData, NotificationSetting } from "../types/app-data.type";
 import { PaletteMode } from "@mui/material";
 
 export const appDataInitialState: AppData = {
-  theme: "dark",
+  theme: "light",
+  notificationSettings: {
+    muted: "no",
+    paused: "no",
+    ringtone: "default",
+  },
 };
 const appDataSlice = createSlice({
   name: "appDataSlice",
@@ -13,11 +18,50 @@ const appDataSlice = createSlice({
       let s = current(state);
       return { ...s, theme: action.payload };
     },
+    updateMutedNotificationSettings(state, action: PayloadAction<string>) {
+      let s = current(state);
+
+      return {
+        ...s,
+        notificationSettings: {
+          ...s.notificationSettings,
+          muted: action.payload,
+        },
+      };
+    },
+    updatePausedNotificationSettings(state, action: PayloadAction<string>) {
+      let s = current(state);
+
+      return {
+        ...s,
+        notificationSettings: {
+          ...s.notificationSettings,
+          paused: action.payload,
+        },
+      };
+    },
+    updateRingtoneNotificationSettings(state, action: PayloadAction<string>) {
+      let s = current(state);
+
+      return {
+        ...s,
+        notificationSettings: {
+          ...s.notificationSettings,
+          ringtone: action.payload,
+        },
+      };
+    },
     clearAppDataSlice() {
       return { ...appDataInitialState };
     },
   },
 });
 
-export const { handleAppTheme, clearAppDataSlice } = appDataSlice.actions;
+export const {
+  handleAppTheme,
+  clearAppDataSlice,
+  updateMutedNotificationSettings,
+  updatePausedNotificationSettings,
+  updateRingtoneNotificationSettings,
+} = appDataSlice.actions;
 export default appDataSlice.reducer;
