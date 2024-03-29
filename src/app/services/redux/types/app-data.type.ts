@@ -8,5 +8,6 @@ export type AppData = {
 export type NotificationSetting = {
   muted: string;
   paused: string;
-  ringtone: string;
+  notification: string;
+  autohide: string;
 };

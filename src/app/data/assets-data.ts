@@ -11,3 +11,5 @@ export const CREATE_CHAT = "/assets/banners/create-chat.svg";
 export const HEY_EMOJI = "/assets/banners/hey-emoji.gif";
 export const DARK_THEME = "/assets/banners/dark-theme.png";
 export const LIGHT_THEME = "/assets/banners/light-theme.png";
+export const MAC_NOTIFICATION_INFO =
+  "/assets/banners/mac-notification-info.png";

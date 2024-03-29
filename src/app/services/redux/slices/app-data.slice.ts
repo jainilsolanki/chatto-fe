@@ -7,7 +7,8 @@ export const appDataInitialState: AppData = {
   notificationSettings: {
     muted: "no",
     paused: "no",
-    ringtone: "default",
+    notification: "/assets/notifications/default-notification.mp3",
+    autohide: "yes",
   },
 };
 const appDataSlice = createSlice({
@@ -40,14 +41,28 @@ const appDataSlice = createSlice({
         },
       };
     },
-    updateRingtoneNotificationSettings(state, action: PayloadAction<string>) {
+    updateNotificationNotificationSettings(
+      state,
+      action: PayloadAction<string>
+    ) {
       let s = current(state);
 
       return {
         ...s,
         notificationSettings: {
           ...s.notificationSettings,
-          ringtone: action.payload,
+          notification: action.payload,
+        },
+      };
+    },
+    updateAutohideNotificationSettings(state, action: PayloadAction<string>) {
+      let s = current(state);
+
+      return {
+        ...s,
+        notificationSettings: {
+          ...s.notificationSettings,
+          autohide: action.payload,
         },
       };
     },
@@ -62,6 +77,7 @@ export const {
   clearAppDataSlice,
   updateMutedNotificationSettings,
   updatePausedNotificationSettings,
-  updateRingtoneNotificationSettings,
+  updateNotificationNotificationSettings,
+  updateAutohideNotificationSettings,
 } = appDataSlice.actions;
 export default appDataSlice.reducer;

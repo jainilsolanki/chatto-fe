@@ -1,26 +1,30 @@
 "use client";
 import {
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ActiveSettingsHeader from "../components/active-settings-header.component";
-import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
-import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
-import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
 import CloseIcon from "@mui/icons-material/Close";
 import DoneIcon from "@mui/icons-material/Done";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  updateAutohideNotificationSettings,
   updateMutedNotificationSettings,
+  updateNotificationNotificationSettings,
   updatePausedNotificationSettings,
-  updateRingtoneNotificationSettings,
 } from "@/app/services/redux/slices/app-data.slice";
+import PlayCircleFilledTwoToneIcon from "@mui/icons-material/PlayCircleFilledTwoTone";
+import HelpTwoToneIcon from "@mui/icons-material/HelpTwoTone";
+import { notificationsList } from "@/app/data/constants-data";
+import { MAC_NOTIFICATION_INFO } from "@/app/data/assets-data";
+
 export default function Notifications() {
   const dispatch = useDispatch();
   const appData = useSelector((state: any) => state.appData);
@@ -43,7 +47,20 @@ export default function Notifications() {
   };
 
   const handleTune = (event: SelectChangeEvent) => {
-    dispatch(updateRingtoneNotificationSettings(event.target.value));
+    dispatch(updateNotificationNotificationSettings(event.target.value));
+  };
+
+  const handleAutohide = (
+    event: React.MouseEvent<HTMLElement>,
+    newSetting: string | null
+  ) => {
+    if (newSetting !== null) {
+      dispatch(updateAutohideNotificationSettings(newSetting));
+    }
+  };
+
+  const testNotificationSound = (notification) => {
+    new Audio(notification).play();
   };
 
   return (
@@ -90,18 +107,84 @@ export default function Notifications() {
           </ToggleButtonGroup>
         </Stack>
 
+        <Stack gap={2}>
+          <Stack direction={"row"} alignItems={"center"}>
+            <Typography variant="subtitle2">Autohide notifications</Typography>
+            <Tooltip
+              title={
+                <Stack gap={1}>
+                  Mac users please make sure notifications are enabled and set
+                  to alerts for Google Chrome Helper (Alerts)
+                  <img
+                    src={MAC_NOTIFICATION_INFO}
+                    alt="MAC NOTIFICATION INFO"
+                    style={{ borderRadius: 10 }}
+                  />
+                </Stack>
+              }
+              placement="top"
+              arrow
+            >
+              <IconButton size="small">
+                <HelpTwoToneIcon sx={{ fontSize: 20 }} />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+          <ToggleButtonGroup
+            value={appData.notificationSettings.autohide}
+            exclusive
+            aria-label="text alignment"
+            size="small"
+            onChange={handleAutohide}
+          >
+            <ToggleButton value="no" aria-label="left aligned" color="error">
+              <CloseIcon />
+            </ToggleButton>
+            <ToggleButton value="yes" aria-label="centered" color="success">
+              <DoneIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Stack>
+
         <Stack direction={"row"} gap={2} alignItems={"center"}>
           <Typography variant="subtitle2">Notifications tune</Typography>
+
           <Select
-            value={appData.notificationSettings.ringtone}
+            value={appData.notificationSettings.notification}
             placeholder="Tune"
             size="small"
-            sx={{ width: 300 }}
+            sx={{
+              width: 300,
+            }}
             onChange={handleTune}
+            renderValue={(selected) => {
+              const selectedNotification =
+                notificationsList.find(
+                  (notification) => notification.path === selected
+                )?.name || "";
+              return <Stack>{selectedNotification}</Stack>;
+            }}
           >
-            <MenuItem value={"default"}>Default</MenuItem>
-            <MenuItem value={"onee"}>Onee</MenuItem>
-            <MenuItem value={"chan"}>Chan</MenuItem>
+            {notificationsList.map((notification) => {
+              return (
+                <MenuItem
+                  value={notification.path}
+                  key={notification.key}
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  {notification.name}
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      testNotificationSound(notification.path);
+                    }}
+                    size="small"
+                  >
+                    <PlayCircleFilledTwoToneIcon sx={{ fontSize: 20 }} />
+                  </IconButton>
+                </MenuItem>
+              );
+            })}
           </Select>
         </Stack>
       </Stack>
