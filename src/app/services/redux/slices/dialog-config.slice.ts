@@ -5,6 +5,9 @@ export const dialogConfigInitialState: DialogConfigType = {
   addFriendDialogState: false,
   beginConversationDialogState: false,
   createGroupDialogState: false,
+  enableAppLockDialogState: false,
+  disableAppLockDialogState: false,
+  resetAppLockDialogState: false,
 };
 const dialogConfigSlice = createSlice({
   name: "dialogDataSlice",
@@ -22,6 +25,18 @@ const dialogConfigSlice = createSlice({
       let s = current(state);
       return { ...s, createGroupDialogState: action.payload };
     },
+    handleEnableAppLockDialogState(state, action: PayloadAction<boolean>) {
+      let s = current(state);
+      return { ...s, enableAppLockDialogState: action.payload };
+    },
+    handleDisableAppLockDialogState(state, action: PayloadAction<boolean>) {
+      let s = current(state);
+      return { ...s, disableAppLockDialogState: action.payload };
+    },
+    handleResetAppLockDialogState(state, action: PayloadAction<boolean>) {
+      let s = current(state);
+      return { ...s, resetAppLockDialogState: action.payload };
+    },
     clearDialogConfigSlice() {
       return { ...dialogConfigInitialState };
     },
@@ -33,6 +48,9 @@ export const {
   handleBeginConversationDialogState,
   handleCreateGroupDialogState,
   clearDialogConfigSlice,
+  handleEnableAppLockDialogState,
+  handleDisableAppLockDialogState,
+  handleResetAppLockDialogState,
 } = dialogConfigSlice.actions;
 
 export default dialogConfigSlice.reducer;

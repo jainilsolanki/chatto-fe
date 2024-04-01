@@ -21,7 +21,7 @@ export default function ActiveSettingsHeader({
         <Typography variant="h6" fontWeight={"bold"} lineHeight={"normal"}>
           {settingTitle}
         </Typography>
-        <Stack direction={"row"} alignItems={"center"} gap={1}>
+        {/* <Stack direction={"row"} alignItems={"center"} gap={1}>
           <Button
             variant="outlined"
             sx={{ borderRadius: 3 }}
@@ -39,7 +39,7 @@ export default function ActiveSettingsHeader({
           >
             Save
           </Button>
-        </Stack>
+        </Stack> */}
       </Stack>
       <Divider />
     </>
