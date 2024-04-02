@@ -2,9 +2,11 @@
 import {
   Box,
   Button,
+  IconButton,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ActiveSettingsHeader from "../components/active-settings-header.component";
@@ -20,6 +22,7 @@ import {
   handleResetAppLockDialogState,
 } from "@/app/services/redux/slices/dialog-config.slice";
 import { updateAutoLockAppLockSettings } from "@/app/services/redux/slices/app-data.slice";
+import HelpTwoToneIcon from "@mui/icons-material/HelpTwoTone";
 export default function AppLock() {
   const dispatch = useDispatch();
   const dialogConfig = useSelector((store: any) => store.dialogConfig);
@@ -58,7 +61,30 @@ export default function AppLock() {
       />
       <Stack gap={4} p={1}>
         <Stack gap={2}>
-          <Typography variant="subtitle2">Enable App Lock</Typography>
+          <Stack direction={"row"}>
+            <Typography variant="subtitle2">Enable App Lock</Typography>
+
+            <Tooltip
+              title={
+                <Stack gap={2}>
+                  Please read the following instructions before enabling App
+                  Lock:
+                  <Stack gap={1}>
+                    - Once app is locked you won't receive any notifications
+                    until the app is unlocked.
+                    <br />- Remember your password as there is nothing like
+                    forgot password in our app.
+                  </Stack>
+                </Stack>
+              }
+              placement="right"
+              arrow
+            >
+              <IconButton size="small">
+                <HelpTwoToneIcon sx={{ fontSize: 20 }} />
+              </IconButton>
+            </Tooltip>
+          </Stack>
           <Box>
             <ToggleButtonGroup
               exclusive
