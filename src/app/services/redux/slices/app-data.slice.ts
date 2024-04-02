@@ -14,7 +14,7 @@ export const appDataInitialState: AppData = {
     lockState: false,
     password: "",
     enabled: false,
-    autoLock: null,
+    autoLock: -1,
   },
 };
 
@@ -106,7 +106,7 @@ const appDataSlice = createSlice({
         },
       };
     },
-    updateAutoLockAppLockSettings(state, action: PayloadAction<any>) {
+    updateAutoLockAppLockSettings(state, action: PayloadAction<number>) {
       let s = current(state);
 
       return {

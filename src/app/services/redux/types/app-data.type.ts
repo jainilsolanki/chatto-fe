@@ -17,5 +17,5 @@ export type AppLockSettings = {
   lockState: boolean;
   password: string;
   enabled: boolean;
-  autoLock: any;
+  autoLock: number;
 };

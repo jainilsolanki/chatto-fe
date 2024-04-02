@@ -61,7 +61,7 @@ export default function AuthenticateAppLockDialog() {
 
   //use effect for time based auto lock
   useEffect(() => {
-    if ([3000, 6000, 9000].includes(appData.appLockSettings.autoLock)) {
+    if ([300000, 600000, 900000].includes(appData.appLockSettings.autoLock)) {
       let inactivityTimer;
 
       const resetTimer = () => {
