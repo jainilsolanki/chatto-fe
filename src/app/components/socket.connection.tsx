@@ -13,6 +13,7 @@ let lastNotification: any = null;
 const SocketConnection = () => {
   const appData = useSelector((store: any) => store.appData);
   const { notificationSettings } = appData;
+  const { appLockSettings } = appData;
   const { userData } = useUserData();
   const accessToken = userData ? userData.accessToken : null;
   const dispatch = useDispatch();
@@ -64,8 +65,11 @@ const SocketConnection = () => {
         store?.getState()?.onGoingChatData?.conversationId
       );
 
-      if (notificationSettings.paused === "yes") return;
+      // don't send notification if notifications are paused or app is locked
+      if (notificationSettings.paused === "yes" || appLockSettings.lockState)
+        return;
 
+      // don't send notification of person who the user is currently interacting with
       if (
         message.conversationId ===
           store?.getState()?.onGoingChatData?.conversationId &&

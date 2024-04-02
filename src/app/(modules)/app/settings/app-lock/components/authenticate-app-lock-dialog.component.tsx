@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIdle } from "react-use";
 export default function AuthenticateAppLockDialog() {
-  const idle = useIdle(3000);
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const appData = useSelector((store: any) => store.appData);
@@ -22,7 +21,8 @@ export default function AuthenticateAppLockDialog() {
     error: false,
     message: "Password is required",
   });
-  console.log("idle", idle);
+
+  // useeffect for preventing user from interacting with app even after removing dialog using inspect
   useEffect(() => {
     const clickHandler = (e) => {
       if (appData.appLockSettings.lockState) {
@@ -43,6 +43,51 @@ export default function AuthenticateAppLockDialog() {
     };
   }, [appData.appLockSettings.lockState]);
 
+  // use effect for out of tab based autolock
+  useEffect(() => {
+    const outOfTabHandler = () => {
+      if (document.visibilityState !== "visible") {
+        dispatch(updateLockStateAppLockSettings(true));
+      }
+    };
+    if (appData.appLockSettings.autoLock === 0) {
+      document.addEventListener("visibilitychange", outOfTabHandler);
+    }
+
+    return () => {
+      document.removeEventListener("visibilitychange", outOfTabHandler);
+    };
+  }, [appData.appLockSettings.autoLock]);
+
+  //use effect for time based auto lock
+  useEffect(() => {
+    if ([3000, 6000, 9000].includes(appData.appLockSettings.autoLock)) {
+      let inactivityTimer;
+
+      const resetTimer = () => {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+          dispatch(updateLockStateAppLockSettings(true));
+        }, appData.appLockSettings.autoLock);
+      };
+
+      const handleUserActivity = () => {
+        resetTimer();
+      };
+
+      document.addEventListener("mousemove", handleUserActivity);
+      document.addEventListener("keydown", handleUserActivity);
+
+      resetTimer();
+
+      return () => {
+        clearTimeout(inactivityTimer);
+        document.removeEventListener("mousemove", handleUserActivity);
+        document.removeEventListener("keydown", handleUserActivity);
+      };
+    }
+  }, [appData.appLockSettings.autoLock]);
+
   const unlockAppLock = () => {
     if (password.trim().length === 0) {
       setErrorData({ error: true, message: "Password is required" });
@@ -55,6 +100,7 @@ export default function AuthenticateAppLockDialog() {
     setPassword("");
     setErrorData({ error: false, message: "Password is required" });
   };
+
   return (
     <Dialog
       open={appData.appLockSettings.lockState}

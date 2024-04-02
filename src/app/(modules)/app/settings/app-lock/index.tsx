@@ -14,7 +14,6 @@ import EnableAppLockDialog from "./components/enable-app-lock-dialog.component";
 import DisableAppLockDialog from "./components/disable-app-lock-dialog.component";
 import { useDispatch, useSelector } from "react-redux";
 import ResetAppLockDialog from "./components/reset-app-lock-dialog.component";
-import AuthenticateAppLockDialog from "./components/authenticate-app-lock-dialog.component";
 import {
   handleDisableAppLockDialogState,
   handleEnableAppLockDialogState,
