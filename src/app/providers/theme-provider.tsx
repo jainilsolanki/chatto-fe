@@ -6,13 +6,12 @@ import { getDesignTokens } from "../data/theme";
 import store from "../services/redux";
 
 export default function AppThemeProvider({ children }) {
+  const persistedData = localStorage?.getItem("persist:root");
+  const initialThemeData = persistedData
+    ? JSON.parse(JSON.parse(persistedData).appData)?.theme
+    : "light";
   const [theme, setTheme] = useState(
-    createTheme(
-      getDesignTokens(
-        JSON.parse(JSON.parse(localStorage?.getItem("persist:root"))?.appData)
-          ?.theme
-      )
-    )
+    createTheme(getDesignTokens(initialThemeData))
   );
 
   useEffect(() => {
