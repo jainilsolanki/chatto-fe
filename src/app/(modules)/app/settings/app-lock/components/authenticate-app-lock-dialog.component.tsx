@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useIdle } from "react-use";
 export default function AuthenticateAppLockDialog() {
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
