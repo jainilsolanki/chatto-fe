@@ -16,6 +16,7 @@ import GavelTwoToneIcon from "@mui/icons-material/GavelTwoTone";
 import NotificationsNoneTwoToneIcon from "@mui/icons-material/NotificationsNoneTwoTone";
 import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
 import TuneTwoToneIcon from "@mui/icons-material/TuneTwoTone";
+import RocketLaunchTwoToneIcon from '@mui/icons-material/RocketLaunchTwoTone';
 const SettingsPanel = ({
   activeSetting,
   setActiveSetting,
@@ -46,6 +47,14 @@ const SettingsPanel = ({
       icon: <NotificationsNoneTwoToneIcon />,
       onClick: () => {
         setActiveSetting("notifications");
+      },
+    },
+    {
+      key: "autolaunchapp",
+      title: "Autolaunch App",
+      icon: <RocketLaunchTwoToneIcon />,
+      onClick: () => {
+        setActiveSetting("autolaunchapp");
       },
     },
     // {

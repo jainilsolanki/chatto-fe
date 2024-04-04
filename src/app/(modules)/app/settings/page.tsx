@@ -11,6 +11,7 @@ import Visibility from "./visibility";
 import Advanced from "./advanced";
 import PrivacyPolicy from "./privacypolicy";
 import TermsConditions from "./terms-conditions";
+import AutoLaunchAppSteps from "./autolaunch";
 export default function Settings() {
   const [activeSetting, setActiveSetting] = useState("customisations");
 
@@ -39,6 +40,9 @@ export default function Settings() {
         break;
       case "terms_and_conditions":
         return <TermsConditions />;
+        break;
+      case "autolaunchapp":
+        return <AutoLaunchAppSteps />;
         break;
 
       default:
