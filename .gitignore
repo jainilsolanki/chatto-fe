@@ -2,3 +2,4 @@ node_modules
 .next
 sw.js
 workbox-*
+package-lock.json
