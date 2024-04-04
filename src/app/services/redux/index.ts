@@ -11,11 +11,13 @@ import ongoingChatDataSlice, {
   onGoingChatDataInitialState,
 } from "./slices/ongoing-chat-data.slice";
 import tempDataSlice, { tempDataInitialState } from "./slices/temp-data.slice";
+import appDataSlice, { appDataInitialState } from "./slices/app-data.slice";
 
 const resetAllInitialSlices = {
   ...tempDataInitialState,
   ...onGoingChatDataInitialState,
   ...dialogConfigInitialState,
+  ...appDataInitialState,
 };
 
 const persistConfig = {
@@ -29,11 +31,12 @@ const persistConfig = {
       autoExpire: true,
     }),
   ],
-  whitelist: ["tempData"],
+  whitelist: ["tempData", "appData"],
 };
 const reducers = combineReducers({
   //Persistent
   tempData: tempDataSlice,
+  appData: appDataSlice,
 
   // Temporary
   dialogConfig: dialogConfigSlice,

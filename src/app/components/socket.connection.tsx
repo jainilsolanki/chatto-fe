@@ -4,13 +4,16 @@ import { socketURL } from "../data/constants-data";
 import { io } from "socket.io-client";
 import useUserData from "../hooks/useUserData";
 import { FriendAPI } from "../services/axios/apis/friend.api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
 import store from "../services/redux";
 export let socket: any;
 let preventNotification = false;
 let lastNotification: any = null;
 const SocketConnection = () => {
+  const appData = useSelector((store: any) => store.appData);
+  const { notificationSettings } = appData;
+  const { appLockSettings } = appData;
   const { userData } = useUserData();
   const accessToken = userData ? userData.accessToken : null;
   const dispatch = useDispatch();
@@ -51,6 +54,7 @@ const SocketConnection = () => {
     }
   };
   useEffect(() => {
+    //code for checking notification access
     requestNotificationPermission();
     function onMessageNotification(value: any) {
       const { message } = value;
@@ -60,7 +64,12 @@ const SocketConnection = () => {
         "store?.getState()?.onGoingChatData?.conversationId",
         store?.getState()?.onGoingChatData?.conversationId
       );
-      //code for checking notification access
+
+      // don't send notification if notifications are paused or app is locked
+      if (notificationSettings.paused === "yes" || appLockSettings.lockState)
+        return;
+
+      // don't send notification of person who the user is currently interacting with
       if (
         message.conversationId ===
           store?.getState()?.onGoingChatData?.conversationId &&
@@ -79,10 +88,15 @@ const SocketConnection = () => {
         {
           body: `${content}`,
           icon: "/assets/logos/logo.png",
-          silent: false,
+          requireInteraction:
+            notificationSettings.autohide === "yes" ? false : true,
         }
       );
-      let aud = new Audio("/assets/notifications/notification.mp3");
+      let aud = new Audio(
+        notificationSettings.notification ??
+          "/assets/notifications/default-notification.mp3"
+      );
+      aud.muted = notificationSettings.muted === "yes" ? true : false;
       preventNotification = true;
       lastNotification = null;
       aud.play().catch(() => {
@@ -105,7 +119,7 @@ const SocketConnection = () => {
     return () => {
       socket?.off("message-notification", onMessageNotification);
     };
-  }, [userData]);
+  }, [userData, appData]);
   return <></>;
 };
 export default SocketConnection;

@@ -50,6 +50,25 @@ export default function FriendOptions({ currentFriend }) {
     }
   };
 
+  const options = [
+    {
+      key: "message",
+      optionName: "Message",
+      icon: <ReviewsOutlinedIcon sx={{ fontSize: 20 }} />,
+      onClick: () => {
+        startMessaging(currentFriend.conversation_id);
+      },
+    },
+    {
+      key: "remove_friend",
+      optionName: "Remove Friend",
+      icon: <PersonRemoveAlt1OutlinedIcon sx={{ fontSize: 20 }} />,
+      onClick: () => {
+        setAnchorElPop(null);
+        return;
+      },
+    },
+  ];
   return (
     <>
       <MoreHorizIcon
@@ -94,28 +113,26 @@ export default function FriendOptions({ currentFriend }) {
               },
             }}
           >
-            <ListItem key={"Profile"} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                dense
-                onClick={(e) => {
-                  e.stopPropagation();
-                  startMessaging(currentFriend.conversation_id);
-                }}
-              >
-                <ListItemIcon>
-                  <ReviewsOutlinedIcon sx={{ fontSize: 20 }} />
-                </ListItemIcon>
-                <ListItemText primary={"Message"} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem key={"Status"} disablePadding sx={{ display: "block" }}>
-              <ListItemButton dense>
-                <ListItemIcon>
-                  <PersonRemoveAlt1OutlinedIcon sx={{ fontSize: 20 }} />
-                </ListItemIcon>
-                <ListItemText primary={"Remove friend"} />
-              </ListItemButton>
-            </ListItem>
+            {options.map((option) => {
+              return (
+                <ListItem
+                  key={option.key}
+                  disablePadding
+                  sx={{ display: "block" }}
+                >
+                  <ListItemButton
+                    dense
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      option.onClick();
+                    }}
+                  >
+                    <ListItemIcon>{option.icon}</ListItemIcon>
+                    <ListItemText primary={option.optionName} />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
           </List>
         </Stack>
       </Popover>

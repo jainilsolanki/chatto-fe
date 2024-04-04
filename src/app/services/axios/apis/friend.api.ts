@@ -43,4 +43,13 @@ export const FriendAPI = {
     const response = await request.data;
     return response;
   },
+  createGroup: async (data: any) => {
+    const request = await GlobalInstance.request({
+      url: "/chat/group/create",
+      method: "POST",
+      data,
+    });
+    const response = await request.data;
+    return response;
+  },
 };

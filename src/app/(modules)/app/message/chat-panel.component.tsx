@@ -1,5 +1,13 @@
 "use client";
-import { Avatar, Badge, Box, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Skeleton,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getTimeDifference } from "@/app/data/utils";
 import { VOID } from "@/app/data/assets-data";
@@ -16,6 +24,7 @@ const ChatPanel = () => {
   const dispatch = useDispatch();
   const [friendsList, setFriendsList] = useState([]);
   const { hideLoader, isLoading } = useLoader(true);
+  const theme = useTheme();
   useEffect(() => {
     function onFriendsList(value: any) {
       hideLoader();
@@ -66,7 +75,7 @@ const ChatPanel = () => {
   return (
     <>
       {/* Panel Header */}
-      <PanelHeader title={"Messages"} />
+      <PanelHeader title={"Messages"} showOptions={true}/>
       {/* Chat List */}
       {isLoading ? (
         <PanelListSkeletons />
@@ -76,7 +85,12 @@ const ChatPanel = () => {
           sx={{
             overflow: "auto",
             "& :hover": {
-              background: friendsList.length !== 0 ? "#d3eae8" : "unset",
+              background:
+                friendsList.length !== 0
+                  ? theme.palette.mode === "light"
+                    ? theme.palette.primary.light
+                    : theme.palette.primary.main
+                  : "unset",
               cursor: "pointer",
             },
           }}
