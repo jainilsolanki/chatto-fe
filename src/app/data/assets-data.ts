@@ -13,3 +13,6 @@ export const DARK_THEME = "/assets/banners/dark-theme.png";
 export const LIGHT_THEME = "/assets/banners/light-theme.png";
 export const MAC_NOTIFICATION_INFO =
   "/assets/banners/mac-notification-info.png";
+export const PWA_INSTALL_POPUP = "/assets/banners/pwa-popup.png";
+export const CHROME_PWA_APPS = "/assets/banners/chrome-pwa-apps.png";
+export const PWA_AUTOSTART_MENU = "/assets/banners/pwa-autostart-menu.png";
