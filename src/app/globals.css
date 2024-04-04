@@ -48,7 +48,8 @@ a {
   border: none !important;
 }
 
-.ql-container.ql-snow {
+.ql-container.ql-snow,
+.ql-container.ql-bubble {
   max-height: 50vh !important;
   overflow-y: auto !important;
 }
