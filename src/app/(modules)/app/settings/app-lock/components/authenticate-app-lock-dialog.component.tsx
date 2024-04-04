@@ -9,10 +9,12 @@ import {
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 export default function AuthenticateAppLockDialog() {
+  const theme = useTheme();
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const appData = useSelector((store: any) => store.appData);
@@ -105,6 +107,10 @@ export default function AuthenticateAppLockDialog() {
       open={appData.appLockSettings.lockState}
       aria-labelledby="responsive-dialog-title"
       sx={{
+        background:
+          theme.palette.mode === "light"
+            ? "rgba(255,255,255,0.9)"
+            : "rgba(0,0,0,0.9)",
         "& .MuiDialog-paper": {
           minWidth: 400,
           maxWidth: 700,
