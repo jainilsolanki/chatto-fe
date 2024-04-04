@@ -334,9 +334,11 @@ export default function CreateGroupDialog() {
           <Button
             variant="contained"
             sx={{ width: "100%" }}
-            onClick={createGroup}
+            // onClick={createGroup}
+            disabled
           >
-            Create Group
+            {/* Create Group */}
+            Coming soon...
           </Button>
         </DialogActions>
       </Dialog>

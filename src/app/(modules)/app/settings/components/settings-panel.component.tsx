@@ -48,46 +48,46 @@ const SettingsPanel = ({
         setActiveSetting("notifications");
       },
     },
-    {
-      key: "language_and_region",
-      title: "Language and Region",
-      icon: <TranslateTwoToneIcon />,
-      onClick: () => {
-        setActiveSetting("language_and_region");
-      },
-    },
-    {
-      key: "visibility",
-      title: "Visibility",
-      icon: <SecurityTwoToneIcon />,
-      onClick: () => {
-        setActiveSetting("visibility");
-      },
-    },
-    {
-      key: "advanced",
-      title: "Advanced",
-      icon: <TuneTwoToneIcon />,
-      onClick: () => {
-        setActiveSetting("advanced");
-      },
-    },
-    {
-      key: "privacy_policy",
-      title: "Privacy Policy",
-      icon: <ArticleTwoToneIcon />,
-      onClick: () => {
-        setActiveSetting("privacy_policy");
-      },
-    },
-    {
-      key: "terms_and_conditions",
-      title: "Terms and Conditions",
-      icon: <GavelTwoToneIcon />,
-      onClick: () => {
-        setActiveSetting("terms_and_conditions");
-      },
-    },
+    // {
+    //   key: "language_and_region",
+    //   title: "Language and Region",
+    //   icon: <TranslateTwoToneIcon />,
+    //   onClick: () => {
+    //     setActiveSetting("language_and_region");
+    //   },
+    // },
+    // {
+    //   key: "visibility",
+    //   title: "Visibility",
+    //   icon: <SecurityTwoToneIcon />,
+    //   onClick: () => {
+    //     setActiveSetting("visibility");
+    //   },
+    // },
+    // {
+    //   key: "advanced",
+    //   title: "Advanced",
+    //   icon: <TuneTwoToneIcon />,
+    //   onClick: () => {
+    //     setActiveSetting("advanced");
+    //   },
+    // },
+    // {
+    //   key: "privacy_policy",
+    //   title: "Privacy Policy",
+    //   icon: <ArticleTwoToneIcon />,
+    //   onClick: () => {
+    //     setActiveSetting("privacy_policy");
+    //   },
+    // },
+    // {
+    //   key: "terms_and_conditions",
+    //   title: "Terms and Conditions",
+    //   icon: <GavelTwoToneIcon />,
+    //   onClick: () => {
+    //     setActiveSetting("terms_and_conditions");
+    //   },
+    // },
   ];
   return (
     <>
