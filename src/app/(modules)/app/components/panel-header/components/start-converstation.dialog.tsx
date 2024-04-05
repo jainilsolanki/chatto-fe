@@ -19,15 +19,16 @@ export default function StartConversationConfirmationDialog() {
   const dispatch = useDispatch();
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
   const tempData = useSelector((state: any) => state.tempData);
-  const getSingleChatData = async (data) => {
+  const getSingleChatData = async (conversationId) => {
     try {
-      const response = await FriendAPI.getSingleChatData(data);
+      const response = await FriendAPI.getSingleChatData(conversationId, 0);
       console.log(response);
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
+          totalChatCount: response.totalChatCount,
         })
       );
       dispatch(updateConversationId(null));

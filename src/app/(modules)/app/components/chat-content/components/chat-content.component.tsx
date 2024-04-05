@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Chip,
+  CircularProgress,
   Divider,
   Stack,
   Typography,
@@ -14,16 +15,22 @@ import EmptyChat from "./empty-chat.component";
 import { useDispatch, useSelector } from "react-redux";
 import useUserData from "@/app/hooks/useUserData";
 import { useEffect, useRef, useState } from "react";
-import { updateOnGoingChatList } from "@/app/services/redux/slices/ongoing-chat-data.slice";
+import {
+  loadOnGoingChatList,
+  updateOnGoingChatList,
+} from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import { socket } from "@/app/components/socket.connection";
 import CryptoJS from "crypto-js";
 import MessageField from "../message-field/message-field.component";
 import ReactQuill from "react-quill";
+import { FriendAPI } from "@/app/services/axios/apis/friend.api";
+import store from "@/app/services/redux";
 export default function ChatContent() {
   const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   const { userData } = useUserData();
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
+  const [chatLoader, setChatLoader] = useState<null | boolean>(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const theme = useTheme();
   useEffect(() => {
@@ -50,6 +57,30 @@ export default function ChatContent() {
     }
   }, [onGoingChatData?.chatList?.length]);
 
+  useEffect(() => {
+    const scrollContainer = document.getElementById(
+      "chat-scrollable-container"
+    );
+
+    const handleScroll = () => {
+      if (
+        scrollContainer.scrollTop === 0 &&
+        !chatLoader &&
+        store.getState().onGoingChatData.chatList.length !==
+          store.getState().onGoingChatData.totalChatCount
+      ) {
+        setChatLoader(true);
+        loadMoreChats();
+      }
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollContainer.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const decryptMessage = (encryptedMessage: string | undefined) => {
     if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
 
@@ -75,6 +106,22 @@ export default function ChatContent() {
     return groupedChats;
   }
 
+  const loadMoreChats = async () => {
+    try {
+      const response = await FriendAPI.getSingleChatData(
+        onGoingChatData.conversationId,
+        store.getState().onGoingChatData.chatList.length
+      );
+      setChatLoader(false);
+      if (response.status) {
+        dispatch(loadOnGoingChatList(response.chatList));
+      }
+    } catch (e) {
+      setChatLoader(false);
+      console.log(e);
+    }
+  };
+
   const groupedChats = groupChatsByDate();
   return (
     <>
@@ -89,7 +136,12 @@ export default function ChatContent() {
           justifyContent: "space-between",
         }}
       >
-        <Stack overflow={"auto"}>
+        <Stack overflow={"auto"} id="chat-scrollable-container">
+          {chatLoader && (
+            <Stack sx={{ position: "absolute" }} alignSelf={"center"} mt={10}>
+              <CircularProgress size={30} />
+            </Stack>
+          )}
           {onGoingChatData.chatList.length !== 0 ? (
             Object.entries(groupedChats).map(
               ([date, chats]: [date: any, chats: any], index: number) => {

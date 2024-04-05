@@ -37,16 +37,18 @@ const SocketConnection = () => {
     };
   }, [userData]);
 
-  const getSingleChatData = async (data) => {
-    if (data === store?.getState()?.onGoingChatData?.conversationId) return;
+  const getSingleChatData = async (conversationId) => {
+    if (conversationId === store?.getState()?.onGoingChatData?.conversationId)
+      return;
     try {
-      const response = await FriendAPI.getSingleChatData(data);
+      const response = await FriendAPI.getSingleChatData(conversationId, 0);
       console.log(response);
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
+          totalChatCount: response.totalChatCount,
         })
       );
     } catch (e) {

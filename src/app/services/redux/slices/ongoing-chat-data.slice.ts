@@ -12,6 +12,7 @@ const onGoingChatData = createSlice({
         conversationId: action.payload.conversationId,
         chatList: action.payload.chatList,
         messageReceiver: action.payload.messageReceiver,
+        totalChatCount: action.payload.totalChatCount,
       };
     },
     updateOnGoingChatList(state, action: PayloadAction<Chat>) {
@@ -19,6 +20,14 @@ const onGoingChatData = createSlice({
       return {
         ...s,
         chatList: [...s.chatList, action.payload],
+      };
+    },
+
+    loadOnGoingChatList(state, action: PayloadAction<Chat[]>) {
+      let s = current(state);
+      return {
+        ...s,
+        chatList: [...action.payload, ...s.chatList],
       };
     },
     clearOnGoingChatData() {
@@ -31,5 +40,6 @@ export const {
   saveOnGoingChatData,
   updateOnGoingChatList,
   clearOnGoingChatData,
+  loadOnGoingChatList,
 } = onGoingChatData.actions;
 export default onGoingChatData.reducer;

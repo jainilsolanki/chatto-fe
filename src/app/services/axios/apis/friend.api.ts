@@ -1,3 +1,4 @@
+import { NUMBER_OF_CHATS_PER_PAGE_LIMIT } from "@/app/data/constants-data";
 import { GlobalInstance } from "..";
 
 export const FriendAPI = {
@@ -27,9 +28,9 @@ export const FriendAPI = {
     const response = await request.data;
     return response;
   },
-  getSingleChatData: async (data: any) => {
+  getSingleChatData: async (conversationId: any, skip: any) => {
     const request = await GlobalInstance.request({
-      url: `/chat/list?conversationId=${data}`,
+      url: `/chat/list?conversationId=${conversationId}&skip=${skip}&limit=${NUMBER_OF_CHATS_PER_PAGE_LIMIT}`,
       method: "GET",
     });
     const response = await request.data;
