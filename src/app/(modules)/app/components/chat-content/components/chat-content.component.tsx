@@ -30,8 +30,10 @@ export default function ChatContent() {
   const { userData } = useUserData();
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
+  const chatRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [chatLoader, setChatLoader] = useState<null | boolean>(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [newMessage, setNewMessage] = useState(false);
   const theme = useTheme();
   useEffect(() => {
     function onMessages(value: any) {
@@ -39,6 +41,7 @@ export default function ChatContent() {
       console.log("received chat socket", last_chat);
       dispatch(updateOnGoingChatList(last_chat));
       if (initialLoading) setInitialLoading(false);
+      setNewMessage((prev) => !prev);
     }
 
     socket?.on(`last-chat-${onGoingChatData?.conversationId}`, onMessages);
@@ -55,7 +58,7 @@ export default function ChatContent() {
         block: "end",
       });
     }
-  }, [onGoingChatData?.chatList?.length]);
+  }, [newMessage]);
 
   useEffect(() => {
     const scrollContainer = document.getElementById(
@@ -79,7 +82,7 @@ export default function ChatContent() {
     return () => {
       scrollContainer.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [chatLoader]);
 
   const decryptMessage = (encryptedMessage: string | undefined) => {
     if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
@@ -93,9 +96,14 @@ export default function ChatContent() {
   };
 
   function groupChatsByDate() {
-    const groupedChats = {};
+    const groupedChats: { [key: string]: any[] } = {};
 
-    onGoingChatData.chatList.forEach((chat) => {
+    const sortedChats = [...onGoingChatData.chatList].sort(
+      (a: any, b: any) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    sortedChats.forEach((chat: any) => {
       const date = new Date(chat.createdAt).toISOString().split("T")[0];
       if (!groupedChats[date]) {
         groupedChats[date] = [];
@@ -114,6 +122,8 @@ export default function ChatContent() {
       );
       setChatLoader(false);
       if (response.status) {
+        const messageToScroll = chatRefs.current;
+        console.log("messageToScroll", messageToScroll);
         dispatch(loadOnGoingChatList(response.chatList));
       }
     } catch (e) {
@@ -123,6 +133,8 @@ export default function ChatContent() {
   };
 
   const groupedChats = groupChatsByDate();
+
+  console.log("chatRefds", chatRefs.current[0]);
   return (
     <>
       {/* Ongoing Chat Header */}
@@ -186,7 +198,17 @@ export default function ChatContent() {
                       const isCurrentUser = chat.sender.id === userData?.id;
 
                       return (
-                        <Box key={index} p={1}>
+                        <Box
+                          key={chat.id}
+                          p={1}
+                          ref={(el: HTMLDivElement | null) => {
+                            chatRefs.current[
+                              `${chat.id} ${decryptMessage(
+                                chat.content
+                              )} ${date}`
+                            ] = el;
+                          }}
+                        >
                           <Box
                             sx={{
                               alignItems: "center",
@@ -263,10 +285,12 @@ export default function ChatContent() {
 
                               <Typography
                                 variant="caption"
-                                sx={{ color:
-                                  theme.palette.mode === "light"
-                                    ? "#888"
-                                    : "#fff", }}
+                                sx={{
+                                  color:
+                                    theme.palette.mode === "light"
+                                      ? "#888"
+                                      : "#fff",
+                                }}
                               >
                                 {moment(chat.createdAt).format("hh:mm A")}
                               </Typography>
