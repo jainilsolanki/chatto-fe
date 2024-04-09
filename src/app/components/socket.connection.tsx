@@ -7,6 +7,8 @@ import { FriendAPI } from "../services/axios/apis/friend.api";
 import { useDispatch, useSelector } from "react-redux";
 import { saveOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
 import store from "../services/redux";
+import { usePathname, useRouter } from "next/navigation";
+import { updateSelectedSection } from "../services/redux/slices/temp-data.slice";
 export let socket: any;
 let preventNotification = false;
 let lastNotification: any = null;
@@ -17,6 +19,8 @@ const SocketConnection = () => {
   const { userData } = useUserData();
   const accessToken = userData ? userData.accessToken : null;
   const dispatch = useDispatch();
+  const router = useRouter();
+  const currentPath = usePathname();
   const requestNotificationPermission = async () => {
     try {
       await Notification.requestPermission();
@@ -43,6 +47,10 @@ const SocketConnection = () => {
     try {
       const response = await FriendAPI.getSingleChatData(conversationId, 0);
       console.log(response);
+      if (currentPath !== "/app/message") {
+        router.push("/app/message");
+        dispatch(updateSelectedSection(3));
+      }
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),
