@@ -42,7 +42,11 @@ const SocketConnection = () => {
   }, [userData]);
 
   const getSingleChatData = async (data) => {
-    if (data === store?.getState()?.onGoingChatData?.conversationId) return;
+    if (data === store?.getState()?.onGoingChatData?.conversationId) {
+      router.push("/app/message");
+      dispatch(updateSelectedSection(3));
+      return;
+    }
     try {
       const response = await FriendAPI.getSingleChatData(data);
       console.log(response);
@@ -81,7 +85,8 @@ const SocketConnection = () => {
       if (
         message.conversationId ===
           store?.getState()?.onGoingChatData?.conversationId &&
-        document.visibilityState === "visible"
+        document.visibilityState === "visible" &&
+        currentPath === "/app/message"
       )
         return;
 
