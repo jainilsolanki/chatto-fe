@@ -33,9 +33,9 @@ export default function FriendOptions({ currentFriend }) {
     setAnchorElPop(null);
   }
 
-  const startMessaging = async (data) => {
+  const startMessaging = async (conversationId) => {
     try {
-      const response = await FriendAPI.getSingleChatData(data);
+      const response = await FriendAPI.getSingleChatData(conversationId, 0);
       console.log(response);
       setAnchorElPop(null);
       dispatch(
@@ -43,6 +43,7 @@ export default function FriendOptions({ currentFriend }) {
           conversationId: Number(response.conversationId),
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
+          totalChatCount: response.totalChatCount,
         })
       );
     } catch (e) {

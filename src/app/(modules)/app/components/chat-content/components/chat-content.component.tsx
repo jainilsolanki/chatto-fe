@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Chip,
+  CircularProgress,
   Divider,
   Stack,
   Typography,
@@ -14,24 +15,44 @@ import EmptyChat from "./empty-chat.component";
 import { useDispatch, useSelector } from "react-redux";
 import useUserData from "@/app/hooks/useUserData";
 import { useEffect, useRef, useState } from "react";
-import { updateOnGoingChatList } from "@/app/services/redux/slices/ongoing-chat-data.slice";
+import {
+  loadOnGoingChatList,
+  updateOnGoingChatList,
+} from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import { socket } from "@/app/components/socket.connection";
 import CryptoJS from "crypto-js";
 import MessageField from "../message-field/message-field.component";
 import ReactQuill from "react-quill";
+import { FriendAPI } from "@/app/services/axios/apis/friend.api";
+import store from "@/app/services/redux";
 export default function ChatContent() {
   const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   const { userData } = useUserData();
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
+  const chatRefs = useRef<any>({});
+  const [chatLoader, setChatLoader] = useState<null | boolean>(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [newMessage, setNewMessage] = useState(false);
   const theme = useTheme();
+
+  // useeffect for clearing ref
+  useEffect(() => {
+    return () => {
+      for (let chatRef in chatRefs.current ?? {}) {
+        !chatRefs.current[chatRef] && delete chatRefs.current[chatRef];
+      }
+    };
+  }, [onGoingChatData.conversationId]);
+
+  // useeffect for socket listner for new messages
   useEffect(() => {
     function onMessages(value: any) {
       const { last_chat } = value;
       console.log("received chat socket", last_chat);
       dispatch(updateOnGoingChatList(last_chat));
       if (initialLoading) setInitialLoading(false);
+      setNewMessage((prev) => !prev);
     }
 
     socket?.on(`last-chat-${onGoingChatData?.conversationId}`, onMessages);
@@ -41,14 +62,38 @@ export default function ChatContent() {
     };
   }, [onGoingChatData]);
 
+  // useffect for scrolling into bottom initially and when new message appears
   useEffect(() => {
-    if (onGoingChatData?.chatList?.length) {
-      ref.current?.scrollIntoView({
-        behavior: initialLoading ? "instant" : "smooth",
-        block: "end",
-      });
-    }
-  }, [onGoingChatData?.chatList?.length]);
+    ref.current?.scrollIntoView({
+      behavior: initialLoading ? "instant" : "smooth",
+      block: "end",
+    });
+  }, [newMessage, initialLoading, onGoingChatData.conversationId]);
+
+  // useeffect for loading more chats
+  useEffect(() => {
+    const scrollContainer = document.getElementById(
+      "chat-scrollable-container"
+    );
+
+    const handleScroll = () => {
+      if (
+        scrollContainer.scrollTop === 0 &&
+        !chatLoader &&
+        store.getState().onGoingChatData.chatList.length !==
+          store.getState().onGoingChatData.totalChatCount
+      ) {
+        setChatLoader(true);
+        loadMoreChats();
+      }
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollContainer.removeEventListener("scroll", handleScroll);
+    };
+  }, [chatLoader]);
 
   const decryptMessage = (encryptedMessage: string | undefined) => {
     if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
@@ -62,9 +107,14 @@ export default function ChatContent() {
   };
 
   function groupChatsByDate() {
-    const groupedChats = {};
+    const groupedChats: { [key: string]: any[] } = {};
 
-    onGoingChatData.chatList.forEach((chat) => {
+    const sortedChats = [...onGoingChatData.chatList].sort(
+      (a: any, b: any) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    sortedChats.forEach((chat: any) => {
       const date = new Date(chat.createdAt).toISOString().split("T")[0];
       if (!groupedChats[date]) {
         groupedChats[date] = [];
@@ -75,7 +125,30 @@ export default function ChatContent() {
     return groupedChats;
   }
 
+  const loadMoreChats = async () => {
+    try {
+      const response = await FriendAPI.getSingleChatData(
+        store.getState().onGoingChatData.conversationId,
+        store.getState().onGoingChatData.chatList.length
+      );
+      setChatLoader(false);
+      if (response.status) {
+        const firstChatId = Object.keys(chatRefs.current)[0];
+        const firstChatElement = chatRefs.current[firstChatId];
+        await dispatch(loadOnGoingChatList(response.chatList));
+        document.getElementById("chat-scrollable-container").scrollTo({
+          top: firstChatElement.getBoundingClientRect().top - 150,
+          behavior: "instant",
+        });
+      }
+    } catch (e) {
+      setChatLoader(false);
+      console.log(e);
+    }
+  };
+
   const groupedChats = groupChatsByDate();
+
   return (
     <>
       {/* Ongoing Chat Header */}
@@ -89,7 +162,12 @@ export default function ChatContent() {
           justifyContent: "space-between",
         }}
       >
-        <Stack overflow={"auto"}>
+        <Stack overflow={"auto"} id="chat-scrollable-container">
+          {chatLoader && (
+            <Stack sx={{ position: "absolute" }} alignSelf={"center"} mt={10}>
+              <CircularProgress size={30} />
+            </Stack>
+          )}
           {onGoingChatData.chatList.length !== 0 ? (
             Object.entries(groupedChats).map(
               ([date, chats]: [date: any, chats: any], index: number) => {
@@ -134,7 +212,13 @@ export default function ChatContent() {
                       const isCurrentUser = chat.sender.id === userData?.id;
 
                       return (
-                        <Box key={index} p={1}>
+                        <Box
+                          key={chat.id}
+                          p={1}
+                          ref={(el: any) => {
+                            return (chatRefs.current[chat.id] = el);
+                          }}
+                        >
                           <Box
                             sx={{
                               alignItems: "center",
@@ -211,10 +295,12 @@ export default function ChatContent() {
 
                               <Typography
                                 variant="caption"
-                                sx={{ color:
-                                  theme.palette.mode === "light"
-                                    ? "#888"
-                                    : "#fff", }}
+                                sx={{
+                                  color:
+                                    theme.palette.mode === "light"
+                                      ? "#888"
+                                      : "#fff",
+                                }}
                               >
                                 {moment(chat.createdAt).format("hh:mm A")}
                               </Typography>

@@ -41,15 +41,16 @@ const ChatPanel = () => {
     };
   }, []);
 
-  const getSingleChatData = async (data) => {
+  const getSingleChatData = async (conversationId) => {
     try {
-      const response = await FriendAPI.getSingleChatData(data);
+      const response = await FriendAPI.getSingleChatData(conversationId, 0);
       console.log(response);
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
+          totalChatCount: response.totalChatCount,
         })
       );
     } catch (e) {

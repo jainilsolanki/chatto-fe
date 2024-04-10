@@ -12,15 +12,16 @@ export default function FriendsPanel({ friendsList }) {
   const [currentFriend, setCurrentFriend] = useState<any>(null);
   const dispatch = useDispatch();
   const theme = useTheme();
-  const startMessaging = async (data) => {
+  const startMessaging = async (conversationId) => {
     try {
-      const response = await FriendAPI.getSingleChatData(data);
+      const response = await FriendAPI.getSingleChatData(conversationId, 0);
       console.log("outside start msg function", response);
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
+          totalChatCount: response.totalChatCount,
         })
       );
     } catch (e) {

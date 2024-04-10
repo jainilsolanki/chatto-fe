@@ -50,3 +50,5 @@ export const notificationsList = [
     path: "/assets/notifications/uwu-notification.mp3",
   },
 ];
+
+export const NUMBER_OF_CHATS_PER_PAGE_LIMIT = 30;

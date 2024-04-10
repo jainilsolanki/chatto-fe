@@ -41,14 +41,14 @@ const SocketConnection = () => {
     };
   }, [userData]);
 
-  const getSingleChatData = async (data) => {
-    if (data === store?.getState()?.onGoingChatData?.conversationId) {
+  const getSingleChatData = async (conversationId) => {
+    if (conversationId === store?.getState()?.onGoingChatData?.conversationId) {
       router.push("/app/message");
       dispatch(updateSelectedSection(3));
       return;
     }
     try {
-      const response = await FriendAPI.getSingleChatData(data);
+      const response = await FriendAPI.getSingleChatData(conversationId, 0);
       console.log(response);
       if (currentPath !== "/app/message") {
         router.push("/app/message");
@@ -59,6 +59,7 @@ const SocketConnection = () => {
           conversationId: Number(response.conversationId),
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
+          totalChatCount: response.totalChatCount,
         })
       );
     } catch (e) {
