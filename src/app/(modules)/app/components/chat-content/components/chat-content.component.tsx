@@ -30,11 +30,22 @@ export default function ChatContent() {
   const { userData } = useUserData();
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
-  const chatRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const chatRefs = useRef<any>({});
   const [chatLoader, setChatLoader] = useState<null | boolean>(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [newMessage, setNewMessage] = useState(false);
   const theme = useTheme();
+
+  // useeffect for clearing ref
+  useEffect(() => {
+    return () => {
+      for (let chatRef in chatRefs.current ?? {}) {
+        !chatRefs.current[chatRef] && delete chatRefs.current[chatRef];
+      }
+    };
+  }, [onGoingChatData.conversationId]);
+
+  // useeffect for socket listner for new messages
   useEffect(() => {
     function onMessages(value: any) {
       const { last_chat } = value;
@@ -51,15 +62,15 @@ export default function ChatContent() {
     };
   }, [onGoingChatData]);
 
+  // useffect for scrolling into bottom initially and when new message appears
   useEffect(() => {
-    if (onGoingChatData?.chatList?.length) {
-      ref.current?.scrollIntoView({
-        behavior: initialLoading ? "instant" : "smooth",
-        block: "end",
-      });
-    }
-  }, [newMessage]);
+    ref.current?.scrollIntoView({
+      behavior: initialLoading ? "instant" : "smooth",
+      block: "end",
+    });
+  }, [newMessage, initialLoading, onGoingChatData.conversationId]);
 
+  // useeffect for loading more chats
   useEffect(() => {
     const scrollContainer = document.getElementById(
       "chat-scrollable-container"
@@ -117,14 +128,18 @@ export default function ChatContent() {
   const loadMoreChats = async () => {
     try {
       const response = await FriendAPI.getSingleChatData(
-        onGoingChatData.conversationId,
+        store.getState().onGoingChatData.conversationId,
         store.getState().onGoingChatData.chatList.length
       );
       setChatLoader(false);
       if (response.status) {
-        const messageToScroll = chatRefs.current;
-        console.log("messageToScroll", messageToScroll);
-        dispatch(loadOnGoingChatList(response.chatList));
+        const firstChatId = Object.keys(chatRefs.current)[0];
+        const firstChatElement = chatRefs.current[firstChatId];
+        await dispatch(loadOnGoingChatList(response.chatList));
+        document.getElementById("chat-scrollable-container").scrollTo({
+          top: firstChatElement.getBoundingClientRect().top - 150,
+          behavior: "instant",
+        });
       }
     } catch (e) {
       setChatLoader(false);
@@ -134,7 +149,6 @@ export default function ChatContent() {
 
   const groupedChats = groupChatsByDate();
 
-  console.log("chatRefds", chatRefs.current[0]);
   return (
     <>
       {/* Ongoing Chat Header */}
@@ -201,12 +215,8 @@ export default function ChatContent() {
                         <Box
                           key={chat.id}
                           p={1}
-                          ref={(el: HTMLDivElement | null) => {
-                            chatRefs.current[
-                              `${chat.id} ${decryptMessage(
-                                chat.content
-                              )} ${date}`
-                            ] = el;
+                          ref={(el: any) => {
+                            return (chatRefs.current[chat.id] = el);
                           }}
                         >
                           <Box
