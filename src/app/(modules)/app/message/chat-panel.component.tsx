@@ -19,7 +19,6 @@ import PanelHeader from "../components/panel-header/panel-header.component";
 import CryptoJS from "crypto-js";
 import useLoader from "@/app/hooks/useLoaders";
 import PanelListSkeletons from "../components/panel-list-skeletons.component";
-import ReactQuill from "react-quill";
 const ChatPanel = () => {
   const dispatch = useDispatch();
   const [friendsList, setFriendsList] = useState([]);
@@ -28,7 +27,6 @@ const ChatPanel = () => {
   useEffect(() => {
     function onFriendsList(value: any) {
       hideLoader();
-      // setFooEvents(fooEvents.concat(value));
       const { conversationList } = value;
       console.log("list value: ", value.conversationList);
       setFriendsList(conversationList);
@@ -40,6 +38,31 @@ const ChatPanel = () => {
       socket?.off("conversation-list", onFriendsList);
     };
   }, []);
+
+  useEffect(() => {
+    function updateLastMessage(value: any) {
+      const { message } = value;
+      let updatedFriendsList = [...friendsList];
+
+      updatedFriendsList = updatedFriendsList.map((friend: any) => {
+        if (friend.user.id === message.senderId) {
+          return {
+            ...friend,
+            chats: { ...friend.chats, content: message.content },
+          };
+        } else {
+          return friend;
+        }
+      });
+
+      setFriendsList(updatedFriendsList);
+    }
+    socket?.on("message-notification", updateLastMessage);
+
+    return () => {
+      socket?.off("message-notification", updateLastMessage);
+    };
+  }, [friendsList]);
 
   const getSingleChatData = async (conversationId) => {
     try {

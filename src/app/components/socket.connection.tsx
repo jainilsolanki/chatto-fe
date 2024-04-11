@@ -9,6 +9,7 @@ import { saveOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.
 import store from "../services/redux";
 import { usePathname, useRouter } from "next/navigation";
 import { updateSelectedSection } from "../services/redux/slices/temp-data.slice";
+import CryptoJS from "crypto-js";
 export let socket: any;
 let preventNotification = false;
 let lastNotification: any = null;
@@ -40,6 +41,22 @@ const SocketConnection = () => {
       socket?.disconnect();
     };
   }, [userData]);
+
+  const decryptMessage = (
+    encryptedMessage: string | undefined,
+    conversationId: string
+  ) => {
+    if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
+
+    const bytes = CryptoJS.AES.decrypt(
+      encryptedMessage,
+      String(conversationId)
+    );
+    const decryptedMessage = bytes.toString(CryptoJS.enc.Utf8);
+    //removed all html and kept only normal texts
+    const content = decryptedMessage.replace(/(<([^>]+)>)/gi, "");
+    return content;
+  };
 
   const getSingleChatData = async (conversationId) => {
     if (conversationId === store?.getState()?.onGoingChatData?.conversationId) {
@@ -100,7 +117,7 @@ const SocketConnection = () => {
       const notification = new Notification(
         `New message from ${message.username}`,
         {
-          body: `${content}`,
+          body: `${decryptMessage(message.content, message.conversationId)}`,
           icon: "/assets/logos/logo.png",
           requireInteraction:
             notificationSettings.autohide === "yes" ? false : true,
