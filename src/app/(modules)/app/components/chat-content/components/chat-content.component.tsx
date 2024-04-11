@@ -29,30 +29,18 @@ export default function ChatContent() {
   const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   const { userData } = useUserData();
   const dispatch = useDispatch();
-  const ref = useRef<HTMLDivElement>(null);
   const chatRefs = useRef<any>({});
   const [chatLoader, setChatLoader] = useState<null | boolean>(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [newMessage, setNewMessage] = useState(false);
+  const [newMessage, setNewMessage] = useState(null);
   const theme = useTheme();
-
-  // useeffect for clearing ref
-  useEffect(() => {
-    return () => {
-      for (let chatRef in chatRefs.current ?? {}) {
-        !chatRefs.current[chatRef] && delete chatRefs.current[chatRef];
-      }
-    };
-  }, [onGoingChatData.conversationId]);
 
   // useeffect for socket listner for new messages
   useEffect(() => {
-    function onMessages(value: any) {
+    async function onMessages(value: any) {
       const { last_chat } = value;
       console.log("received chat socket", last_chat);
-      dispatch(updateOnGoingChatList(last_chat));
-      if (initialLoading) setInitialLoading(false);
-      setNewMessage((prev) => !prev);
+      await dispatch(updateOnGoingChatList(last_chat));
+      setNewMessage((prev) => (prev === null ? true : !prev));
     }
 
     socket?.on(`last-chat-${onGoingChatData?.conversationId}`, onMessages);
@@ -64,13 +52,14 @@ export default function ChatContent() {
 
   // useffect for scrolling into bottom initially and when new message appears
   useEffect(() => {
-    ref.current?.scrollIntoView({
-      behavior: initialLoading ? "instant" : "smooth",
-      block: "end",
+    const chatContainer = document.getElementById("chat-scrollable-container");
+    chatContainer.scrollTo({
+      top: chatContainer.scrollHeight,
+      behavior: newMessage === null ? "instant" : "smooth",
     });
-  }, [newMessage, initialLoading, onGoingChatData.conversationId]);
+  }, [newMessage, onGoingChatData.conversationId]);
 
-  // useeffect for loading more chats
+  // useeffect to keep track of scroll position for loading more chats
   useEffect(() => {
     const scrollContainer = document.getElementById(
       "chat-scrollable-container"
@@ -232,7 +221,6 @@ export default function ChatContent() {
                           >
                             <Avatar
                               sx={{
-                                // bgcolor: getRandomColor(),
                                 width: 40,
                                 height: 40,
                                 borderRadius: 4,
@@ -328,7 +316,6 @@ export default function ChatContent() {
                         </Box>
                       );
                     })}
-                    <div ref={ref} />
                   </Box>
                 );
               }
