@@ -24,7 +24,6 @@ export default function FriendOptions({ currentFriend }) {
   const openPop = Boolean(anchorElPop);
   const popOverId = openPop ? "simple-popover" : undefined;
   function handleClickPop(event: React.MouseEvent<HTMLButtonElement>) {
-    console.log("open caled");
     event.stopPropagation();
     setAnchorElPop(event.currentTarget);
   }
@@ -36,7 +35,6 @@ export default function FriendOptions({ currentFriend }) {
   const startMessaging = async (conversationId) => {
     try {
       const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      console.log(response);
       setAnchorElPop(null);
       dispatch(
         saveOnGoingChatData({

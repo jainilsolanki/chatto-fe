@@ -35,7 +35,6 @@ export default function FriendsPanel() {
   const startMessaging = async (conversationId) => {
     try {
       const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      console.log("outside start msg function", response);
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),

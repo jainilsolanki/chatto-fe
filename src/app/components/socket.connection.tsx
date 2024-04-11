@@ -66,7 +66,6 @@ const SocketConnection = () => {
     }
     try {
       const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      console.log(response);
       if (currentPath !== "/app/message") {
         router.push("/app/message");
         dispatch(updateSelectedSection(3));
@@ -88,12 +87,6 @@ const SocketConnection = () => {
     requestNotificationPermission();
     function onMessageNotification(value: any) {
       const { message } = value;
-      console.log(
-        "onMessageNotification",
-        message,
-        "store?.getState()?.onGoingChatData?.conversationId",
-        store?.getState()?.onGoingChatData?.conversationId
-      );
 
       // don't send notification if notifications are paused or app is locked
       if (notificationSettings.paused === "yes" || appLockSettings.lockState)

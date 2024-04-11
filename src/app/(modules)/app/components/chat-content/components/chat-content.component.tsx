@@ -38,7 +38,6 @@ export default function ChatContent() {
   useEffect(() => {
     async function onMessages(value: any) {
       const { last_chat } = value;
-      console.log("received chat socket", last_chat);
       await dispatch(updateOnGoingChatList(last_chat));
       setNewMessage((prev) => (prev === null ? true : !prev));
     }
