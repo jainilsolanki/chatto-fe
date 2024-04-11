@@ -51,7 +51,6 @@ export default function CreateGroupDialog() {
     try {
       const response = await FriendAPI.getAllFriends();
 
-      console.log("all friends", response);
       setAllFriends(response.friends);
     } catch (e) {
       console.log(e);
@@ -94,13 +93,11 @@ export default function CreateGroupDialog() {
     try {
       const response = await FriendAPI.createGroup({ ...groupData });
 
-      console.log("group response ", response);
       handleClose();
     } catch (e) {
       console.log(e);
     }
   };
-  console.log("group Data", groupData);
   return (
     <>
       <Dialog

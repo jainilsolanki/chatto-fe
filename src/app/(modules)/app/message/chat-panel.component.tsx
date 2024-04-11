@@ -28,7 +28,6 @@ const ChatPanel = () => {
     function onFriendsList(value: any) {
       hideLoader();
       const { conversationList } = value;
-      console.log("list value: ", value.conversationList);
       setFriendsList(conversationList);
     }
 
@@ -67,7 +66,6 @@ const ChatPanel = () => {
   const getSingleChatData = async (conversationId) => {
     try {
       const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      console.log(response);
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),

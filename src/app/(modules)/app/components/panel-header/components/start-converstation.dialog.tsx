@@ -22,7 +22,6 @@ export default function StartConversationConfirmationDialog() {
   const getSingleChatData = async (conversationId) => {
     try {
       const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      console.log(response);
       dispatch(
         saveOnGoingChatData({
           conversationId: Number(response.conversationId),

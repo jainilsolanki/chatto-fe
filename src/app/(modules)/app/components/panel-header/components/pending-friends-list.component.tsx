@@ -37,7 +37,6 @@ const FriendItem = ({
   const handleNotificationClick = (notification: any) => {
     handleClosePop();
   };
-  console.log(dataLength);
   const acceptFriendRequest = async (id) => {
     try {
       const response = await FriendAPI.sendFriendRequestResponse({
@@ -214,7 +213,6 @@ export const NotificationBell = () => {
   const getFriendsList = async () => {
     try {
       const response = await FriendAPI.getFriendsList();
-      console.log(response.friends);
       setFriendsListData(response.friends);
     } catch (e) {
       console.log(e);
@@ -223,7 +221,6 @@ export const NotificationBell = () => {
   useEffect(() => {
     getFriendsList();
     function onNewFriendRequest(value: any) {
-      console.log("received new friend request");
       getFriendsList();
     }
 
