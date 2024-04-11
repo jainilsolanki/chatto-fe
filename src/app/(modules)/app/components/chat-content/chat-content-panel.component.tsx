@@ -7,7 +7,7 @@ const ChatContentPanel = () => {
   const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
 
   return onGoingChatData ? (
-    <ChatContent />
+    <ChatContent key={onGoingChatData?.conversationId} />
   ) : (
     //No Active Chat Message
     <NoActiveChat />
