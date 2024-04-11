@@ -48,7 +48,7 @@ export default function ChatContent() {
     return () => {
       socket?.off(`last-chat-${onGoingChatData?.conversationId}`, onMessages);
     };
-  }, [onGoingChatData]);
+  }, []);
 
   // useffect for scrolling into bottom initially and when new message appears
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function ChatContent() {
       top: chatContainer.scrollHeight,
       behavior: newMessage === null ? "instant" : "smooth",
     });
-  }, [newMessage, onGoingChatData.conversationId]);
+  }, [newMessage]);
 
   // useeffect to keep track of scroll position for loading more chats
   useEffect(() => {
