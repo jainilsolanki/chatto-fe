@@ -12,18 +12,21 @@ import React, { useEffect, useState } from "react";
 import { getTimeDifference } from "@/app/data/utils";
 import { VOID } from "@/app/data/assets-data";
 import { socket } from "@/app/components/socket.connection";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import PanelHeader from "../components/panel-header/panel-header.component";
 import CryptoJS from "crypto-js";
 import useLoader from "@/app/hooks/useLoaders";
 import PanelListSkeletons from "../components/panel-list-skeletons.component";
+import store from "@/app/services/redux";
 const ChatPanel = () => {
   const dispatch = useDispatch();
   const [friendsList, setFriendsList] = useState([]);
   const { hideLoader, isLoading } = useLoader(true);
   const theme = useTheme();
+  const [activeChatConversationId, setActiveChatConversationId] =
+    useState(null);
   useEffect(() => {
     function onFriendsList(value: any) {
       hideLoader();
@@ -42,28 +45,64 @@ const ChatPanel = () => {
     function updateLastMessage(value: any) {
       const { message } = value;
       let updatedFriendsList = [...friendsList];
-
       updatedFriendsList = updatedFriendsList.map((friend: any) => {
         if (friend.user.id === message.senderId) {
           return {
             ...friend,
-            chats: { ...friend.chats, content: message.content },
+            chats: {
+              ...friend.chats,
+              content: message.content,
+              createdAt: message.createdAt,
+            },
+            unreadMessages: message.unread_messages_count,
           };
         } else {
           return friend;
         }
       });
-
       setFriendsList(updatedFriendsList);
+
+      if (
+        message.conversationId ===
+        store.getState()?.onGoingChatData?.conversationId
+      ) {
+        setActiveChatConversationId(message.senderId);
+      }
     }
     socket?.on("message-notification", updateLastMessage);
+
+    document.addEventListener("message-notification-clicked", (e: any) => {
+      const { senderId } = e.detail;
+      setActiveChatConversationId(senderId);
+    });
 
     return () => {
       socket?.off("message-notification", updateLastMessage);
     };
   }, [friendsList]);
 
-  const getSingleChatData = async (conversationId) => {
+  useEffect(() => {
+    if (activeChatConversationId)
+      setTimeout(() => {
+        let updatedFriendsList = [...friendsList];
+        updatedFriendsList = updatedFriendsList.map((friend: any) => {
+          if (friend.user.id === activeChatConversationId) {
+            return {
+              ...friend,
+              unreadMessages: 0,
+            };
+          } else {
+            return friend;
+          }
+        });
+        setFriendsList(updatedFriendsList);
+        setActiveChatConversationId(null);
+      }, 1000);
+  }, [activeChatConversationId]);
+
+  const getSingleChatData = async (conversationId, senderId) => {
+    if (conversationId === store.getState()?.onGoingChatData?.conversationId)
+      return;
     try {
       const response = await FriendAPI.getSingleChatData(conversationId, 0);
       dispatch(
@@ -74,6 +113,19 @@ const ChatPanel = () => {
           totalChatCount: response.totalChatCount,
         })
       );
+
+      let updatedFriendsList = [...friendsList];
+      updatedFriendsList = updatedFriendsList.map((friend: any) => {
+        if (friend.user.id === senderId) {
+          return {
+            ...friend,
+            unreadMessages: 0,
+          };
+        } else {
+          return friend;
+        }
+      });
+      setFriendsList(updatedFriendsList);
     } catch (e) {
       console.log(e);
     }
@@ -129,7 +181,9 @@ const ChatPanel = () => {
                 sx={{
                   borderRadius: 5,
                 }}
-                onClick={() => getSingleChatData(user.conversationDetails.id)}
+                onClick={() =>
+                  getSingleChatData(user.conversationDetails.id, user.user.id)
+                }
               >
                 <Badge
                   overlap="circular"
@@ -198,20 +252,33 @@ const ChatPanel = () => {
                       {getTimeDifference(user.chats.createdAt)}
                     </Typography>
                   </Stack>
-                  <Box
-                    sx={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      width: "15vw",
-                    }}
-                  >
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                      {decryptMessage(
-                        user.chats.content,
-                        user.conversationDetails.id
-                      )}
-                    </Typography>
-                  </Box>
+                  <Stack direction={"row"} alignItems={"center"}>
+                    <Box
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        width: "14.5vw",
+                      }}
+                    >
+                      <Typography variant="body2" color="textSecondary" noWrap>
+                        {decryptMessage(
+                          user.chats.content,
+                          user.conversationDetails.id
+                        )}
+                      </Typography>
+                    </Box>
+
+                    <Badge
+                      badgeContent={user.unreadMessages}
+                      color="primary"
+                      max={9}
+                      sx={{
+                        "& :hover": {
+                          background: theme.palette.primary.main,
+                        },
+                      }}
+                    />
+                  </Stack>
                 </Stack>
               </Box>
             ))
