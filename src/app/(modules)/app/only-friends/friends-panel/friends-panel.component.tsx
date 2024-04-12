@@ -152,7 +152,7 @@ export default function FriendsPanel() {
                     {friend.user.first_name} {friend.user.last_name}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    Friend since {getTimeDifference(friend.createdAt)}
+                    Friends since {getTimeDifference(friend.createdAt)}
                   </Typography>
                 </Box>
                 <FriendOptions currentFriend={currentFriend} />

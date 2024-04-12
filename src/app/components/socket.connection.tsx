@@ -135,6 +135,13 @@ const SocketConnection = () => {
       notification.onclick = () => {
         window && window.focus();
         getSingleChatData(message.conversationId);
+        document.dispatchEvent(
+          new CustomEvent("message-notification-clicked", {
+            detail: {
+              senderId: message.senderId,
+            },
+          })
+        );
       };
     }
 
