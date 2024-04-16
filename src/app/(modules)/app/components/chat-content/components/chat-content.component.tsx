@@ -18,6 +18,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   loadOnGoingChatList,
   updateOnGoingChatList,
+  updateUnreadMessagesCount,
 } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import { socket } from "@/app/components/socket.connection";
 import CryptoJS from "crypto-js";
@@ -25,6 +26,8 @@ import MessageField from "../message-field/message-field.component";
 import ReactQuill from "react-quill";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import store from "@/app/services/redux";
+import ScrollToBottom from "./scroll-to-bottom.component";
+import { useSocketEmit } from "@/app/hooks/useSocketEmit";
 export default function ChatContent() {
   const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   const { userData } = useUserData();
@@ -33,12 +36,19 @@ export default function ChatContent() {
   const [chatLoader, setChatLoader] = useState<null | boolean>(false);
   const [newMessage, setNewMessage] = useState(null);
   const theme = useTheme();
-
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  const { emitEvent } = useSocketEmit();
   // useeffect for socket listner for new messages
   useEffect(() => {
     async function onMessages(value: any) {
-      const { last_chat } = value;
-      await dispatch(updateOnGoingChatList(last_chat));
+      const { last_chat, unread_messages_count } = value;
+      console.log("on new msesaf", value);
+      await dispatch(
+        updateOnGoingChatList({
+          chatList: last_chat,
+          unreadMessagesCount: unread_messages_count,
+        })
+      );
       setNewMessage((prev) => (prev === null ? true : !prev));
     }
 
@@ -51,12 +61,27 @@ export default function ChatContent() {
 
   // useffect for scrolling into bottom initially and when new message appears
   useEffect(() => {
-    const chatContainer = document.getElementById("chat-scrollable-container");
-    chatContainer.scrollTo({
-      top: chatContainer.scrollHeight,
-      behavior: newMessage === null ? "instant" : "smooth",
-    });
-  }, [newMessage]);
+    const scrollContainer = document.getElementById(
+      "chat-scrollable-container"
+    );
+    if (!showScrollToBottom) {
+      const chatContainer = document.getElementById(
+        "chat-scrollable-container"
+      );
+      chatContainer.scrollTo({
+        top: chatContainer.scrollHeight,
+        behavior: newMessage === null ? "instant" : "smooth",
+      });
+    }
+
+    //read messages when there is no scrollbar
+    if (scrollContainer.scrollHeight === scrollContainer.clientHeight) {
+      emitEvent("read-chat", {
+        conversationId: onGoingChatData?.conversationId,
+      });
+      dispatch(updateUnreadMessagesCount(0));
+    }
+  }, [newMessage, showScrollToBottom]);
 
   // useeffect to keep track of scroll position for loading more chats
   useEffect(() => {
@@ -74,6 +99,31 @@ export default function ChatContent() {
         setChatLoader(true);
         loadMoreChats();
       }
+
+      const isAtBottom =
+        scrollContainer.scrollHeight - scrollContainer.scrollTop <=
+        scrollContainer.clientHeight + 200;
+
+      const isAtBottomZero =
+        scrollContainer.scrollHeight - scrollContainer.scrollTop ===
+        scrollContainer.clientHeight;
+
+      //read messages when scroll at bottom
+      if (
+        isAtBottomZero &&
+        store.getState().onGoingChatData.unreadMessagesCount > 0
+      ) {
+        console.log("inside scroll emit event");
+        emitEvent("read-chat", {
+          conversationId: onGoingChatData?.conversationId,
+        });
+        dispatch(updateUnreadMessagesCount(0));
+      }
+
+      // if current state value is same as new value return and don't update
+      if (showScrollToBottom === !isAtBottom) return;
+
+      setShowScrollToBottom(!isAtBottom);
     };
 
     scrollContainer.addEventListener("scroll", handleScroll);
@@ -81,7 +131,7 @@ export default function ChatContent() {
     return () => {
       scrollContainer.removeEventListener("scroll", handleScroll);
     };
-  }, [chatLoader]);
+  }, [chatLoader, showScrollToBottom]);
 
   const decryptMessage = (encryptedMessage: string | undefined) => {
     if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
@@ -131,7 +181,7 @@ export default function ChatContent() {
       }
     } catch (e) {
       setChatLoader(false);
-      console.log(e);
+      console.error(e);
     }
   };
 
@@ -325,6 +375,9 @@ export default function ChatContent() {
         </Stack>
         {/* Message Textfield */}
         <MessageField />
+        {onGoingChatData.unreadMessagesCount > 0 && showScrollToBottom && (
+          <ScrollToBottom />
+        )}
       </Stack>
     </>
   );

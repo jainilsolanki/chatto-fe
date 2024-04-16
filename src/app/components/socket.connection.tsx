@@ -76,10 +76,11 @@ const SocketConnection = () => {
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
           totalChatCount: response.totalChatCount,
+          unreadMessagesCount: 0,
         })
       );
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   useEffect(() => {

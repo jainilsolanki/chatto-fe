@@ -10,11 +10,11 @@ const useUserData = () => {
         const userData = JSON.parse(userDataCookie);
         return userData;
       } catch (error) {
-        console.log("Error parsing userData cookie:", error);
+        console.error("Error parsing userData cookie:", error);
         return null;
       }
     } else {
-      console.log("userData cookie not found.");
+      console.error("userData cookie not found.");
       return null;
     }
   };

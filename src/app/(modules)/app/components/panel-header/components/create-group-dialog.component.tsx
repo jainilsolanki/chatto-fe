@@ -53,7 +53,7 @@ export default function CreateGroupDialog() {
 
       setAllFriends(response.friends);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function CreateGroupDialog() {
 
       handleClose();
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   return (

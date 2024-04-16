@@ -13,6 +13,6 @@ export function axiosRequestInterceptor(config: InternalAxiosRequestConfig) {
 export function axiosRequestErrorInterceptor(
   error: AxiosError
 ): Promise<never> {
-  console.log("Error Occurred");
+  console.error("Error Occurred");
   return Promise.reject(error);
 }

@@ -12,6 +12,12 @@ const nextConfig = {
     //     }
     // }
 
+    // used for removing logs in staging and keeping logs in dev
+    compiler: {
+        removeConsole:
+            process.env.NEXT_PUBLIC_ENVIRONMENT === "staging" ? { exclude: ["error"] } : false,
+    },
+
 };
 
 module.exports = withPWA(nextConfig)

@@ -52,7 +52,7 @@ const FriendItem = ({
         getFriendsList();
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   const rejectFriendRequest = async (id) => {
@@ -70,7 +70,7 @@ const FriendItem = ({
         }, 500);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   return (
@@ -215,7 +215,7 @@ export const NotificationBell = () => {
       const response = await FriendAPI.getFriendsList();
       setFriendsListData(response.friends);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   useEffect(() => {

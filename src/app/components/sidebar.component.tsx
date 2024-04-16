@@ -67,7 +67,7 @@ export default function Sidebar() {
   const CopyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      console.log("Copied to clipboard:", text);
+      console.info("Copied to clipboard:", text);
       setCopyIcon(false); // Show checkmark icon
       setTimeout(() => setCopyIcon(true), 3000);
     } catch (err) {

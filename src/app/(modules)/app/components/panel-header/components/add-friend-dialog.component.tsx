@@ -41,7 +41,7 @@ export default function AddFriendDialog() {
         showSnackbar(response.message, "success");
       } catch (e: any) {
         showSnackbar(e.response.data.message, "error");
-        console.log(e);
+        console.error(e);
       }
     } else {
       setError(true);

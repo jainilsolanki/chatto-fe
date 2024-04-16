@@ -3,6 +3,7 @@ export type OnGoinghatData = {
   chatList: Chat[];
   messageReceiver: ChatReceiver | {};
   totalChatCount: number;
+  unreadMessagesCount: number;
 } | null;
 
 export type Chat = {

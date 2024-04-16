@@ -111,6 +111,7 @@ const ChatPanel = () => {
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
           totalChatCount: response.totalChatCount,
+          unreadMessagesCount: 0,
         })
       );
 
@@ -127,7 +128,7 @@ const ChatPanel = () => {
       });
       setFriendsList(updatedFriendsList);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
@@ -260,7 +261,12 @@ const ChatPanel = () => {
                         width: "14.5vw",
                       }}
                     >
-                      <Typography variant="body2" color="textSecondary" noWrap>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        noWrap
+                        fontWeight={user.unreadMessages > 0 ? "800" : "medium"}
+                      >
                         {decryptMessage(
                           user.chats.content,
                           user.conversationDetails.id
