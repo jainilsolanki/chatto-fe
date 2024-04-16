@@ -28,12 +28,13 @@ export default function StartConversationConfirmationDialog() {
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
           totalChatCount: response.totalChatCount,
+          unreadMessagesCount: 0,
         })
       );
       dispatch(updateConversationId(null));
       dispatch(handleBeginConversationDialogState(false));
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   return (

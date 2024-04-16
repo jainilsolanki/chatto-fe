@@ -42,10 +42,11 @@ export default function FriendOptions({ currentFriend }) {
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
           totalChatCount: response.totalChatCount,
+          unreadMessagesCount: 0,
         })
       );
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 

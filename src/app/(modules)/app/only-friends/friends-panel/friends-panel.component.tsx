@@ -25,7 +25,7 @@ export default function FriendsPanel() {
       }
     } catch (e) {
       hideLoader();
-      console.log(e);
+      console.error(e);
     }
   };
   useEffect(() => {
@@ -41,10 +41,11 @@ export default function FriendsPanel() {
           chatList: response.chatList,
           messageReceiver: response.messageReceiver,
           totalChatCount: response.totalChatCount,
+          unreadMessagesCount: 0,
         })
       );
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   return (
