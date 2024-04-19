@@ -94,9 +94,9 @@ export default function PanelHeader({
           {showOptions && (
             <Stack direction={"row"} alignItems={"center"}>
               <NotificationBell />
-              <IconButton>
+              {/* <IconButton>
                 <SearchIcon />
-              </IconButton>
+              </IconButton> */}
               <IconButton onClick={handleClickPop}>
                 <MoreHorizIcon />
               </IconButton>

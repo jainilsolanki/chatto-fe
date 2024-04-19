@@ -7,15 +7,12 @@ import expireReducer from "redux-persist-expire";
 import dialogConfigSlice, {
   dialogConfigInitialState,
 } from "./slices/dialog-config.slice";
-import ongoingChatDataSlice, {
-  onGoingChatDataInitialState,
-} from "./slices/ongoing-chat-data.slice";
+
 import tempDataSlice, { tempDataInitialState } from "./slices/temp-data.slice";
 import appDataSlice, { appDataInitialState } from "./slices/app-data.slice";
 
 const resetAllInitialSlices = {
   ...tempDataInitialState,
-  ...onGoingChatDataInitialState,
   ...dialogConfigInitialState,
   ...appDataInitialState,
 };
@@ -40,7 +37,6 @@ const reducers = combineReducers({
 
   // Temporary
   dialogConfig: dialogConfigSlice,
-  onGoingChatData: ongoingChatDataSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

@@ -16,13 +16,15 @@ const style: SxProps = {
   right: 20,
 };
 import ArrowDownwardTwoToneIcon from "@mui/icons-material/ArrowDownwardTwoTone";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useSocketEmit } from "@/app/hooks/useSocketEmit";
-import { updateUnreadMessagesCount } from "@/app/services/redux/slices/ongoing-chat-data.slice";
-const ScrollToBottom = () => {
+const ScrollToBottom = ({
+  unreadMessagesCount,
+  conversationId,
+  setOnGoingChatData,
+}) => {
   const { emitEvent } = useSocketEmit();
   const dispatch = useDispatch();
-  const onGoingChatData = useSelector((store: any) => store.onGoingChatData);
   const chatContainer =
     document.getElementById("chat-scrollable-container") ?? undefined;
   const trigger = useScrollTrigger({ target: chatContainer });
@@ -34,13 +36,16 @@ const ScrollToBottom = () => {
     });
 
     emitEvent("read-chat", {
-      conversationId: onGoingChatData?.conversationId,
+      conversationId: conversationId,
     });
-    dispatch(updateUnreadMessagesCount(0));
+    setOnGoingChatData((prevState) => ({
+      ...prevState,
+      unreadMessagesCount: 0, // Update unreadMessagesCount to 0
+    }));
   };
 
   return (
-    <Zoom in={onGoingChatData.unreadMessagesCount > 0}>
+    <Zoom in={unreadMessagesCount > 0}>
       <Box
         onClick={handleClick}
         role="presentation"
@@ -54,7 +59,7 @@ const ScrollToBottom = () => {
           },
         }}
       >
-        <Badge badgeContent={onGoingChatData.unreadMessagesCount} max={9}>
+        <Badge badgeContent={unreadMessagesCount} max={9}>
           <Fab
             sx={{
               background: theme.palette.primary.main,

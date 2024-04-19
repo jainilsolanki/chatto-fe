@@ -23,7 +23,7 @@ import AssistantTwoToneIcon from "@mui/icons-material/AssistantTwoTone";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
 import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
-import { destroyCookie } from "nookies";
+import { destroyCookie, setCookie } from "nookies";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "./socket.connection";
@@ -32,13 +32,13 @@ import {
   clearTempData,
   updateSelectedSection,
 } from "../services/redux/slices/temp-data.slice";
-import { clearOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
 import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.slice";
 import useUserData from "../hooks/useUserData";
 import {
   clearAppDataSlice,
   updateLockStateAppLockSettings,
 } from "../services/redux/slices/app-data.slice";
+import { FriendAPI } from "../services/axios/apis/friend.api";
 type MenuItemType = {
   id: string;
   name: string;
@@ -50,6 +50,7 @@ const drawerWidth = 90;
 
 export default function Sidebar() {
   const router = useRouter();
+  const { userData } = useUserData();
   const dispatch = useDispatch();
   const tempData = useSelector((state: any) => state.tempData);
   const appData = useSelector((state: any) => state.appData);
@@ -57,13 +58,12 @@ export default function Sidebar() {
     null
   );
   const [copyIcon, setCopyIcon] = useState(true);
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState(userData?.status);
   const openPop = Boolean(anchorElPop);
   const popOverId = openPop ? "simple-popover" : undefined;
   const handleClickPop = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElPop(event.currentTarget);
   };
-  const { userData } = useUserData();
   const CopyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -123,7 +123,6 @@ export default function Sidebar() {
         socket?.disconnect();
         setTimeout(() => {
           dispatch(clearTempData());
-          dispatch(clearOnGoingChatData());
           dispatch(clearDialogConfigSlice());
           dispatch(clearAppDataSlice());
         }, 500);
@@ -140,6 +139,26 @@ export default function Sidebar() {
       color: copyIcon ? "" : "#44b700",
     },
   }));
+
+  const updateUserActiveStatus = async (status) => {
+    try {
+      const response = await FriendAPI.updateUserActiveStatus(
+        status,
+        userData.id
+      );
+
+      if (response.status) {
+        userData.status = status;
+        setCookie(null, "userData", JSON.stringify(userData), {
+          maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
+          path: "/", // Cookie path
+        });
+        setStatus(status);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <>
       <Drawer
@@ -285,7 +304,7 @@ export default function Sidebar() {
                 }}
                 src="https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               />
-              {status && (
+              {status === "active" ? (
                 <Box
                   sx={{
                     background: "#44b700",
@@ -295,6 +314,19 @@ export default function Sidebar() {
                     position: "absolute",
                     right: 2,
                     bottom: 2,
+                  }}
+                ></Box>
+              ) : (
+                <Box
+                  sx={{
+                    background: "#616161",
+                    height: 10,
+                    width: 10,
+                    borderRadius: "50%",
+                    position: "absolute",
+                    right: 2,
+                    bottom: 2,
+                    border: "2px solid #e0e0e0",
                   }}
                 ></Box>
               )}
@@ -327,14 +359,18 @@ export default function Sidebar() {
             </ListItem>
             <ListItem key={"Status"} disablePadding sx={{ display: "block" }}>
               <ListItemButton
-                onClick={() => setStatus((prev: boolean) => !prev)}
+                onClick={() =>
+                  updateUserActiveStatus(
+                    status === "active" ? "away" : "active"
+                  )
+                }
               >
                 <ListItemText
                   primary={
                     <Typography>
                       Set Yourself{" "}
                       <span style={{ fontWeight: "bold" }}>
-                        {status ? "Away" : "Active"}
+                        {status === "active" ? "Away" : "Active"}
                       </span>
                     </Typography>
                   }

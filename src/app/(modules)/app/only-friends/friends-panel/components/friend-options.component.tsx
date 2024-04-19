@@ -13,13 +13,13 @@ import {
 import { useState } from "react";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 import PersonRemoveAlt1OutlinedIcon from "@mui/icons-material/PersonRemoveAlt1Outlined";
-import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import { useDispatch } from "react-redux";
-import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
+import { useRouter } from "next/navigation";
 export default function FriendOptions({ currentFriend }) {
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
     null
   );
+  const router = useRouter();
   const dispatch = useDispatch();
   const openPop = Boolean(anchorElPop);
   const popOverId = openPop ? "simple-popover" : undefined;
@@ -32,31 +32,14 @@ export default function FriendOptions({ currentFriend }) {
     setAnchorElPop(null);
   }
 
-  const startMessaging = async (conversationId) => {
-    try {
-      const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      setAnchorElPop(null);
-      dispatch(
-        saveOnGoingChatData({
-          conversationId: Number(response.conversationId),
-          chatList: response.chatList,
-          messageReceiver: response.messageReceiver,
-          totalChatCount: response.totalChatCount,
-          unreadMessagesCount: 0,
-        })
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   const options = [
     {
       key: "message",
       optionName: "Message",
       icon: <ReviewsOutlinedIcon sx={{ fontSize: 20 }} />,
       onClick: () => {
-        startMessaging(currentFriend.conversation_id);
+        setAnchorElPop(null);
+        router.push(`/app/only-friends/${currentFriend.conversation_id}`);
       },
     },
     {
@@ -82,6 +65,7 @@ export default function FriendOptions({ currentFriend }) {
           },
           background: anchorElPop ? "rgba(0, 0, 0, 0.1)" : "transparent",
           borderRadius: "50%",
+          zIndex: 10000,
         }}
         onClick={(e: any) => {
           e.stopPropagation();
@@ -124,6 +108,7 @@ export default function FriendOptions({ currentFriend }) {
                     dense
                     onClick={(e) => {
                       e.stopPropagation();
+                      e.preventDefault();
                       option.onClick();
                     }}
                   >
