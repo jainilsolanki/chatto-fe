@@ -33,8 +33,9 @@ export default function StartConversationConfirmationDialog() {
               Do you want to begin conversation with Pragnesh Popat ?
             </DialogContentText>
             <img
+              loading="lazy"
               src={CREATE_CHAT}
-              alt="Begin Conversation"
+              alt="BEGIN_CONVERSATION_BANNER"
               width={"100%"}
               style={{ maxWidth: 200 }}
             />

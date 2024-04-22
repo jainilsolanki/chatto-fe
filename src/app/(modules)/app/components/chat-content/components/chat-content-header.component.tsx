@@ -23,7 +23,7 @@ export default function ChatContentHeader({
         ...prevState,
         messageReceiver: {
           ...prevState.messageReceiver,
-          isOnline: user.online === "active" ? true : false,
+          status: user.online,
         },
       }));
     }
@@ -34,7 +34,7 @@ export default function ChatContentHeader({
     return () => {
       socket?.off("activity-changes", updateUserActivity);
     };
-  }, [messageReceiver.isOnline]);
+  }, [messageReceiver.status]);
 
   return (
     <Stack
@@ -90,7 +90,7 @@ export default function ChatContentHeader({
             </Typography>
             {isLoading ? (
               <Skeleton width={80} animation="wave" />
-            ) : messageReceiver.isOnline ? (
+            ) : messageReceiver.status === "active" ? (
               <Stack direction={"row"} alignItems={"center"} gap={1}>
                 <Box
                   sx={{

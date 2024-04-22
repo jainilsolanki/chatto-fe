@@ -42,8 +42,7 @@ export default function ChatContent({ conversationId }) {
   useEffect(() => {
     async function onMessages(value: any) {
       const { last_chat, unread_messages_count } = value;
-      console.log("on new msesaf", value);
-      setOnGoingChatData((prevState) => ({
+      await setOnGoingChatData((prevState) => ({
         ...prevState,
         chatList: [...prevState.chatList, last_chat],
         unreadMessagesCount: unread_messages_count,
@@ -66,11 +65,8 @@ export default function ChatContent({ conversationId }) {
       "chat-scrollable-container"
     );
     if (!showScrollToBottom) {
-      const chatContainer = document.getElementById(
-        "chat-scrollable-container"
-      );
-      chatContainer.scrollTo({
-        top: chatContainer.scrollHeight,
+      scrollContainer.scrollTo({
+        top: scrollContainer.scrollHeight,
         behavior: newMessage === null ? "instant" : "smooth",
       });
     }
@@ -85,7 +81,7 @@ export default function ChatContent({ conversationId }) {
         unreadMessagesCount: 0, // Update unreadMessagesCount to 0
       }));
     }
-  }, [newMessage, showScrollToBottom]);
+  }, [newMessage, showScrollToBottom, isLoading]);
 
   // useeffect to keep track of scroll position for loading more chats
   useEffect(() => {

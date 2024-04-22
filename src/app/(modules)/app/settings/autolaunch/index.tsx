@@ -21,8 +21,9 @@ export default function AutoLaunchAppSteps() {
             Firstly install our app from the install popup.
           </Typography>
           <img
+            loading="lazy"
             src={PWA_INSTALL_POPUP}
-            alt="PWA INSTALL POPUP"
+            alt="PWA_INSTALL_POPUP_BANNER"
             width={"100%"}
             style={{
               maxWidth: 400,
@@ -41,8 +42,9 @@ export default function AutoLaunchAppSteps() {
             enter. You will see all your apps.
           </Typography>
           <img
+            loading="lazy"
             src={CHROME_PWA_APPS}
-            alt="CHROME PWA APPS"
+            alt="CHROME_PWA_APPS_BANNER"
             width={"100%"}
             style={{
               maxWidth: 400,
@@ -61,8 +63,9 @@ export default function AutoLaunchAppSteps() {
             <span style={{ color: "#21978B" }}> Launch at Startup. </span>
           </Typography>
           <img
+            loading="lazy"
             src={PWA_AUTOSTART_MENU}
-            alt="PWA AUTOSTART MENU"
+            alt="PWA_AUTOSTART_MENU_BANNER"
             width={"100%"}
             style={{
               maxWidth: 400,

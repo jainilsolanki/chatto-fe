@@ -5,8 +5,9 @@ export default function NoActiveChat() {
   return (
     <Stack justifyContent={"center"} gap={2} p={10} height={"100%"}>
       <img
+        loading="lazy"
         src={BEGIN_CHAT}
-        alt="Begin Chat"
+        alt="BEGIN_CHAT_BANNER"
         style={{ width: "100%", maxWidth: 200 }}
       />
       <Stack gap={1}>

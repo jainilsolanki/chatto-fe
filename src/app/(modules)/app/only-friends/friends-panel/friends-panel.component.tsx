@@ -33,7 +33,7 @@ export default function FriendsPanel() {
   function updateUserActivity(user: any) {
     let updatedFriendsList = [...friendsList];
     updatedFriendsList = updatedFriendsList.map((friend: any) => {
-      if (friend.user.id === user.user_id) {
+      if (Number(friend.user.id) === Number(user.user_id)) {
         return {
           ...friend,
           user: {
@@ -147,6 +147,7 @@ export default function FriendsPanel() {
               gap={2}
             >
               <img
+                loading="lazy"
                 src={VOID}
                 alt="You have no friends yet ! Start adding some"
                 style={{ maxWidth: 120, maxHeight: 120 }}

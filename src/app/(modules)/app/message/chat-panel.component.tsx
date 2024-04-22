@@ -50,7 +50,7 @@ const ChatPanel = () => {
   function updateUserActivity(user: any) {
     let updatedFriendsList = [...friendsList];
     updatedFriendsList = updatedFriendsList.map((friend: any) => {
-      if (friend.user.id === user.user_id) {
+      if (Number(friend.user.id) === Number(user.user_id)) {
         return {
           ...friend,
           user: {
@@ -69,8 +69,6 @@ const ChatPanel = () => {
     function onFriendsList(value: any) {
       hideLoader();
       const { conversationList } = value;
-
-      console.log(value);
 
       setFriendsList(conversationList);
     }
@@ -266,8 +264,9 @@ const ChatPanel = () => {
               gap={2}
             >
               <img
+                loading="lazy"
                 src={VOID}
-                alt="No Pending messages or chats"
+                alt="NO_PENDING_MESSAGES_OR_CHATS_BANNER"
                 style={{ maxWidth: 120, maxHeight: 120 }}
               />
               <Typography variant="body1" fontSize={18}>

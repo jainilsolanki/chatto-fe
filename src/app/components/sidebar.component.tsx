@@ -24,7 +24,7 @@ import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
 import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
 import { destroyCookie, setCookie } from "nookies";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "./socket.connection";
 import { useState } from "react";
@@ -49,6 +49,7 @@ type MenuItemType = {
 const drawerWidth = 90;
 
 export default function Sidebar() {
+  const { conversationId } = useParams();
   const router = useRouter();
   const { userData } = useUserData();
   const dispatch = useDispatch();
@@ -101,7 +102,11 @@ export default function Sidebar() {
       icon: <Groups2TwoToneIcon />,
       onClick: () => {
         dispatch(updateSelectedSection(2));
-        router.push("/app/only-friends");
+        if (conversationId) {
+          router.push(`/app/only-friends/${conversationId}`);
+        } else {
+          router.push(`/app/only-friends`);
+        }
       },
     },
     {
@@ -110,7 +115,11 @@ export default function Sidebar() {
       icon: <AssistantTwoToneIcon />,
       onClick: () => {
         dispatch(updateSelectedSection(3));
-        router.push("/app/message");
+        if (conversationId) {
+          router.push(`/app/message/${conversationId}`);
+        } else {
+          router.push("/app/message");
+        }
       },
     },
     {
