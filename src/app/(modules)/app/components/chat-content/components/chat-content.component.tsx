@@ -5,6 +5,7 @@ import {
   Chip,
   CircularProgress,
   Divider,
+  Skeleton,
   Stack,
   Typography,
   useTheme,
@@ -12,50 +13,49 @@ import {
 import ChatContentHeader from "./chat-content-header.component";
 import moment from "moment";
 import EmptyChat from "./empty-chat.component";
-import { useDispatch, useSelector } from "react-redux";
 import useUserData from "@/app/hooks/useUserData";
 import { useEffect, useRef, useState } from "react";
-import {
-  loadOnGoingChatList,
-  updateOnGoingChatList,
-  updateUnreadMessagesCount,
-} from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import { socket } from "@/app/components/socket.connection";
 import CryptoJS from "crypto-js";
 import MessageField from "../message-field/message-field.component";
 import ReactQuill from "react-quill";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
-import store from "@/app/services/redux";
 import ScrollToBottom from "./scroll-to-bottom.component";
 import { useSocketEmit } from "@/app/hooks/useSocketEmit";
-export default function ChatContent() {
-  const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
+import useLoader from "@/app/hooks/useLoaders";
+export default function ChatContent({ conversationId }) {
+  const [onGoingChatData, setOnGoingChatData] = useState<any>({
+    chatList: [],
+    messageReceiver: {},
+    totalChatCount: 0,
+    unreadMessagesCount: 0,
+  });
   const { userData } = useUserData();
-  const dispatch = useDispatch();
   const chatRefs = useRef<any>({});
   const [chatLoader, setChatLoader] = useState<null | boolean>(false);
   const [newMessage, setNewMessage] = useState(null);
   const theme = useTheme();
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   const { emitEvent } = useSocketEmit();
+  const { isLoading, showLoader, hideLoader } = useLoader(true);
   // useeffect for socket listner for new messages
   useEffect(() => {
     async function onMessages(value: any) {
       const { last_chat, unread_messages_count } = value;
-      console.log("on new msesaf", value);
-      await dispatch(
-        updateOnGoingChatList({
-          chatList: last_chat,
-          unreadMessagesCount: unread_messages_count,
-        })
-      );
-      setNewMessage((prev) => (prev === null ? true : !prev));
+      await setOnGoingChatData((prevState) => ({
+        ...prevState,
+        chatList: [...prevState.chatList, last_chat],
+        unreadMessagesCount: unread_messages_count,
+      }));
+
+      await setNewMessage((prev) => (prev === null ? true : !prev));
     }
 
-    socket?.on(`last-chat-${onGoingChatData?.conversationId}`, onMessages);
+    getSingleChatData();
+    socket?.on(`last-chat-${conversationId}`, onMessages);
 
     return () => {
-      socket?.off(`last-chat-${onGoingChatData?.conversationId}`, onMessages);
+      socket?.off(`last-chat-${conversationId}`, onMessages);
     };
   }, []);
 
@@ -65,11 +65,8 @@ export default function ChatContent() {
       "chat-scrollable-container"
     );
     if (!showScrollToBottom) {
-      const chatContainer = document.getElementById(
-        "chat-scrollable-container"
-      );
-      chatContainer.scrollTo({
-        top: chatContainer.scrollHeight,
+      scrollContainer.scrollTo({
+        top: scrollContainer.scrollHeight,
         behavior: newMessage === null ? "instant" : "smooth",
       });
     }
@@ -77,11 +74,14 @@ export default function ChatContent() {
     //read messages when there is no scrollbar
     if (scrollContainer.scrollHeight === scrollContainer.clientHeight) {
       emitEvent("read-chat", {
-        conversationId: onGoingChatData?.conversationId,
+        conversationId: conversationId,
       });
-      dispatch(updateUnreadMessagesCount(0));
+      setOnGoingChatData((prevState) => ({
+        ...prevState,
+        unreadMessagesCount: 0, // Update unreadMessagesCount to 0
+      }));
     }
-  }, [newMessage, showScrollToBottom]);
+  }, [newMessage, showScrollToBottom, isLoading]);
 
   // useeffect to keep track of scroll position for loading more chats
   useEffect(() => {
@@ -93,8 +93,7 @@ export default function ChatContent() {
       if (
         scrollContainer.scrollTop === 0 &&
         !chatLoader &&
-        store.getState().onGoingChatData.chatList.length !==
-          store.getState().onGoingChatData.totalChatCount
+        onGoingChatData.chatList.length !== onGoingChatData.totalChatCount
       ) {
         setChatLoader(true);
         loadMoreChats();
@@ -109,15 +108,14 @@ export default function ChatContent() {
         scrollContainer.clientHeight;
 
       //read messages when scroll at bottom
-      if (
-        isAtBottomZero &&
-        store.getState().onGoingChatData.unreadMessagesCount > 0
-      ) {
-        console.log("inside scroll emit event");
+      if (isAtBottomZero && onGoingChatData.unreadMessagesCount > 0) {
         emitEvent("read-chat", {
-          conversationId: onGoingChatData?.conversationId,
+          conversationId: conversationId,
         });
-        dispatch(updateUnreadMessagesCount(0));
+        setOnGoingChatData((prevState) => ({
+          ...prevState,
+          unreadMessagesCount: 0, // Update unreadMessagesCount to 0
+        }));
       }
 
       // if current state value is same as new value return and don't update
@@ -138,7 +136,7 @@ export default function ChatContent() {
 
     const bytes = CryptoJS.AES.decrypt(
       encryptedMessage,
-      String(onGoingChatData.conversationId)
+      String(conversationId)
     );
     const decryptedMessage = bytes.toString(CryptoJS.enc.Utf8);
     return decryptedMessage;
@@ -166,14 +164,18 @@ export default function ChatContent() {
   const loadMoreChats = async () => {
     try {
       const response = await FriendAPI.getSingleChatData(
-        store.getState().onGoingChatData.conversationId,
-        store.getState().onGoingChatData.chatList.length
+        conversationId,
+        onGoingChatData.chatList.length
       );
       setChatLoader(false);
       if (response.status) {
         const firstChatId = Object.keys(chatRefs.current)[0];
         const firstChatElement = chatRefs.current[firstChatId];
-        await dispatch(loadOnGoingChatList(response.chatList));
+        await setOnGoingChatData((prevState) => ({
+          ...prevState,
+          chatList: [...response.chatList, ...prevState.chatList],
+        }));
+
         document.getElementById("chat-scrollable-container").scrollTo({
           top: firstChatElement.getBoundingClientRect().top - 150,
           behavior: "instant",
@@ -185,12 +187,32 @@ export default function ChatContent() {
     }
   };
 
+  const getSingleChatData = async () => {
+    try {
+      const response = await FriendAPI.getSingleChatData(conversationId, 0);
+      hideLoader();
+      setOnGoingChatData({
+        conversationId: Number(response.conversationId),
+        chatList: response.chatList,
+        messageReceiver: response.messageReceiver,
+        totalChatCount: response.totalChatCount,
+        unreadMessagesCount: 0,
+      });
+    } catch (e) {
+      console.error(e);
+      hideLoader();
+    }
+  };
   const groupedChats = groupChatsByDate();
 
   return (
     <>
       {/* Ongoing Chat Header */}
-      <ChatContentHeader messageReceiver={onGoingChatData.messageReceiver} />
+      <ChatContentHeader
+        messageReceiver={onGoingChatData.messageReceiver}
+        isLoading={isLoading}
+        setOnGoingChatData={setOnGoingChatData}
+      />
       <Divider />
       {/* Chat List */}
       <Stack
@@ -206,7 +228,36 @@ export default function ChatContent() {
               <CircularProgress size={30} />
             </Stack>
           )}
-          {onGoingChatData.chatList.length !== 0 ? (
+          {isLoading ? (
+            [...Array(4)].map((_, index) => (
+              <Box key={index}>
+                <Box
+                  p={1}
+                  sx={{
+                    alignItems: "center",
+                    display: "flex",
+                    justifyContent: index % 2 === 0 ? "flex-start" : "flex-end",
+                  }}
+                >
+                  <Typography variant="h3" width={300}>
+                    <Skeleton sx={{ borderRadius: 4 }} animation="wave" />
+                  </Typography>
+                </Box>
+                <Box
+                  p={1}
+                  sx={{
+                    alignItems: "center",
+                    display: "flex",
+                    justifyContent: index % 2 !== 0 ? "flex-start" : "flex-end",
+                  }}
+                >
+                  <Typography variant="h3" width={300}>
+                    <Skeleton sx={{ borderRadius: 4 }} animation="wave" />
+                  </Typography>
+                </Box>
+              </Box>
+            ))
+          ) : onGoingChatData.chatList.length !== 0 ? (
             Object.entries(groupedChats).map(
               ([date, chats]: [date: any, chats: any], index: number) => {
                 let dayLabel = moment(date).calendar(null, {
@@ -231,9 +282,6 @@ export default function ChatContent() {
                       <Chip
                         label={dayLabel}
                         variant="outlined"
-                        // size="small"
-                        // sx={{ fontSize: 12 }}
-
                         sx={{
                           background:
                             theme.palette.mode === "light"
@@ -374,9 +422,17 @@ export default function ChatContent() {
           )}
         </Stack>
         {/* Message Textfield */}
-        <MessageField />
+        {isLoading ? (
+          <Skeleton sx={{ py: 10, mx: 1, borderRadius: 4 }} animation="wave" />
+        ) : (
+          <MessageField conversationId={conversationId} />
+        )}
         {onGoingChatData.unreadMessagesCount > 0 && showScrollToBottom && (
-          <ScrollToBottom />
+          <ScrollToBottom
+            unreadMessagesCount={onGoingChatData.unreadMessagesCount}
+            conversationId={conversationId}
+            setOnGoingChatData={setOnGoingChatData}
+          />
         )}
       </Stack>
     </>

@@ -116,7 +116,13 @@ export default function AddFriendDialog() {
                 Note: You can find your user code in your profile
               </DialogContentText>
             </Stack>
-            <img src={ADD_FRIEND} width={"100%"} style={{ maxWidth: 250 }} />
+            <img
+              src={ADD_FRIEND}
+              width={"100%"}
+              style={{ maxWidth: 250 }}
+              alt="ADD_FRIEND_BANNER"
+              loading="lazy"
+            />
           </Stack>
         </DialogContent>
         <DialogActions>

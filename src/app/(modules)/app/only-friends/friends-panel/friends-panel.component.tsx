@@ -1,21 +1,22 @@
 "use client";
 import { VOID } from "@/app/data/assets-data";
 import { getTimeDifference } from "@/app/data/utils";
-import { Avatar, Badge, Box, Stack, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
 import FriendOptions from "./components/friend-options.component";
 import { useEffect, useState } from "react";
 import PanelHeader from "../../components/panel-header/panel-header.component";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
-import { useDispatch } from "react-redux";
-import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import useLoader from "@/app/hooks/useLoaders";
 import PanelListSkeletons from "../../components/panel-list-skeletons.component";
+import { socket } from "@/app/components/socket.connection";
+import UserActivityBadge from "../../components/user-activity-badge.component";
+import { useRouter } from "next/navigation";
 export default function FriendsPanel() {
   const [currentFriend, setCurrentFriend] = useState<any>(null);
-  const dispatch = useDispatch();
   const theme = useTheme();
   const { hideLoader, isLoading } = useLoader(true);
   const [friendsList, setFriendsList] = useState([]);
+  const router = useRouter();
   const getAllFriends = async () => {
     try {
       const response = await FriendAPI.getAllFriends();
@@ -28,26 +29,40 @@ export default function FriendsPanel() {
       console.error(e);
     }
   };
+
+  function updateUserActivity(user: any) {
+    let updatedFriendsList = [...friendsList];
+    updatedFriendsList = updatedFriendsList.map((friend: any) => {
+      if (Number(friend.user.id) === Number(user.user_id)) {
+        return {
+          ...friend,
+          user: {
+            ...friend.user,
+            status: user.online,
+          },
+        };
+      } else {
+        return friend;
+      }
+    });
+    setFriendsList(updatedFriendsList);
+  }
+
+  const navigateToConversation = (conversationId: number) => {
+    router.push(`/app/only-friends/${conversationId}`);
+  };
   useEffect(() => {
     getAllFriends();
   }, []);
 
-  const startMessaging = async (conversationId) => {
-    try {
-      const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      dispatch(
-        saveOnGoingChatData({
-          conversationId: Number(response.conversationId),
-          chatList: response.chatList,
-          messageReceiver: response.messageReceiver,
-          totalChatCount: response.totalChatCount,
-          unreadMessagesCount: 0,
-        })
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  useEffect(() => {
+    socket?.on("activity-changes", updateUserActivity);
+
+    return () => {
+      socket?.off("activity-changes", updateUserActivity);
+    };
+  }, [friendsList]);
+
   return (
     <>
       {/* Panel Header */}
@@ -95,45 +110,10 @@ export default function FriendsPanel() {
                 onMouseOut={() => setCurrentFriend(null)}
                 onClick={(e) => {
                   e.stopPropagation();
-                  startMessaging(friend.conversation_id);
+                  navigateToConversation(friend.conversation_id);
                 }}
               >
-                <Badge
-                  overlap="circular"
-                  // anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  variant="dot"
-                  // invisible={!user.is_online}
-                  sx={{
-                    marginRight: "10px",
-
-                    "& .MuiBadge-badge": {
-                      backgroundColor: "#44b700",
-                      color: "#44b700",
-                      // boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-                      "&::after": {
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "50%",
-                        animation: "ripple 1.2s infinite ease-in-out",
-                        border: "1px solid currentColor",
-                        content: '""',
-                      },
-                    },
-                    "@keyframes ripple": {
-                      "0%": {
-                        transform: "scale(.8)",
-                        opacity: 1,
-                      },
-                      "100%": {
-                        transform: "scale(2.4)",
-                        opacity: 0,
-                      },
-                    },
-                  }}
-                >
+                <UserActivityBadge status={friend.user.status}>
                   <Avatar
                     sx={{
                       // bgcolor: getRandomColor(),
@@ -147,7 +127,7 @@ export default function FriendsPanel() {
                     {friend.user.first_name.charAt(0).toUpperCase() +
                       friend.user.last_name.charAt(0).toUpperCase()}
                   </Avatar>
-                </Badge>
+                </UserActivityBadge>
                 <Box flexGrow={1}>
                   <Typography variant="body1" fontWeight={"bold"}>
                     {friend.user.first_name} {friend.user.last_name}
@@ -167,6 +147,7 @@ export default function FriendsPanel() {
               gap={2}
             >
               <img
+                loading="lazy"
                 src={VOID}
                 alt="You have no friends yet ! Start adding some"
                 style={{ maxWidth: 120, maxHeight: 120 }}

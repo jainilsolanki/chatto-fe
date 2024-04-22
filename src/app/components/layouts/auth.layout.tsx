@@ -79,9 +79,10 @@ export default function AuthLayout({ leftContent, rightBanner }: LayoutType) {
               }}
             >
               <img
+                loading="lazy"
                 src={rightBanner}
                 style={{ objectFit: "cover", height: "70vh" }}
-                alt="image"
+                alt="RIGHT_BANNER"
               />
             </Grid>
           </Grid>

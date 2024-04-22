@@ -170,7 +170,7 @@ export default function CreateGroupDialog() {
                     display: "flex",
                     flexDirection: "column",
                     gap: 0.5,
-                    background:"transparent"
+                    background: "transparent",
                   }}
                 >
                   <Stack
@@ -316,9 +316,10 @@ export default function CreateGroupDialog() {
                   >
                     <img
                       src={NO_FRIENDS}
-                      alt="no friends found"
+                      alt="NO_FRIENDS_FOUND_BANNER"
                       width={"100%"}
                       style={{ maxWidth: "150px" }}
+                      loading="lazy"
                     />
                     <Typography variant="body1">No friends found</Typography>
                   </Stack>

@@ -3,11 +3,8 @@ import { useEffect } from "react";
 import { socketURL } from "../data/constants-data";
 import { io } from "socket.io-client";
 import useUserData from "../hooks/useUserData";
-import { FriendAPI } from "../services/axios/apis/friend.api";
 import { useDispatch, useSelector } from "react-redux";
-import { saveOnGoingChatData } from "../services/redux/slices/ongoing-chat-data.slice";
-import store from "../services/redux";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { updateSelectedSection } from "../services/redux/slices/temp-data.slice";
 import CryptoJS from "crypto-js";
 export let socket: any;
@@ -15,6 +12,7 @@ let preventNotification = false;
 let lastNotification: any = null;
 const SocketConnection = () => {
   const appData = useSelector((store: any) => store.appData);
+  const { conversationId } = useParams();
   const { notificationSettings } = appData;
   const { appLockSettings } = appData;
   const { userData } = useUserData();
@@ -58,30 +56,9 @@ const SocketConnection = () => {
     return content;
   };
 
-  const getSingleChatData = async (conversationId) => {
-    if (conversationId === store?.getState()?.onGoingChatData?.conversationId) {
-      router.push("/app/message");
-      dispatch(updateSelectedSection(3));
-      return;
-    }
-    try {
-      const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      if (currentPath !== "/app/message") {
-        router.push("/app/message");
-        dispatch(updateSelectedSection(3));
-      }
-      dispatch(
-        saveOnGoingChatData({
-          conversationId: Number(response.conversationId),
-          chatList: response.chatList,
-          messageReceiver: response.messageReceiver,
-          totalChatCount: response.totalChatCount,
-          unreadMessagesCount: 0,
-        })
-      );
-    } catch (e) {
-      console.error(e);
-    }
+  const navigateTochat = async (conversationId) => {
+    router.push(`/app/message/${conversationId}`);
+    dispatch(updateSelectedSection(3));
   };
   useEffect(() => {
     //code for checking notification access
@@ -95,8 +72,8 @@ const SocketConnection = () => {
 
       // don't send notification of person who the user is currently interacting with
       if (
-        message.conversationId ===
-          store?.getState()?.onGoingChatData?.conversationId &&
+        conversationId &&
+        Number(message.conversationId) === Number(conversationId) &&
         document.visibilityState === "visible" &&
         currentPath === "/app/message"
       )
@@ -135,7 +112,7 @@ const SocketConnection = () => {
 
       notification.onclick = () => {
         window && window.focus();
-        getSingleChatData(message.conversationId);
+        navigateTochat(message.conversationId);
         document.dispatchEvent(
           new CustomEvent("message-notification-clicked", {
             detail: {

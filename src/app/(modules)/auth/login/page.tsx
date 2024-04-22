@@ -12,7 +12,7 @@ export default function LoginPage() {
     );
 
     if (response.status) {
-      const { id, first_name, last_name, email, user_code } =
+      const { id, first_name, last_name, email, user_code, status } =
         response.data.user;
       cookies().set({
         name: "userData",
@@ -23,6 +23,7 @@ export default function LoginPage() {
           email,
           accessToken: response.accessToken,
           user_code,
+          status: status === "inactive" ? "active" : "away",
         }),
         expires: 15 * 24 * 60 * 60, // Expires in 15 days,
         maxAge: 15 * 24 * 60 * 60, // Expires in 15 days

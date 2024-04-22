@@ -53,4 +53,13 @@ export const FriendAPI = {
     const response = await request.data;
     return response;
   },
+  updateUserActiveStatus: async (status, userId) => {
+    const request = await GlobalInstance.request({
+      url: `/users/status/${userId}`,
+      method: "PUT",
+      data: { status },
+    });
+    const response = await request.data;
+    return response;
+  },
 };

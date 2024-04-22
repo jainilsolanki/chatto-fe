@@ -1,8 +1,6 @@
 "use client";
 import { CREATE_CHAT } from "@/app/data/assets-data";
-import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
-import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import { updateConversationId } from "@/app/services/redux/slices/temp-data.slice";
 import {
   Button,
@@ -13,30 +11,13 @@ import {
   DialogTitle,
   Stack,
 } from "@mui/material";
+import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function StartConversationConfirmationDialog() {
   const dispatch = useDispatch();
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
   const tempData = useSelector((state: any) => state.tempData);
-  const getSingleChatData = async (conversationId) => {
-    try {
-      const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      dispatch(
-        saveOnGoingChatData({
-          conversationId: Number(response.conversationId),
-          chatList: response.chatList,
-          messageReceiver: response.messageReceiver,
-          totalChatCount: response.totalChatCount,
-          unreadMessagesCount: 0,
-        })
-      );
-      dispatch(updateConversationId(null));
-      dispatch(handleBeginConversationDialogState(false));
-    } catch (e) {
-      console.error(e);
-    }
-  };
   return (
     <>
       <Dialog
@@ -52,8 +33,9 @@ export default function StartConversationConfirmationDialog() {
               Do you want to begin conversation with Pragnesh Popat ?
             </DialogContentText>
             <img
+              loading="lazy"
               src={CREATE_CHAT}
-              alt="Begin Conversation"
+              alt="BEGIN_CONVERSATION_BANNER"
               width={"100%"}
               style={{ maxWidth: 200 }}
             />
@@ -67,13 +49,17 @@ export default function StartConversationConfirmationDialog() {
           >
             Later
           </Button>
-          <Button
-            variant="contained"
-            sx={{ width: "100%" }}
-            onClick={() => getSingleChatData(tempData.conversationId)}
-          >
-            Begin
-          </Button>
+          <Link href={`/app/message/${tempData.conversationId}`}>
+            <Button
+              variant="contained"
+              sx={{ width: "100%" }}
+              onClick={() => {
+                dispatch(updateConversationId(null));
+              }}
+            >
+              Begin
+            </Button>
+          </Link>
         </DialogActions>
       </Dialog>
     </>

@@ -25,6 +25,8 @@ export default function EmptyChat() {
             Send a message or tap the greeting below.
           </Typography>
           <img
+            alt="BEGIN_CHAT_GIF"
+            loading="lazy"
             src={HEY_EMOJI}
             width={"100%"}
             style={{ maxWidth: 150, cursor: "pointer" }}

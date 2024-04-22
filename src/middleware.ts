@@ -12,6 +12,16 @@ export function middleware(request: NextRequest) {
   if (!isPublicPath && !currentUser) {
     return NextResponse.redirect(new URL("/auth/login", request.nextUrl));
   }
+
+  // Redirect logged-in users from root to /app/home
+  if (path === "/" && currentUser) {
+    return NextResponse.redirect(new URL("/app/home", request.nextUrl));
+  }
+
+  // If the user is not logged in and tries to access root, redirect to login
+  if (path === "/" && !currentUser) {
+    return NextResponse.redirect(new URL("/auth/login", request.nextUrl));
+  }
 }
 
 export const config = {

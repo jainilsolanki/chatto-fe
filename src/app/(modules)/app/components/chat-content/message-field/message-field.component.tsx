@@ -1,7 +1,6 @@
 import { useSocketEmit } from "@/app/hooks/useSocketEmit";
 import { Box, IconButton, Stack, useTheme } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import SendMessageButton from "./components/send-button.component";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
 import GifOutlinedIcon from "@mui/icons-material/GifOutlined";
@@ -23,10 +22,9 @@ const modules = {
   toolbar: toolbarOptions,
 };
 
-export default function MessageField() {
+export default function MessageField({ conversationId }) {
   const { emitEvent } = useSocketEmit();
   const [messageToSend, setMessageToSend] = useState("");
-  const onGoingChatData = useSelector((state: any) => state.onGoingChatData);
   const [theme, setTheme] = useState("bubble");
   const quillRef = useRef(null);
   const [shouldFocus, setShouldFocus] = useState(true);
@@ -51,7 +49,7 @@ export default function MessageField() {
 
     emitEvent("message", {
       message: processedMessage,
-      conversationId: onGoingChatData.conversationId,
+      conversationId: conversationId,
     });
     const quill = quillRef.current.getEditor();
     quill.focus();

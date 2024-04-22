@@ -116,8 +116,9 @@ export default function Notifications() {
                   Mac users please make sure notifications are enabled and set
                   to alerts for Google Chrome Helper (Alerts)
                   <img
+                    loading="lazy"
                     src={MAC_NOTIFICATION_INFO}
-                    alt="MAC NOTIFICATION INFO"
+                    alt="MAC_NOTIFICATION_INFO_BANNER"
                     style={{ borderRadius: 10 }}
                   />
                 </Stack>

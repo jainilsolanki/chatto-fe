@@ -7,7 +7,12 @@ export default function Logo({ logoStyles, imgStyles }: any) {
       <Box
         sx={{ display: "flex", alignItems: "center", gap: 0.5, ...logoStyles }}
       >
-        <img style={{ width: 50, ...imgStyles }} src={LOGO} />{" "}
+        <img
+          loading="lazy"
+          alt="LOGO_BANNER"
+          style={{ width: 50, ...imgStyles }}
+          src={LOGO}
+        />{" "}
         <Typography variant="h3" textTransform={"uppercase"}>
           Chatto
         </Typography>

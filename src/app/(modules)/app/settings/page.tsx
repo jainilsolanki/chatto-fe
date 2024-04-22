@@ -1,6 +1,5 @@
 "use client";
 import AppLayout from "@/app/components/layouts/app.layout";
-import AppWrapper from "@/app/wrappers/app.wrapper";
 import React, { useState } from "react";
 import SettingsPanel from "./components/settings-panel.component";
 import Customisations from "./customisations";
@@ -50,16 +49,14 @@ export default function Settings() {
     }
   };
   return (
-    <AppWrapper>
-      <AppLayout
-        leftPanel={
-          <SettingsPanel
-            activeSetting={activeSetting}
-            setActiveSetting={setActiveSetting}
-          />
-        }
-        rightPanel={getActiveSetting()}
-      />
-    </AppWrapper>
+    <AppLayout
+      leftPanel={
+        <SettingsPanel
+          activeSetting={activeSetting}
+          setActiveSetting={setActiveSetting}
+        />
+      }
+      rightPanel={getActiveSetting()}
+    />
   );
 }

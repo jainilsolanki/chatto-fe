@@ -190,8 +190,9 @@ export const FriendsList = ({
       ) : (
         <Box p={3}>
           <img
+            loading="lazy"
             src={NO_PENDING_REQUESTS}
-            alt="No notifications"
+            alt="NO_NOTIFICATIONS_BANNER"
             width={"100%"}
             style={{ maxWidth: 200, margin: "auto" }}
           />

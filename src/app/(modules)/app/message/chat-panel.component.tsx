@@ -1,36 +1,75 @@
 "use client";
-import {
-  Avatar,
-  Badge,
-  Box,
-  Skeleton,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Avatar, Badge, Box, Stack, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getTimeDifference } from "@/app/data/utils";
 import { VOID } from "@/app/data/assets-data";
 import { socket } from "@/app/components/socket.connection";
-import { useDispatch, useSelector } from "react-redux";
-import { FriendAPI } from "@/app/services/axios/apis/friend.api";
-import { saveOnGoingChatData } from "@/app/services/redux/slices/ongoing-chat-data.slice";
 import PanelHeader from "../components/panel-header/panel-header.component";
 import CryptoJS from "crypto-js";
 import useLoader from "@/app/hooks/useLoaders";
 import PanelListSkeletons from "../components/panel-list-skeletons.component";
-import store from "@/app/services/redux";
+import UserActivityBadge from "../components/user-activity-badge.component";
+import { useParams, useRouter } from "next/navigation";
 const ChatPanel = () => {
-  const dispatch = useDispatch();
+  const router = useRouter();
+  const { conversationId } = useParams();
   const [friendsList, setFriendsList] = useState([]);
   const { hideLoader, isLoading } = useLoader(true);
   const theme = useTheme();
   const [activeChatConversationId, setActiveChatConversationId] =
     useState(null);
+
+  function updateLastMessage(value: any) {
+    const { message } = value;
+    let updatedFriendsList = [...friendsList];
+    updatedFriendsList = updatedFriendsList.map((friend: any) => {
+      if (friend.user.id === message.senderId) {
+        return {
+          ...friend,
+          chats: {
+            ...friend.chats,
+            content: message.content,
+            createdAt: message.createdAt,
+          },
+          unreadMessages: message.unread_messages_count,
+        };
+      } else {
+        return friend;
+      }
+    });
+    setFriendsList(updatedFriendsList);
+
+    if (
+      conversationId &&
+      Number(message.conversationId) === Number(conversationId)
+    ) {
+      setActiveChatConversationId(message.senderId);
+    }
+  }
+
+  function updateUserActivity(user: any) {
+    let updatedFriendsList = [...friendsList];
+    updatedFriendsList = updatedFriendsList.map((friend: any) => {
+      if (Number(friend.user.id) === Number(user.user_id)) {
+        return {
+          ...friend,
+          user: {
+            ...friend.user,
+            status: user.online,
+          },
+        };
+      } else {
+        return friend;
+      }
+    });
+    setFriendsList(updatedFriendsList);
+  }
+
   useEffect(() => {
     function onFriendsList(value: any) {
       hideLoader();
       const { conversationList } = value;
+
       setFriendsList(conversationList);
     }
 
@@ -42,35 +81,8 @@ const ChatPanel = () => {
   }, []);
 
   useEffect(() => {
-    function updateLastMessage(value: any) {
-      const { message } = value;
-      let updatedFriendsList = [...friendsList];
-      updatedFriendsList = updatedFriendsList.map((friend: any) => {
-        if (friend.user.id === message.senderId) {
-          return {
-            ...friend,
-            chats: {
-              ...friend.chats,
-              content: message.content,
-              createdAt: message.createdAt,
-            },
-            unreadMessages: message.unread_messages_count,
-          };
-        } else {
-          return friend;
-        }
-      });
-      setFriendsList(updatedFriendsList);
-
-      if (
-        message.conversationId ===
-        store.getState()?.onGoingChatData?.conversationId
-      ) {
-        setActiveChatConversationId(message.senderId);
-      }
-    }
     socket?.on("message-notification", updateLastMessage);
-
+    socket?.on("activity-changes", updateUserActivity);
     document.addEventListener("message-notification-clicked", (e: any) => {
       const { senderId } = e.detail;
       setActiveChatConversationId(senderId);
@@ -78,8 +90,9 @@ const ChatPanel = () => {
 
     return () => {
       socket?.off("message-notification", updateLastMessage);
+      socket?.off("activity-changes", updateUserActivity);
     };
-  }, [friendsList]);
+  }, [friendsList, conversationId]);
 
   useEffect(() => {
     if (activeChatConversationId)
@@ -101,20 +114,8 @@ const ChatPanel = () => {
   }, [activeChatConversationId]);
 
   const getSingleChatData = async (conversationId, senderId) => {
-    if (conversationId === store.getState()?.onGoingChatData?.conversationId)
-      return;
+    router.push(`/app/message/${conversationId}`);
     try {
-      const response = await FriendAPI.getSingleChatData(conversationId, 0);
-      dispatch(
-        saveOnGoingChatData({
-          conversationId: Number(response.conversationId),
-          chatList: response.chatList,
-          messageReceiver: response.messageReceiver,
-          totalChatCount: response.totalChatCount,
-          unreadMessagesCount: 0,
-        })
-      );
-
       let updatedFriendsList = [...friendsList];
       updatedFriendsList = updatedFriendsList.map((friend: any) => {
         if (friend.user.id === senderId) {
@@ -150,7 +151,7 @@ const ChatPanel = () => {
   return (
     <>
       {/* Panel Header */}
-      <PanelHeader title={"Messages"} showOptions={true}/>
+      <PanelHeader title={"Messages"} showOptions={true} />
       {/* Chat List */}
       {isLoading ? (
         <PanelListSkeletons />
@@ -186,41 +187,8 @@ const ChatPanel = () => {
                   getSingleChatData(user.conversationDetails.id, user.user.id)
                 }
               >
-                <Badge
-                  overlap="circular"
-                  // anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  variant="dot"
-                  // invisible={!user.is_online}
-                  sx={{
-                    marginRight: "10px",
-
-                    "& .MuiBadge-badge": {
-                      backgroundColor: "#44b700",
-                      color: "#44b700",
-                      // boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-                      "&::after": {
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "50%",
-                        animation: "ripple 1.2s infinite ease-in-out",
-                        border: "1px solid currentColor",
-                        content: '""',
-                      },
-                    },
-                    "@keyframes ripple": {
-                      "0%": {
-                        transform: "scale(.8)",
-                        opacity: 1,
-                      },
-                      "100%": {
-                        transform: "scale(2.4)",
-                        opacity: 0,
-                      },
-                    },
-                  }}
+                <UserActivityBadge
+                  status={(user.conversationDetails.id, user.user.status)}
                 >
                   <Avatar
                     sx={{
@@ -235,7 +203,7 @@ const ChatPanel = () => {
                     {user.user.first_name.charAt(0).toUpperCase() +
                       user.user.last_name.charAt(0).toUpperCase()}
                   </Avatar>
-                </Badge>
+                </UserActivityBadge>
                 <Stack width={"100%"}>
                   <Stack
                     flexGrow={1}
@@ -296,8 +264,9 @@ const ChatPanel = () => {
               gap={2}
             >
               <img
+                loading="lazy"
                 src={VOID}
-                alt="No Pending messages or chats"
+                alt="NO_PENDING_MESSAGES_OR_CHATS_BANNER"
                 style={{ maxWidth: 120, maxHeight: 120 }}
               />
               <Typography variant="body1" fontSize={18}>
