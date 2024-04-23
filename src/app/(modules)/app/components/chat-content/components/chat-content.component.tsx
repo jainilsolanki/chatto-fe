@@ -105,7 +105,7 @@ export default function ChatContent({ conversationId }) {
         scrollContainer.clientHeight + 200;
 
       const isAtBottomZero =
-        scrollContainer.scrollHeight - scrollContainer.scrollTop ===
+        scrollContainer.scrollHeight - scrollContainer.scrollTop <=
         scrollContainer.clientHeight;
 
       //read messages when scroll at bottom
@@ -131,6 +131,30 @@ export default function ChatContent({ conversationId }) {
       scrollContainer.removeEventListener("scroll", handleScroll);
     };
   }, [chatLoader, showScrollToBottom, onGoingChatData.unreadMessagesCount]);
+
+  // useeffect for adjusting scrolling when loading new chats
+  useEffect(() => {
+    const totalChats = Object.keys(chatRefs.current).length;
+    let startIndex = 0;
+
+    if (totalChats > 30) {
+      const remainder = totalChats % 30;
+      if (remainder !== 0) {
+        startIndex = remainder;
+      } else {
+        startIndex = totalChats - 30;
+      }
+    }
+
+    const firstChatId = Object.keys(chatRefs.current)[startIndex];
+    const firstChatElement = chatRefs.current[firstChatId];
+    if (!chatLoader && firstChatElement) {
+      document.getElementById("chat-scrollable-container").scrollTo({
+        top: firstChatElement.getBoundingClientRect().top - 150,
+        behavior: "instant",
+      });
+    }
+  }, [chatLoader]);
 
   const decryptMessage = (encryptedMessage: string | undefined) => {
     if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
@@ -168,19 +192,17 @@ export default function ChatContent({ conversationId }) {
         conversationId,
         onGoingChatData.chatList.length
       );
-      setChatLoader(false);
       if (response.status) {
-        const firstChatId = Object.keys(chatRefs.current)[0];
-        const firstChatElement = chatRefs.current[firstChatId];
+        const updatedChatList = [
+          ...response.chatList,
+          ...onGoingChatData.chatList,
+        ];
+
         await setOnGoingChatData((prevState) => ({
           ...prevState,
-          chatList: [...response.chatList, ...prevState.chatList],
+          chatList: updatedChatList,
         }));
-
-        document.getElementById("chat-scrollable-container").scrollTo({
-          top: firstChatElement.getBoundingClientRect().top - 150,
-          behavior: "instant",
-        });
+        setChatLoader(false);
       }
     } catch (e) {
       setChatLoader(false);
