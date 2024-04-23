@@ -49,12 +49,16 @@ export default function StartConversationConfirmationDialog() {
           >
             Later
           </Button>
-          <Link href={`/app/message/${tempData.conversationId}`}>
+          <Link
+            href={`/app/message/${tempData.conversationId}`}
+            style={{ width: "100%" }}
+          >
             <Button
               variant="contained"
               sx={{ width: "100%" }}
               onClick={() => {
                 dispatch(updateConversationId(null));
+                dispatch(handleBeginConversationDialogState(false));
               }}
             >
               Begin

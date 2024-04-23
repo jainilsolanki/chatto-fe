@@ -3,7 +3,6 @@ import { TempDataTypes } from "../types/temp-data.type";
 
 export const tempDataInitialState: TempDataTypes = {
   conversationId: null,
-  selectedSection: 3,
 };
 
 const tempDataSlice = createSlice({
@@ -14,16 +13,11 @@ const tempDataSlice = createSlice({
       let s = current(state);
       return { ...s, conversationId: action.payload };
     },
-    updateSelectedSection(state, action: PayloadAction<number | null>) {
-      let s = current(state);
-      return { ...s, selectedSection: action.payload };
-    },
     clearTempData() {
       return { ...tempDataInitialState };
     },
   },
 });
 
-export const { updateConversationId, updateSelectedSection, clearTempData } =
-  tempDataSlice.actions;
+export const { updateConversationId, clearTempData } = tempDataSlice.actions;
 export default tempDataSlice.reducer;

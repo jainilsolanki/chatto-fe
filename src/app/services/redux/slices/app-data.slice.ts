@@ -4,6 +4,7 @@ import { PaletteMode } from "@mui/material";
 
 export const appDataInitialState: AppData = {
   theme: "light",
+  selectedSection: 0,
   notificationSettings: {
     muted: "no",
     paused: "no",
@@ -117,6 +118,10 @@ const appDataSlice = createSlice({
         },
       };
     },
+    updateSelectedSection(state, action: PayloadAction<number | null>) {
+      let s = current(state);
+      return { ...s, selectedSection: action.payload };
+    },
     clearAppDataSlice() {
       return { ...appDataInitialState };
     },
@@ -126,6 +131,7 @@ const appDataSlice = createSlice({
 export const {
   handleAppTheme,
   clearAppDataSlice,
+  updateSelectedSection,
   updateMutedNotificationSettings,
   updatePausedNotificationSettings,
   updateNotificationNotificationSettings,

@@ -21,21 +21,21 @@ const persistConfig = {
   key: "root",
   storage,
   transforms: [
-    expireReducer("tempData", {
+    expireReducer("appData", {
       //expire in 15 days
       expireSeconds: 15 * 24 * 60 * 60,
       expiredState: resetAllInitialSlices,
       autoExpire: true,
     }),
   ],
-  whitelist: ["tempData", "appData"],
+  whitelist: ["appData"],
 };
 const reducers = combineReducers({
   //Persistent
-  tempData: tempDataSlice,
   appData: appDataSlice,
 
   // Temporary
+  tempData: tempDataSlice,
   dialogConfig: dialogConfigSlice,
 });
 
