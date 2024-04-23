@@ -7,6 +7,7 @@ import {
   Divider,
   Skeleton,
   Stack,
+  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -129,7 +130,7 @@ export default function ChatContent({ conversationId }) {
     return () => {
       scrollContainer.removeEventListener("scroll", handleScroll);
     };
-  }, [chatLoader, showScrollToBottom]);
+  }, [chatLoader, showScrollToBottom, onGoingChatData.unreadMessagesCount]);
 
   const decryptMessage = (encryptedMessage: string | undefined) => {
     if (!encryptedMessage) return ""; // Check if encryptedMessage is undefined or falsy
@@ -378,17 +379,31 @@ export default function ChatContent({ conversationId }) {
                                 />
                               </Typography>
 
-                              <Typography
-                                variant="caption"
-                                sx={{
-                                  color:
-                                    theme.palette.mode === "light"
-                                      ? "#888"
-                                      : "#fff",
-                                }}
+                              <Tooltip
+                                title={moment(chat.createdAt).calendar(null, {
+                                  sameDay: "[Today] hh:mm A",
+                                  lastDay: "[Yesterday] hh:mm A",
+                                  lastWeek: "dddd D, hh:mm A",
+                                  sameElse: "dddd, MMMM D, YYYY hh:mm A",
+                                })}
+                                arrow
                               >
-                                {moment(chat.createdAt).format("hh:mm A")}
-                              </Typography>
+                                <Typography
+                                  variant="caption"
+                                  sx={{
+                                    color:
+                                      theme.palette.mode === "light"
+                                        ? "#888"
+                                        : "#fff",
+                                    opacity: 1,
+                                    "&:hover": {
+                                      opacity: 0.7,
+                                    },
+                                  }}
+                                >
+                                  {moment(chat.createdAt).format("hh:mm A")}
+                                </Typography>
+                              </Tooltip>
                             </Box>
                             <Avatar
                               sx={{

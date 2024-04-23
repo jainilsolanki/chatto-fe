@@ -28,15 +28,13 @@ import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "./socket.connection";
 import { useState } from "react";
-import {
-  clearTempData,
-  updateSelectedSection,
-} from "../services/redux/slices/temp-data.slice";
+import { clearTempData } from "../services/redux/slices/temp-data.slice";
 import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.slice";
 import useUserData from "../hooks/useUserData";
 import {
   clearAppDataSlice,
   updateLockStateAppLockSettings,
+  updateSelectedSection,
 } from "../services/redux/slices/app-data.slice";
 import { FriendAPI } from "../services/axios/apis/friend.api";
 type MenuItemType = {
@@ -53,7 +51,6 @@ export default function Sidebar() {
   const router = useRouter();
   const { userData } = useUserData();
   const dispatch = useDispatch();
-  const tempData = useSelector((state: any) => state.tempData);
   const appData = useSelector((state: any) => state.appData);
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
     null
@@ -228,7 +225,7 @@ export default function Sidebar() {
                     alignItems: "center",
                   }}
                   onClick={() => menu.onClick()}
-                  selected={index === tempData.selectedSection}
+                  selected={index === appData.selectedSection}
                 >
                   <ListItemIcon
                     sx={{
@@ -267,7 +264,7 @@ export default function Sidebar() {
                 dispatch(updateSelectedSection(5));
                 router.push("/app/settings");
               }}
-              selected={5 === tempData.selectedSection}
+              selected={5 === appData.selectedSection}
             >
               <ListItemIcon
                 sx={{
