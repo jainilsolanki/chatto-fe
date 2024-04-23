@@ -142,7 +142,7 @@ export default function ChatContent({ conversationId }) {
       if (remainder !== 0) {
         startIndex = remainder;
       } else {
-        startIndex = totalChats - 30;
+        startIndex = 30;
       }
     }
 
