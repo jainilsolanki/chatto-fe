@@ -7,6 +7,7 @@ export const dialogConfigInitialState: DialogConfigType = {
   createGroupDialogState: false,
   enableAppLockDialogState: false,
   disableAppLockDialogState: false,
+  forgotPasswordDialogState: false,
   resetAppLockDialogState: false,
 };
 const dialogConfigSlice = createSlice({
@@ -37,6 +38,10 @@ const dialogConfigSlice = createSlice({
       let s = current(state);
       return { ...s, resetAppLockDialogState: action.payload };
     },
+    handleForgotPasswordDialogState(state, action: PayloadAction<boolean>) {
+      let s = current(state);
+      return { ...s, forgotPasswordDialogState: action.payload };
+    },
     clearDialogConfigSlice() {
       return { ...dialogConfigInitialState };
     },
@@ -50,6 +55,7 @@ export const {
   clearDialogConfigSlice,
   handleEnableAppLockDialogState,
   handleDisableAppLockDialogState,
+  handleForgotPasswordDialogState,
   handleResetAppLockDialogState,
 } = dialogConfigSlice.actions;
 

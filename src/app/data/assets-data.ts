@@ -16,3 +16,4 @@ export const MAC_NOTIFICATION_INFO =
 export const PWA_INSTALL_POPUP = "/assets/banners/pwa-popup.png";
 export const CHROME_PWA_APPS = "/assets/banners/chrome-pwa-apps.png";
 export const PWA_AUTOSTART_MENU = "/assets/banners/pwa-autostart-menu.png";
+export const FORGOT_PASSWORD = "/assets/banners/forgot-password.svg";

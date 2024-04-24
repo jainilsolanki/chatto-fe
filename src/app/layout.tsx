@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "./providers/redux-provider";
 import dynamic from "next/dynamic";
+import NotiStackSnackbarProvider from "./providers/snackbar.provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -35,7 +36,9 @@ export default function RootLayout({
         />
 
         <body className={poppins.className}>
-          <AppThemeProvider>{children}</AppThemeProvider>
+          <NotiStackSnackbarProvider>
+            <AppThemeProvider>{children}</AppThemeProvider>
+          </NotiStackSnackbarProvider>
         </body>
       </html>
     </ReduxProvider>
