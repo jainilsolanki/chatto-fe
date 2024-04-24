@@ -74,8 +74,7 @@ const SocketConnection = () => {
       if (
         conversationId &&
         Number(message.conversationId) === Number(conversationId) &&
-        document.visibilityState === "visible" &&
-        currentPath === "/app/message"
+        document.visibilityState === "visible"
       )
         return;
 
