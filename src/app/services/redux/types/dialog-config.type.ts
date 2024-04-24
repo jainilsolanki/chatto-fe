@@ -4,5 +4,6 @@ export type DialogConfigType = {
   createGroupDialogState: boolean;
   enableAppLockDialogState: boolean;
   disableAppLockDialogState: boolean;
+  forgotPasswordDialogState: boolean;
   resetAppLockDialogState: boolean;
 };

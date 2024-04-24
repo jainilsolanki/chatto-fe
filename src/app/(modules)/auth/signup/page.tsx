@@ -16,10 +16,10 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { GOOGLE_LOGO, SIGNUP_BANNER } from "@/app/data/assets-data";
 import { AuthAPI } from "@/app/services/axios/apis/auth.api";
 import { useRouter } from "next/navigation";
-import useCustomSnackbar from "@/app/hooks/useSnackbar";
 import AuthLayout from "@/app/components/layouts/auth.layout";
 import { LoadingButton } from "@mui/lab";
 import useLoader from "@/app/hooks/useLoaders";
+import { enqueueSnackbar } from "notistack";
 type UserData = {
   first_name: string;
   last_name: string;
@@ -37,7 +37,6 @@ export default function SignupPage() {
     department_name: "Development",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const { showSnackbar, SnackbarComponent } = useCustomSnackbar();
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const { showLoader, hideLoader, isLoading } = useLoader();
   const signup = async () => {
@@ -47,13 +46,13 @@ export default function SignupPage() {
         ...userData,
       });
       if (response.status) {
-        showSnackbar(response.message, "success");
+        enqueueSnackbar(response.message, { variant: "success" });
         setTimeout(() => {
           router.push("/auth/login");
         }, 1000);
       }
     } catch (e: any) {
-      showSnackbar(e?.response?.data.message, "error");
+      enqueueSnackbar(e?.response?.data.message, { variant: "error" });
       console.error(e);
     } finally {
       hideLoader();
@@ -174,7 +173,6 @@ export default function SignupPage() {
         }
         rightBanner={SIGNUP_BANNER}
       />
-      <SnackbarComponent />
     </>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { ADD_FRIEND } from "@/app/data/assets-data";
-import useCustomSnackbar from "@/app/hooks/useSnackbar";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import { handleAddFriendDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import CloseIcon from "@mui/icons-material/Close";
@@ -16,6 +15,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 import PinInput from "react-pin-input";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +24,6 @@ export default function AddFriendDialog() {
   const dispatch = useDispatch();
   const [userCode, setUserCode] = useState<string>("");
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
-  const { showSnackbar, SnackbarComponent } = useCustomSnackbar();
   const [error, setError] = useState(false);
   const handleClose = () => {
     dispatch(handleAddFriendDialogState(false));
@@ -38,9 +37,10 @@ export default function AddFriendDialog() {
           user_code: userCode.toLowerCase(),
         });
         handleClose();
-        showSnackbar(response.message, "success");
+
+        enqueueSnackbar(response.message, { variant: "success" });
       } catch (e: any) {
-        showSnackbar(e.response.data.message, "error");
+        enqueueSnackbar(e.response.data.message, { variant: "error" });
         console.error(e);
       }
     } else {
@@ -135,7 +135,6 @@ export default function AddFriendDialog() {
           </Button>
         </DialogActions>
       </Dialog>
-      <SnackbarComponent />
     </>
   );
 }

@@ -17,12 +17,17 @@ import { GOOGLE_LOGO, LOGIN_BANNER } from "@/app/data/assets-data";
 import AuthLayout from "@/app/components/layouts/auth.layout";
 import { LoadingButton } from "@mui/lab";
 import useLoader from "@/app/hooks/useLoaders";
+import { useDispatch, useSelector } from "react-redux";
+import ForgotPasswordDialog from "./forgot-password.component";
+import { handleForgotPasswordDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 
 export default function LoginPageUI({ login }) {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const [errorMessage, setErrorMessage] = useState("");
   const { showLoader, hideLoader, isLoading } = useLoader();
+  const dialogConfig = useSelector((state: any) => state.dialogConfig);
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     showLoader();
     e.preventDefault();
@@ -90,6 +95,14 @@ export default function LoginPageUI({ login }) {
                     justifyContent: "flex-end",
                     alignItems: "center",
                     display: "flex",
+                    cursor: "pointer",
+                    transition: "color 0.4s ease-out",
+                    "&:hover": {
+                      color: "#0661A8",
+                    },
+                  }}
+                  onClick={() => {
+                    dispatch(handleForgotPasswordDialogState(true));
                   }}
                 >
                   Forgot Password?
@@ -121,6 +134,7 @@ export default function LoginPageUI({ login }) {
                 borderRadius: "10",
                 border: "0.9px solid #0661A8",
                 fontSize: 10,
+                height: 40,
               }}
               startIcon={
                 <Avatar src={GOOGLE_LOGO} sx={{ width: 20, height: 20 }} />
@@ -132,6 +146,7 @@ export default function LoginPageUI({ login }) {
         }
         rightBanner={LOGIN_BANNER}
       />
+      {dialogConfig.forgotPasswordDialogState && <ForgotPasswordDialog />}
     </>
   );
 }
