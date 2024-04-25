@@ -70,3 +70,8 @@ a {
 .ql-editor ul {
   padding-left: 0 !important;
 }
+
+.notistack-MuiContent {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
