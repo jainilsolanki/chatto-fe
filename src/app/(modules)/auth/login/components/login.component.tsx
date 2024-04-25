@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -20,8 +20,13 @@ import useLoader from "@/app/hooks/useLoaders";
 import { useDispatch, useSelector } from "react-redux";
 import ForgotPasswordDialog from "./forgot-password.component";
 import { handleForgotPasswordDialogState } from "@/app/services/redux/slices/dialog-config.slice";
+import { signIn, useSession } from "next-auth/react";
+import { AuthAPI } from "@/app/services/axios/apis/auth.api";
+import { googleId } from "@/app/data/constants-data";
+import { enqueueSnackbar } from "notistack";
 
 export default function LoginPageUI({ login }) {
+  const { data: session, status } = useSession();
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const [errorMessage, setErrorMessage] = useState("");
@@ -38,6 +43,33 @@ export default function LoginPageUI({ login }) {
       setErrorMessage("You have entered an invalid email or password");
     } finally {
       hideLoader();
+    }
+  };
+  useEffect(() => {
+    // Log the session information when it's available
+    if (status === "authenticated") {
+      sendGoogleSessionDetails(session);
+    }
+  }, [session, status]);
+  const handleSignInWithGoogle = () => {
+    signIn("google");
+  };
+
+  const sendGoogleSessionDetails = async (session: any) => {
+    const { id_token } = session;
+    try {
+      const response = await AuthAPI.logiGoogle({
+        idToken: id_token,
+        clientId: googleId,
+      });
+
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+      enqueueSnackbar(e.response.data.message, {
+        variant: "error",
+        autoHideDuration: 6000,
+      });
     }
   };
   return (
@@ -139,6 +171,7 @@ export default function LoginPageUI({ login }) {
               startIcon={
                 <Avatar src={GOOGLE_LOGO} sx={{ width: 20, height: 20 }} />
               }
+              onClick={handleSignInWithGoogle}
             >
               Continue with Google
             </Button>
