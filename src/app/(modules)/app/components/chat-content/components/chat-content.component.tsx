@@ -382,6 +382,9 @@ export default function ChatContent({ conversationId }) {
                                   : "flex-start",
                                 position: "relative",
                                 flexDirection: "column",
+                                alignItems: isCurrentUser
+                                  ? "flex-end"
+                                  : "flex-start",
                               }}
                             >
                               <Typography

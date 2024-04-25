@@ -8,31 +8,28 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemButton,
-  ListItemSecondaryAction,
   ListItemText,
   ListSubheader,
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
-import PinInput from "react-pin-input";
 import { useEffect, useMemo, useState } from "react";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
-import ClearAllIcon from "@mui/icons-material/ClearAll";
 import { NO_FRIENDS } from "@/app/data/assets-data";
 export default function CreateGroupDialog() {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const [allFriends, setAllFriends] = useState([]);
   const [searchData, setSearchData] = useState({
     searchVisible: false,
@@ -170,7 +167,14 @@ export default function CreateGroupDialog() {
                     display: "flex",
                     flexDirection: "column",
                     gap: 0.5,
-                    background: "transparent",
+                    backgroundColor:
+                      theme.palette.mode === "light"
+                        ? theme.palette.background.default
+                        : "#121212",
+                    backgroundImage:
+                      theme.palette.mode === "light"
+                        ? "none"
+                        : "linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16))",
                   }}
                 >
                   <Stack
