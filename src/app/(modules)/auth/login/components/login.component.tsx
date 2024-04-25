@@ -44,7 +44,7 @@ export default function LoginPageUI({ login }) {
     <>
       <AuthLayout
         leftContent={
-          <Stack px={10} gap={3}>
+          <Stack sx={{ px: { xs: 2, sm: 4, md: 6, lg: 8, xl: 10 } }} gap={3}>
             <Stack gap={1}>
               <Typography variant="h5" fontWeight={"bold"}>
                 Login
@@ -121,7 +121,7 @@ export default function LoginPageUI({ login }) {
               justifyContent={"center"}
               alignItems={"center"}
             >
-              <Typography>Don't have an account?</Typography>
+              <Typography>Don't have an account ?</Typography>
               <Link href={"/auth/signup"}>
                 <Button>Sign up</Button>
               </Link>

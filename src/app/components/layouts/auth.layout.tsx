@@ -15,27 +15,46 @@ export default function AuthLayout({ leftContent, rightBanner }: LayoutType) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
+          minHeight: "100vh",
         }}
       >
         <Grid
           container
           sx={{
             width: "80vw",
+            gap: { xs: 1, sm: 1, md: 1 },
           }}
         >
-          <Grid item xs={12} sx={{ px: 10 }}>
+          <Grid
+            item
+            xs={12}
+            sx={{ px: { xs: 2, sm: 4, md: 6, lg: 8, xl: 10 } }}
+          >
             <Logo />
           </Grid>
-          <Grid sx={{ height: "70vh", width: "80vw", mt: 10 }} container>
-            <Grid item xs={6}>
+          <Grid container item>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={12}
+              lg={6}
+              xl={6}
+              alignSelf={"center"}
+            >
               {leftContent}
             </Grid>
             <Grid
               item
               xs={6}
               sx={{
-                display: "flex",
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "none",
+                  lg: "flex",
+                  xl: "flex",
+                },
                 justifyContent: "center",
                 alignItems: "center",
               }}
