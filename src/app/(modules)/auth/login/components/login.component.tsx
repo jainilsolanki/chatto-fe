@@ -153,26 +153,24 @@ export default function LoginPageUI({ login }) {
                     ),
                   }}
                 />
-
-                <Typography
-                  sx={{
-                    fontSize: 12,
-                    textTransform: "none",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    display: "flex",
-                    cursor: "pointer",
-                    transition: "color 0.4s ease-out",
-                    "&:hover": {
-                      color: "#0661A8",
-                    },
-                  }}
-                  onClick={() => {
-                    dispatch(handleForgotPasswordDialogState(true));
-                  }}
-                >
-                  Forgot Password?
-                </Typography>
+                <Link href={"/auth/forgot-password"}>
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                      textTransform: "none",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      display: "flex",
+                      cursor: "pointer",
+                      transition: "color 0.4s ease-out",
+                      "&:hover": {
+                        color: "#0661A8",
+                      },
+                    }}
+                  >
+                    Forgot Password?
+                  </Typography>
+                </Link>
                 <LoadingButton
                   variant="contained"
                   type="submit"
