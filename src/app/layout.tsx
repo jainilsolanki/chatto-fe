@@ -4,6 +4,7 @@ import "./globals.css";
 import ReduxProvider from "./providers/redux-provider";
 import dynamic from "next/dynamic";
 import NotiStackSnackbarProvider from "./providers/snackbar.provider";
+import NextAuthSessionProvider from "./providers/next-auth-session-provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -36,9 +37,11 @@ export default function RootLayout({
         />
 
         <body className={poppins.className}>
-          <NotiStackSnackbarProvider>
-            <AppThemeProvider>{children}</AppThemeProvider>
-          </NotiStackSnackbarProvider>
+          <NextAuthSessionProvider>
+            <NotiStackSnackbarProvider>
+              <AppThemeProvider>{children}</AppThemeProvider>
+            </NotiStackSnackbarProvider>
+          </NextAuthSessionProvider>
         </body>
       </html>
     </ReduxProvider>

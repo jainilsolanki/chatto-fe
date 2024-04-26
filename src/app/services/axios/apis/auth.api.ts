@@ -26,4 +26,13 @@ export const AuthAPI = {
     const response = await request.data;
     return response;
   },
+  logiGoogle: async (data) => {
+    const request = await GlobalInstance.request({
+      url: "/api/login/google",
+      method: "POST",
+      data,
+    });
+    const response = await request.data;
+    return response;
+  },
 };

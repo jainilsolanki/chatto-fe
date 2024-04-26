@@ -3,7 +3,10 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const isPublicPath = path === "/auth/login" || path === "/auth/signup";
+  const isPublicPath =
+    path === "/auth/login" ||
+    path === "/auth/signup" ||
+    path === "/auth/forgot-password";
   const currentUser = request.cookies.get("userData")?.value;
 
   if (isPublicPath && currentUser) {

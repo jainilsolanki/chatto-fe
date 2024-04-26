@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -19,15 +19,28 @@ import { LoadingButton } from "@mui/lab";
 import useLoader from "@/app/hooks/useLoaders";
 import { useDispatch, useSelector } from "react-redux";
 import ForgotPasswordDialog from "./forgot-password.component";
-import { handleForgotPasswordDialogState } from "@/app/services/redux/slices/dialog-config.slice";
+import {
+  handleForgotPasswordDialogState,
+  handleGoogleAccountNotFoundDialogState,
+} from "@/app/services/redux/slices/dialog-config.slice";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { AuthAPI } from "@/app/services/axios/apis/auth.api";
+import { googleId } from "@/app/data/constants-data";
+import { enqueueSnackbar } from "notistack";
+import GoogleSignInButton from "../../components/google-signin-button.component";
+import { setCookie } from "nookies";
+import { useRouter } from "next/navigation";
+import GoogleAccountNotFoundDialog from "./google-account-not-found-dialog.component";
 
 export default function LoginPageUI({ login }) {
+  const { data: session, status } = useSession();
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const [errorMessage, setErrorMessage] = useState("");
   const { showLoader, hideLoader, isLoading } = useLoader();
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
   const dispatch = useDispatch();
+  const router = useRouter();
   const handleSubmit = async (e) => {
     showLoader();
     e.preventDefault();
@@ -36,6 +49,59 @@ export default function LoginPageUI({ login }) {
       await login(formData);
     } catch (error) {
       setErrorMessage("You have entered an invalid email or password");
+    } finally {
+      hideLoader();
+    }
+  };
+  useEffect(() => {
+    // Log the session information when it's available
+    if (status === "authenticated") {
+      sendGoogleSessionDetails(session);
+    }
+  }, [session, status]);
+
+  const sendGoogleSessionDetails = async (session: any) => {
+    showLoader();
+    const { id_token } = session;
+    try {
+      const response = await AuthAPI.logiGoogle({
+        idToken: id_token,
+        clientId: googleId,
+      });
+
+      console.log(response);
+      if (response.status) {
+        const { id, first_name, last_name, email, user_code, status } =
+          response.data.user;
+        setCookie(
+          null,
+          "userData",
+          JSON.stringify({
+            id,
+            first_name,
+            last_name,
+            email,
+            accessToken: response.data.accessToken,
+            user_code,
+            status: status === "inactive" ? "active" : "away",
+          }),
+          {
+            maxAge: 15 * 24 * 60 * 60, // Expires in 15 days
+            path: "/", // Available on the entire domain
+          }
+        );
+
+        router.replace("/app/message");
+      }
+    } catch (e) {
+      await signOut({
+        redirect: false,
+        callbackUrl: "/auth/login",
+      });
+      console.error(e);
+      if (e.response.status === 403) {
+        dispatch(handleGoogleAccountNotFoundDialogState(true));
+      }
     } finally {
       hideLoader();
     }
@@ -87,26 +153,24 @@ export default function LoginPageUI({ login }) {
                     ),
                   }}
                 />
-
-                <Typography
-                  sx={{
-                    fontSize: 12,
-                    textTransform: "none",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    display: "flex",
-                    cursor: "pointer",
-                    transition: "color 0.4s ease-out",
-                    "&:hover": {
-                      color: "#0661A8",
-                    },
-                  }}
-                  onClick={() => {
-                    dispatch(handleForgotPasswordDialogState(true));
-                  }}
-                >
-                  Forgot Password?
-                </Typography>
+                <Link href={"/auth/forgot-password"}>
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                      textTransform: "none",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      display: "flex",
+                      cursor: "pointer",
+                      transition: "color 0.4s ease-out",
+                      "&:hover": {
+                        color: "#0661A8",
+                      },
+                    }}
+                  >
+                    Forgot Password?
+                  </Typography>
+                </Link>
                 <LoadingButton
                   variant="contained"
                   type="submit"
@@ -129,24 +193,15 @@ export default function LoginPageUI({ login }) {
 
             <Divider>Or login with</Divider>
 
-            <Button
-              sx={{
-                borderRadius: "10",
-                border: "0.9px solid #0661A8",
-                fontSize: 10,
-                height: 40,
-              }}
-              startIcon={
-                <Avatar src={GOOGLE_LOGO} sx={{ width: 20, height: 20 }} />
-              }
-            >
-              Continue with Google
-            </Button>
+            <GoogleSignInButton />
           </Stack>
         }
         rightBanner={LOGIN_BANNER}
       />
       {dialogConfig.forgotPasswordDialogState && <ForgotPasswordDialog />}
+      {dialogConfig.googleAccountNotFoundDialogState && (
+        <GoogleAccountNotFoundDialog />
+      )}
     </>
   );
 }

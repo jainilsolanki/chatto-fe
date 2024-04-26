@@ -1,6 +1,5 @@
 "use client";
 import {
-  Avatar,
   Button,
   Divider,
   IconButton,
@@ -9,17 +8,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { GOOGLE_LOGO, SIGNUP_BANNER } from "@/app/data/assets-data";
+import { SIGNUP_BANNER } from "@/app/data/assets-data";
 import { AuthAPI } from "@/app/services/axios/apis/auth.api";
 import { useRouter } from "next/navigation";
 import AuthLayout from "@/app/components/layouts/auth.layout";
 import { LoadingButton } from "@mui/lab";
 import useLoader from "@/app/hooks/useLoaders";
 import { enqueueSnackbar } from "notistack";
+import GoogleSignInButton from "../components/google-signin-button.component";
+import { signOut, useSession } from "next-auth/react";
 type UserData = {
   first_name: string;
   last_name: string;
@@ -28,6 +29,7 @@ type UserData = {
   department_name: string;
 };
 export default function SignupPage() {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [userData, setUserData] = useState<UserData>({
     first_name: "",
@@ -39,6 +41,53 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const { showLoader, hideLoader, isLoading } = useLoader();
+
+  useEffect(() => {
+    // Log the session information when it's available
+    if (status === "authenticated") {
+      console.log(session);
+
+      registerWithGoogle(session);
+    }
+  }, [session, status]);
+
+  const registerWithGoogle = async (session) => {
+    showLoader();
+    const { name, email } = session.user;
+    const nameArray = name.split(" ");
+    const first_name = nameArray[0];
+    const last_name = nameArray[1];
+
+    try {
+      const response = await AuthAPI.signup({
+        first_name,
+        last_name,
+        email,
+        department_name: "Development",
+        is_google_signup: true,
+        password: null,
+      });
+      if (response.status) {
+        enqueueSnackbar(response.message, { variant: "success" });
+        const data = await signOut({
+          redirect: false,
+          callbackUrl: "/auth/login",
+        });
+        setTimeout(() => {
+          router.push(data.url);
+        }, 1000);
+      }
+    } catch (e: any) {
+      await signOut({
+        redirect: false,
+      });
+      enqueueSnackbar(e?.response?.data.message, { variant: "error" });
+      console.error(e);
+    } finally {
+      hideLoader();
+    }
+  };
+
   const signup = async () => {
     showLoader();
     try {
@@ -157,18 +206,7 @@ export default function SignupPage() {
 
             <Divider>Or signup with</Divider>
 
-            <Button
-              sx={{
-                borderRadius: "10",
-                border: "0.9px solid #0661A8",
-                fontSize: 10,
-              }}
-              startIcon={
-                <Avatar src={GOOGLE_LOGO} sx={{ width: 20, height: 20 }} />
-              }
-            >
-              Continue with Google
-            </Button>
+            <GoogleSignInButton />
           </Stack>
         }
         rightBanner={SIGNUP_BANNER}

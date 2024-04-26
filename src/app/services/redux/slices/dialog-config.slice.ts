@@ -9,6 +9,7 @@ export const dialogConfigInitialState: DialogConfigType = {
   disableAppLockDialogState: false,
   forgotPasswordDialogState: false,
   resetAppLockDialogState: false,
+  googleAccountNotFoundDialogState: false,
 };
 const dialogConfigSlice = createSlice({
   name: "dialogDataSlice",
@@ -42,6 +43,13 @@ const dialogConfigSlice = createSlice({
       let s = current(state);
       return { ...s, forgotPasswordDialogState: action.payload };
     },
+    handleGoogleAccountNotFoundDialogState(
+      state,
+      action: PayloadAction<boolean>
+    ) {
+      let s = current(state);
+      return { ...s, googleAccountNotFoundDialogState: action.payload };
+    },
     clearDialogConfigSlice() {
       return { ...dialogConfigInitialState };
     },
@@ -56,6 +64,7 @@ export const {
   handleEnableAppLockDialogState,
   handleDisableAppLockDialogState,
   handleForgotPasswordDialogState,
+  handleGoogleAccountNotFoundDialogState,
   handleResetAppLockDialogState,
 } = dialogConfigSlice.actions;
 
