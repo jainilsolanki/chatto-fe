@@ -19,12 +19,18 @@ import { LoadingButton } from "@mui/lab";
 import useLoader from "@/app/hooks/useLoaders";
 import { useDispatch, useSelector } from "react-redux";
 import ForgotPasswordDialog from "./forgot-password.component";
-import { handleForgotPasswordDialogState } from "@/app/services/redux/slices/dialog-config.slice";
-import { signIn, useSession } from "next-auth/react";
+import {
+  handleForgotPasswordDialogState,
+  handleGoogleAccountNotFoundDialogState,
+} from "@/app/services/redux/slices/dialog-config.slice";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { AuthAPI } from "@/app/services/axios/apis/auth.api";
 import { googleId } from "@/app/data/constants-data";
 import { enqueueSnackbar } from "notistack";
 import GoogleSignInButton from "../../components/google-signin-button.component";
+import { setCookie } from "nookies";
+import { useRouter } from "next/navigation";
+import GoogleAccountNotFoundDialog from "./google-account-not-found-dialog.component";
 
 export default function LoginPageUI({ login }) {
   const { data: session, status } = useSession();
@@ -34,6 +40,7 @@ export default function LoginPageUI({ login }) {
   const { showLoader, hideLoader, isLoading } = useLoader();
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
   const dispatch = useDispatch();
+  const router = useRouter();
   const handleSubmit = async (e) => {
     showLoader();
     e.preventDefault();
@@ -54,6 +61,7 @@ export default function LoginPageUI({ login }) {
   }, [session, status]);
 
   const sendGoogleSessionDetails = async (session: any) => {
+    showLoader();
     const { id_token } = session;
     try {
       const response = await AuthAPI.logiGoogle({
@@ -62,12 +70,40 @@ export default function LoginPageUI({ login }) {
       });
 
       console.log(response);
+      if (response.status) {
+        const { id, first_name, last_name, email, user_code, status } =
+          response.data.user;
+        setCookie(
+          null,
+          "userData",
+          JSON.stringify({
+            id,
+            first_name,
+            last_name,
+            email,
+            accessToken: response.data.accessToken,
+            user_code,
+            status: status === "inactive" ? "active" : "away",
+          }),
+          {
+            maxAge: 15 * 24 * 60 * 60, // Expires in 15 days
+            path: "/", // Available on the entire domain
+          }
+        );
+
+        router.replace("/app/message");
+      }
     } catch (e) {
-      console.error(e);
-      enqueueSnackbar(e.response.data.message, {
-        variant: "error",
-        autoHideDuration: 6000,
+      await signOut({
+        redirect: false,
+        callbackUrl: "/auth/login",
       });
+      console.error(e);
+      if (e.response.status === 403) {
+        dispatch(handleGoogleAccountNotFoundDialogState(true));
+      }
+    } finally {
+      hideLoader();
     }
   };
   return (
@@ -165,6 +201,9 @@ export default function LoginPageUI({ login }) {
         rightBanner={LOGIN_BANNER}
       />
       {dialogConfig.forgotPasswordDialogState && <ForgotPasswordDialog />}
+      {dialogConfig.googleAccountNotFoundDialogState && (
+        <GoogleAccountNotFoundDialog />
+      )}
     </>
   );
 }

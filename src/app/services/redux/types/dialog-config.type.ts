@@ -5,5 +5,6 @@ export type DialogConfigType = {
   enableAppLockDialogState: boolean;
   disableAppLockDialogState: boolean;
   forgotPasswordDialogState: boolean;
+  googleAccountNotFoundDialogState: boolean;
   resetAppLockDialogState: boolean;
 };

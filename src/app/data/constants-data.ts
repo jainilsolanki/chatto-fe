@@ -69,6 +69,13 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_ID ?? "",
       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_SECRET ?? "",
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
   ],
   pages: {
