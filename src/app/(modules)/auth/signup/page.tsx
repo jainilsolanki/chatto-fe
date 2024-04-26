@@ -20,6 +20,7 @@ import AuthLayout from "@/app/components/layouts/auth.layout";
 import { LoadingButton } from "@mui/lab";
 import useLoader from "@/app/hooks/useLoaders";
 import { enqueueSnackbar } from "notistack";
+import GoogleSignInButton from "../components/google-signin-button.component";
 type UserData = {
   first_name: string;
   last_name: string;
@@ -157,18 +158,7 @@ export default function SignupPage() {
 
             <Divider>Or signup with</Divider>
 
-            <Button
-              sx={{
-                borderRadius: "10",
-                border: "0.9px solid #0661A8",
-                fontSize: 10,
-              }}
-              startIcon={
-                <Avatar src={GOOGLE_LOGO} sx={{ width: 20, height: 20 }} />
-              }
-            >
-              Continue with Google
-            </Button>
+            <GoogleSignInButton />
           </Stack>
         }
         rightBanner={SIGNUP_BANNER}

@@ -24,6 +24,7 @@ import { signIn, useSession } from "next-auth/react";
 import { AuthAPI } from "@/app/services/axios/apis/auth.api";
 import { googleId } from "@/app/data/constants-data";
 import { enqueueSnackbar } from "notistack";
+import GoogleSignInButton from "../../components/google-signin-button.component";
 
 export default function LoginPageUI({ login }) {
   const { data: session, status } = useSession();
@@ -51,9 +52,6 @@ export default function LoginPageUI({ login }) {
       sendGoogleSessionDetails(session);
     }
   }, [session, status]);
-  const handleSignInWithGoogle = () => {
-    signIn("google");
-  };
 
   const sendGoogleSessionDetails = async (session: any) => {
     const { id_token } = session;
@@ -161,20 +159,7 @@ export default function LoginPageUI({ login }) {
 
             <Divider>Or login with</Divider>
 
-            <Button
-              sx={{
-                borderRadius: "10",
-                border: "0.9px solid #0661A8",
-                fontSize: 10,
-                height: 40,
-              }}
-              startIcon={
-                <Avatar src={GOOGLE_LOGO} sx={{ width: 20, height: 20 }} />
-              }
-              onClick={handleSignInWithGoogle}
-            >
-              Continue with Google
-            </Button>
+            <GoogleSignInButton />
           </Stack>
         }
         rightBanner={LOGIN_BANNER}
