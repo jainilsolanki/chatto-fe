@@ -3,6 +3,8 @@ import React from "react";
 import {
   AppBar,
   Avatar,
+  BottomNavigation,
+  BottomNavigationAction,
   Box,
   Fab,
   IconButton,
@@ -23,121 +25,55 @@ export default function BottomBar() {
   const appData = useSelector((store: any) => store.appData);
   const dispatch = useDispatch();
 
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    dispatch(updateSelectedSection(newValue));
+  };
   return (
-    <AppBar
-      position="fixed"
-      color="primary"
-      sx={{ top: "auto", bottom: 0, borderRadius: "25px 25px 0 0" }}
+    <BottomNavigation
+      sx={{
+        bottom: 0,
+        borderRadius: "25px 25px 0 0",
+        position: "fixed",
+        width: "100%",
+      }}
+      value={appData.selectedSection}
+      onChange={handleChange}
     >
-      <Toolbar>
-        <Avatar
-          sx={{
-            minWidth: 30,
-            minHeight: 30,
-            borderRadius: 4,
-            ml: 1, // Added margin to align with other icons
-          }}
-          src="https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        />
-        <Box sx={{ flexGrow: 1 }} />
-        <Stack alignItems={"center"} direction={"row"} gap={1}>
-          <Fab
-            aria-label="Home"
-            size="small"
+      <BottomNavigationAction
+        value={-1}
+        icon={
+          <Avatar
             sx={{
-              top: appData.selectedSection === 0 ? -20 : 0,
-              transition: "top 0.5s ease-in-out",
-              background: "none",
-              boxShadow: "none",
-              display: "flex",
-              flexDirection: "column",
+              width: 28,
+              height: 28,
+              borderRadius: 2,
+              cursor: "pointer",
               "&:hover": {
-                background: "none",
-                boxShadow: "none",
+                opacity: 0.7,
               },
             }}
-            onClick={() => dispatch(updateSelectedSection(0))}
-            variant="extended"
-          >
-            <HomeTwoToneIcon
-              sx={{
-                transition: "background 0.5s ease-in-out",
-                background:
-                  appData.selectedSection === 0 ? "white" : "transparent",
-                borderRadius: "50%",
-              }}
-            />
-            <Typography variant="caption">Home</Typography>
-          </Fab>
-
-          <Fab
-            aria-label="Assistant"
-            size="small"
-            onClick={() => dispatch(updateSelectedSection(2))}
-            sx={{
-              top: appData.selectedSection === 2 ? -15 : 0,
-              transition: "top 0.5s ease-in-out",
-              background: "none",
-              boxShadow: "none",
-              display: "flex",
-              flexDirection: "column",
-              "&:hover": {
-                background: "none",
-                boxShadow: "none",
-              },
-            }}
-            variant="extended"
-          >
-            <Groups2TwoToneIcon
-              sx={{
-                transition: "background 0.5s ease-in-out",
-                background:
-                  appData.selectedSection === 2 ? "white" : "transparent",
-                borderRadius: "50%",
-              }}
-            />
-
-            <Typography variant="caption">Friends</Typography>
-          </Fab>
-
-          <Fab
-            aria-label="Groups"
-            size="small"
-            onClick={() => dispatch(updateSelectedSection(3))}
-            sx={{
-              top: appData.selectedSection === 3 ? -15 : 0,
-              transition: "top 0.5s ease-in-out",
-              background: "none",
-              boxShadow: "none",
-              display: "flex",
-              flexDirection: "column",
-              "&:hover": {
-                background: "none",
-                boxShadow: "none",
-              },
-            }}
-            variant="extended"
-          >
-            <AssistantTwoToneIcon
-              sx={{
-                transition: "background 0.5s ease-in-out",
-                background:
-                  appData.selectedSection === 3 ? "white" : "transparent",
-                borderRadius: "50%",
-              }}
-            />
-
-            <Typography variant="caption">Message</Typography>
-          </Fab>
-        </Stack>
-        <Box sx={{ flexGrow: 1 }} />
-        <IconButton color="inherit">
-          <SearchIcon />
-        </IconButton>
-        <IconButton color="inherit">
-          <MoreIcon />
-        </IconButton>
-      </Toolbar>
-    </AppBar>
+            src="https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          />
+        }
+      />
+      <Box sx={{ flexGrow: 1 }} />
+      <BottomNavigationAction
+        label="Home"
+        value={0}
+        icon={<HomeTwoToneIcon />}
+      />
+      <BottomNavigationAction
+        label="Friends"
+        value={2}
+        icon={<Groups2TwoToneIcon />}
+      />
+      <BottomNavigationAction
+        label="Message"
+        value={3}
+        icon={<AssistantTwoToneIcon />}
+      />
+      <Box sx={{ flexGrow: 1 }} />
+      <BottomNavigationAction label="More" value={4} icon={<MoreIcon />} />
+    </BottomNavigation>
   );
 }
