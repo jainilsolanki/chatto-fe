@@ -37,6 +37,7 @@ import {
   updateSelectedSection,
 } from "../services/redux/slices/app-data.slice";
 import { FriendAPI } from "../services/axios/apis/friend.api";
+import { signOut } from "next-auth/react";
 type MenuItemType = {
   id: string;
   name: string;
@@ -123,9 +124,14 @@ export default function Sidebar() {
       id: "Logout",
       name: "Logout",
       icon: <ExitToAppTwoToneIcon />,
-      onClick: () => {
+      onClick: async () => {
+        const data = await signOut({
+          redirect: false,
+          callbackUrl: "/auth/login",
+        });
+
         destroyCookie(null, "userData", { path: "/" });
-        router.push("/auth/login");
+        router.push(data.url);
         socket?.disconnect();
         setTimeout(() => {
           dispatch(clearTempData());
