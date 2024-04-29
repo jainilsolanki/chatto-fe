@@ -5,7 +5,7 @@ import ChatPanel from "./chat-panel.component";
 export default function Message() {
   return (
     <>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <NoActiveChat />
       </Hidden>
 

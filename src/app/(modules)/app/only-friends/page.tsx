@@ -6,7 +6,7 @@ import { Hidden } from "@mui/material";
 export default function Friends() {
   return (
     <>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <NoActiveChat />
       </Hidden>
 

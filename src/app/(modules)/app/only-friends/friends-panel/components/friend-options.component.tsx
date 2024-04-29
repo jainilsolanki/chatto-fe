@@ -13,14 +13,12 @@ import {
 import { useState } from "react";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 import PersonRemoveAlt1OutlinedIcon from "@mui/icons-material/PersonRemoveAlt1Outlined";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 export default function FriendOptions({ currentFriend }) {
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
     null
   );
   const router = useRouter();
-  const dispatch = useDispatch();
   const openPop = Boolean(anchorElPop);
   const popOverId = openPop ? "simple-popover" : undefined;
   function handleClickPop(event: React.MouseEvent<HTMLButtonElement>) {

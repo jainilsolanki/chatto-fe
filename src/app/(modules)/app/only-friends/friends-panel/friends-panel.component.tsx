@@ -72,8 +72,14 @@ export default function FriendsPanel() {
         <PanelListSkeletons />
       ) : (
         <Stack
-          height={"calc(80vh - 40px)"}
           sx={{
+            height: {
+              xs: "calc(100vh - 128px)",
+              sm: "calc(100vh - 128px)",
+              md: "calc(100vh - 128px)",
+              lg: "95vh",
+              xl: "95vh",
+            },
             overflow: "auto",
           }}
           p={1}
@@ -97,12 +103,14 @@ export default function FriendsPanel() {
                         : theme.palette.primary.main
                       : "unset",
                   "& .MuiSvgIcon-root": {
-                    display:
-                      friendsList.length !== 0 &&
-                      currentFriend &&
-                      friend.user.id === currentFriend.user.id
-                        ? "block"
-                        : "none",
+                    display: {
+                      xl:
+                        friendsList.length !== 0 &&
+                        currentFriend &&
+                        friend.user.id === currentFriend.user.id
+                          ? "block"
+                          : "none",
+                    },
                   },
                   cursor: "pointer",
                 }}
