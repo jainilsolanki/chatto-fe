@@ -79,7 +79,7 @@ export const authOptions: AuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/signin", // Set to false to disable the default sign-in page
+    signIn: "/auth/login", // Set to false to disable the default sign-in page
   },
   callbacks: {
     async jwt({ token, user, account }) {
