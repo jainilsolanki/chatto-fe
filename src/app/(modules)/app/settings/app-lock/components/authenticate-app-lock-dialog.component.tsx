@@ -112,7 +112,7 @@ export default function AuthenticateAppLockDialog() {
             ? "rgba(255,255,255,0.9)"
             : "rgba(0,0,0,0.9)",
         "& .MuiDialog-paper": {
-          minWidth: 400,
+          minWidth: 350,
           maxWidth: 700,
         },
       }}

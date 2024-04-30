@@ -159,9 +159,9 @@ const ChatPanel = () => {
         <Stack
           sx={{
             height: {
-              xs: "calc(100vh - 128px)",
-              sm: "calc(100vh - 128px)",
-              md: "calc(100vh - 128px)",
+              xs: "calc(100vh - 122px)",
+              sm: "calc(100vh - 122px)",
+              md: "calc(100vh - 122px)",
               lg: "95vh",
               xl: "95vh",
             },

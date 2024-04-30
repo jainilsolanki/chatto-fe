@@ -15,6 +15,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Paper,
   Popover,
   Stack,
   styled,
@@ -120,55 +121,59 @@ export default function BottomBar() {
 
   return (
     <>
-      <Tabs
-        value={appData.selectedSection}
-        onChange={handleChange}
-        TabIndicatorProps={{
-          sx: {
-            top: 0,
-          },
-        }}
+      <Paper
         sx={{
           bottom: 0,
           position: "fixed",
           width: "100%",
+          borderRadius: 0,
         }}
-        variant="fullWidth"
+        elevation={0}
       >
-        <Tab
-          icon={<HomeTwoToneIcon />}
-          label="Home"
-          sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-          value={0}
-        />
-        <Tab
-          icon={<Search />}
-          label="Search"
-          sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-          value={1}
-        />
-        <Tab
-          icon={
-            <Avatar src="https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-          }
-          onClick={(e: any) => handleClickPop(e)}
-          sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-          value={-1}
-        />
-        <Tab
-          icon={<Groups2TwoToneIcon />}
-          label="Friends"
-          sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-          value={2}
-        />
-        <Tab
-          icon={<AssistantTwoToneIcon />}
-          label="Message"
-          sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-          value={3}
-        />
-      </Tabs>
-
+        <Tabs
+          value={appData.selectedSection}
+          onChange={handleChange}
+          TabIndicatorProps={{
+            sx: {
+              top: 0,
+            },
+          }}
+          variant="fullWidth"
+        >
+          <Tab
+            icon={<HomeTwoToneIcon />}
+            label="Home"
+            sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
+            value={0}
+          />
+          <Tab
+            icon={<Search />}
+            label="Search"
+            sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
+            value={1}
+          />
+          <Tab
+            icon={
+              <Avatar src="https://images.unsplash.com/photo-1682685797661-9e0c87f59c60?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+            }
+            onClick={(e: any) => handleClickPop(e)}
+            sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
+            value={-1}
+          />
+          <Tab
+            icon={<Groups2TwoToneIcon />}
+            label="Friends"
+            sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
+            value={2}
+          />
+          <Tab
+            icon={<AssistantTwoToneIcon />}
+            label="Message"
+            sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
+            value={3}
+          />
+        </Tabs>
+      </Paper>
       <Popover
         id={popOverId}
         open={openPop}

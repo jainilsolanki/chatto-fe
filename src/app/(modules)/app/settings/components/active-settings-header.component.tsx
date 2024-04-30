@@ -1,4 +1,6 @@
-import { Button, Divider, Stack, Typography } from "@mui/material";
+import { Divider, Hidden, Stack, Typography } from "@mui/material";
+import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTone";
+import Link from "next/link";
 export default function ActiveSettingsHeader({
   settingTitle,
   onCancel,
@@ -9,7 +11,7 @@ export default function ActiveSettingsHeader({
   onSave: Function;
 }) {
   return (
-    <>
+    <Stack sx={{ position: "sticky", top: 0 }}>
       <Stack
         justifyContent={"space-between"}
         flexDirection={"row"}
@@ -18,9 +20,19 @@ export default function ActiveSettingsHeader({
         gap={2}
         alignItems={"center"}
       >
-        <Typography variant="h6" fontWeight={"bold"} lineHeight={"normal"}>
-          {settingTitle}
-        </Typography>
+        <Stack direction={"row"} alignItems={"center"} gap={1}>
+          <Hidden lgUp>
+            <Link
+              href={"/app/settings"}
+              style={{ alignSelf: "center", display: "flex" }}
+            >
+              <ArrowBackIosNewTwoToneIcon />
+            </Link>
+          </Hidden>
+          <Typography variant="h6" fontWeight={"bold"} lineHeight={"normal"}>
+            {settingTitle}
+          </Typography>
+        </Stack>
         {/* <Stack direction={"row"} alignItems={"center"} gap={1}>
           <Button
             variant="outlined"
@@ -42,6 +54,6 @@ export default function ActiveSettingsHeader({
         </Stack> */}
       </Stack>
       <Divider />
-    </>
+    </Stack>
   );
 }

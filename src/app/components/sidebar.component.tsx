@@ -268,7 +268,7 @@ export default function Sidebar() {
               }}
               onClick={() => {
                 dispatch(updateSelectedSection(5));
-                router.push("/app/settings");
+                router.push("/app/settings/customisations");
               }}
               selected={5 === appData.selectedSection}
             >
@@ -344,6 +344,8 @@ export default function Sidebar() {
               )}
             </Stack>
             <LightTooltip
+              leaveTouchDelay={10000}
+              enterTouchDelay={0}
               title={copyIcon ? "Copy User code" : "Copied!"}
               placement="top"
               arrow

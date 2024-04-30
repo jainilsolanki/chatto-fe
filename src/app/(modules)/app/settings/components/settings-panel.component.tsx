@@ -6,39 +6,37 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
 } from "@mui/material";
 import PanelHeader from "../../components/panel-header/panel-header.component";
 import BrushTwoToneIcon from "@mui/icons-material/BrushTwoTone";
 import HttpsTwoToneIcon from "@mui/icons-material/HttpsTwoTone";
-import SecurityTwoToneIcon from "@mui/icons-material/SecurityTwoTone";
-import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
-import GavelTwoToneIcon from "@mui/icons-material/GavelTwoTone";
+// import SecurityTwoToneIcon from "@mui/icons-material/SecurityTwoTone";
+// import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
+// import GavelTwoToneIcon from "@mui/icons-material/GavelTwoTone";
 import NotificationsNoneTwoToneIcon from "@mui/icons-material/NotificationsNoneTwoTone";
-import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
-import TuneTwoToneIcon from "@mui/icons-material/TuneTwoTone";
-import RocketLaunchTwoToneIcon from '@mui/icons-material/RocketLaunchTwoTone';
-const SettingsPanel = ({
-  activeSetting,
-  setActiveSetting,
-}: {
-  activeSetting: string;
-  setActiveSetting: Function;
-}) => {
+// import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
+// import TuneTwoToneIcon from "@mui/icons-material/TuneTwoTone";
+import RocketLaunchTwoToneIcon from "@mui/icons-material/RocketLaunchTwoTone";
+import { usePathname, useRouter } from "next/navigation";
+const SettingsPanel = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const settings = [
     {
       key: "customisations",
       title: "Customisations",
       icon: <BrushTwoToneIcon />,
       onClick: () => {
-        setActiveSetting("customisations");
+        router.push("/app/settings/customisations");
       },
     },
     {
-      key: "app_lock",
+      key: "app-lock",
       title: "App Lock",
       icon: <HttpsTwoToneIcon />,
       onClick: () => {
-        setActiveSetting("app_lock");
+        router.push("/app/settings/app-lock");
       },
     },
     {
@@ -46,7 +44,7 @@ const SettingsPanel = ({
       title: "Notifications",
       icon: <NotificationsNoneTwoToneIcon />,
       onClick: () => {
-        setActiveSetting("notifications");
+        router.push("/app/settings/notifications");
       },
     },
     {
@@ -54,7 +52,7 @@ const SettingsPanel = ({
       title: "Autolaunch App",
       icon: <RocketLaunchTwoToneIcon />,
       onClick: () => {
-        setActiveSetting("autolaunchapp");
+        router.push("/app/settings/autolaunchapp");
       },
     },
     // {
@@ -99,17 +97,17 @@ const SettingsPanel = ({
     // },
   ];
   return (
-    <>
+    <Stack height={"100vh"}>
       {/* Panel Header */}
       <PanelHeader title={"Settings"} showOptions={false} />
       {/* Settings List */}
       <List>
-        {settings.map((setting, index) => {
+        {settings.map((setting) => {
           return (
             <ListItem key={setting.key} sx={{ px: 1 }}>
               <ListItemButton
                 sx={{ borderRadius: 4 }}
-                selected={setting.key === activeSetting}
+                selected={setting.key === pathname.split("/")[3]}
                 onClick={setting.onClick}
               >
                 <ListItemIcon>{setting.icon}</ListItemIcon>
@@ -119,7 +117,7 @@ const SettingsPanel = ({
           );
         })}
       </List>
-    </>
+    </Stack>
   );
 };
 

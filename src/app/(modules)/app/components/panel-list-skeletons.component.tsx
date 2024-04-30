@@ -2,7 +2,19 @@ import { Box, Skeleton, Stack } from "@mui/material";
 
 export default function PanelListSkeletons() {
   return (
-    <Stack height={`calc(80vh - 40px)`} p={1} gap={1}>
+    <Stack
+      sx={{
+        height: {
+          xs: "calc(100vh - 122px)",
+          sm: "calc(100vh - 122px)",
+          md: "calc(100vh - 122px)",
+          lg: "95vh",
+          xl: "95vh",
+        },
+      }}
+      p={1}
+      gap={1}
+    >
       {[...Array(4)].map((_, index) => (
         <Box
           key={index}

@@ -64,13 +64,13 @@ export default function Notifications() {
   };
 
   return (
-    <>
+    <Stack>
       <ActiveSettingsHeader
         settingTitle="Notifications"
         onCancel={() => {}}
         onSave={() => {}}
       />
-      <Stack p={1} gap={4}>
+      <Stack p={1} gap={4} height={"95vh"} sx={{ overflowY: "auto" }}>
         <Stack gap={2}>
           <Typography variant="subtitle2">Mute notifications</Typography>
           <ToggleButtonGroup
@@ -111,6 +111,8 @@ export default function Notifications() {
           <Stack direction={"row"} alignItems={"center"}>
             <Typography variant="subtitle2">Autohide notifications</Typography>
             <Tooltip
+              leaveTouchDelay={10000}
+              enterTouchDelay={0}
               title={
                 <Stack gap={1}>
                   Mac users please make sure notifications are enabled and set
@@ -189,6 +191,6 @@ export default function Notifications() {
           </Select>
         </Stack>
       </Stack>
-    </>
+    </Stack>
   );
 }

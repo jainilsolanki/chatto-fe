@@ -8,14 +8,14 @@ import {
 
 export default function AutoLaunchAppSteps() {
   return (
-    <>
+    <Stack>
       <ActiveSettingsHeader
         settingTitle="Autolaunch App"
         onCancel={() => {}}
         onSave={() => {}}
       />
 
-      <Stack p={1} gap={4}>
+      <Stack p={1} gap={4} height={"95vh"} sx={{ overflowY: "auto" }}>
         <Stack gap={1}>
           <Typography variant="subtitle2">
             Firstly install our app from the install popup.
@@ -82,6 +82,6 @@ export default function AutoLaunchAppSteps() {
           your app will now autostart everytime you login into OS.
         </Typography>
       </Stack>
-    </>
+    </Stack>
   );
 }

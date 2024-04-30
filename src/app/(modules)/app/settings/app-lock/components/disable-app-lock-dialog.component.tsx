@@ -53,7 +53,7 @@ export default function DisableAppLockDialog() {
       aria-labelledby="responsive-dialog-title"
       sx={{
         "& .MuiDialog-paper": {
-          minWidth: 400,
+          minWidth: 350,
           maxWidth: 700,
         },
       }}
