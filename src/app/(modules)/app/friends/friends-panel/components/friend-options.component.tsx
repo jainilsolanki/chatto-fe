@@ -37,7 +37,7 @@ export default function FriendOptions({ currentFriend }) {
       icon: <ReviewsOutlinedIcon sx={{ fontSize: 20 }} />,
       onClick: () => {
         setAnchorElPop(null);
-        router.push(`/app/only-friends/${currentFriend.conversation_id}`);
+        router.push(`/app/friends/${currentFriend.conversation_id}`);
       },
     },
     {
@@ -63,7 +63,7 @@ export default function FriendOptions({ currentFriend }) {
           },
           background: anchorElPop ? "rgba(0, 0, 0, 0.1)" : "transparent",
           borderRadius: "50%",
-          zIndex: 10000,
+          zIndex: 100,
         }}
         onClick={(e: any) => {
           e.stopPropagation();

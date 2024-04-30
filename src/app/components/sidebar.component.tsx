@@ -95,15 +95,15 @@ export default function Sidebar() {
       },
     },
     {
-      id: "Only Friends",
-      name: "Only Friends",
+      id: "Friends",
+      name: "Friends",
       icon: <Groups2TwoToneIcon />,
       onClick: () => {
         dispatch(updateSelectedSection(2));
         if (conversationId) {
-          router.push(`/app/only-friends/${conversationId}`);
+          router.push(`/app/friends/${conversationId}`);
         } else {
-          router.push(`/app/only-friends`);
+          router.push(`/app/friends`);
         }
       },
     },

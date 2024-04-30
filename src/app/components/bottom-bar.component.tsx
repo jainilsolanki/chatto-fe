@@ -64,9 +64,9 @@ export default function BottomBar() {
         break;
       case 2:
         if (conversationId) {
-          router.push(`/app/only-friends/${conversationId}`);
+          router.push(`/app/friends/${conversationId}`);
         } else {
-          router.push(`/app/only-friends`);
+          router.push(`/app/friends`);
         }
         break;
       case 3:

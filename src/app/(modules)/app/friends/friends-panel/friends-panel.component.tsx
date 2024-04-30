@@ -49,7 +49,7 @@ export default function FriendsPanel() {
   }
 
   const navigateToConversation = (conversationId: number) => {
-    router.push(`/app/only-friends/${conversationId}`);
+    router.push(`/app/friends/${conversationId}`);
   };
   useEffect(() => {
     getAllFriends();
@@ -66,7 +66,7 @@ export default function FriendsPanel() {
   return (
     <>
       {/* Panel Header */}
-      <PanelHeader title={"Only Friends"} showOptions={true} />
+      <PanelHeader title={"Friends"} showOptions={true} />
       {/* Friends List */}
       {isLoading ? (
         <PanelListSkeletons />
