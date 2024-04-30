@@ -17,9 +17,9 @@ export default function ThemeCustomisation() {
   const theme = useTheme();
   return (
     <>
-      <Stack p={1} gap={1}>
+      <Stack p={1} gap={1} height={"95vh"} sx={{ overflowY: "auto" }}>
         <Typography variant="subtitle2">Theme</Typography>
-        <Stack direction={"row"} gap={3}>
+        <Stack direction={"row"} gap={3} flexWrap={"wrap"}>
           <Card
             sx={{
               maxWidth: 450,

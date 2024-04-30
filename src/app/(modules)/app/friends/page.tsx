@@ -1,8 +1,9 @@
-import { Hidden } from "@mui/material";
+import React from "react";
 import NoActiveChat from "../components/chat-content/components/no-active-chat.component";
-import ChatPanel from "./chat-panel.component";
+import FriendsPanel from "./friends-panel/friends-panel.component";
+import { Hidden } from "@mui/material";
 
-export default function Message() {
+export default function Friends() {
   return (
     <>
       <Hidden lgDown>
@@ -10,7 +11,7 @@ export default function Message() {
       </Hidden>
 
       <Hidden lgUp>
-        <ChatPanel />
+        <FriendsPanel />
       </Hidden>
     </>
   );

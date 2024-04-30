@@ -53,18 +53,20 @@ export default function AppLock() {
   };
 
   return (
-    <>
+    <Stack>
       <ActiveSettingsHeader
         settingTitle="App Lock"
         onCancel={() => {}}
         onSave={() => {}}
       />
-      <Stack gap={4} p={1}>
+      <Stack gap={4} p={1} height={"95vh"} sx={{ overflowY: "auto" }}>
         <Stack gap={2}>
           <Stack direction={"row"}>
             <Typography variant="subtitle2">Enable App Lock</Typography>
 
             <Tooltip
+              leaveTouchDelay={10000}
+              enterTouchDelay={0}
               title={
                 <Stack gap={2}>
                   Please read the following instructions before enabling App
@@ -77,7 +79,6 @@ export default function AppLock() {
                   </Stack>
                 </Stack>
               }
-              placement="right"
               arrow
             >
               <IconButton size="small">
@@ -157,6 +158,6 @@ export default function AppLock() {
       {dialogConfig.enableAppLockDialogState && <EnableAppLockDialog />}
       {dialogConfig.disableAppLockDialogState && <DisableAppLockDialog />}
       {dialogConfig.resetAppLockDialogState && <ResetAppLockDialog />}
-    </>
+    </Stack>
   );
 }

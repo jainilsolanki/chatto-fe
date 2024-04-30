@@ -13,7 +13,13 @@ export default function Logo({ logoStyles, imgStyles }: any) {
           style={{ width: 50, ...imgStyles }}
           src={LOGO}
         />{" "}
-        <Typography variant="h3" textTransform={"uppercase"}>
+        <Typography
+          variant="h3"
+          textTransform={"uppercase"}
+          sx={{
+            fontSize: { xs: 31, sm: 31, md: 31, lg: 31, xl: 52 },
+          }}
+        >
           Chatto
         </Typography>
       </Box>

@@ -13,14 +13,12 @@ import {
 import { useState } from "react";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 import PersonRemoveAlt1OutlinedIcon from "@mui/icons-material/PersonRemoveAlt1Outlined";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 export default function FriendOptions({ currentFriend }) {
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
     null
   );
   const router = useRouter();
-  const dispatch = useDispatch();
   const openPop = Boolean(anchorElPop);
   const popOverId = openPop ? "simple-popover" : undefined;
   function handleClickPop(event: React.MouseEvent<HTMLButtonElement>) {
@@ -39,7 +37,7 @@ export default function FriendOptions({ currentFriend }) {
       icon: <ReviewsOutlinedIcon sx={{ fontSize: 20 }} />,
       onClick: () => {
         setAnchorElPop(null);
-        router.push(`/app/only-friends/${currentFriend.conversation_id}`);
+        router.push(`/app/friends/${currentFriend.conversation_id}`);
       },
     },
     {
@@ -65,7 +63,7 @@ export default function FriendOptions({ currentFriend }) {
           },
           background: anchorElPop ? "rgba(0, 0, 0, 0.1)" : "transparent",
           borderRadius: "50%",
-          zIndex: 10000,
+          zIndex: 100,
         }}
         onClick={(e: any) => {
           e.stopPropagation();

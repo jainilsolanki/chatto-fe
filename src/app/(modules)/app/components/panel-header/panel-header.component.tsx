@@ -17,7 +17,6 @@ import {
   handleCreateGroupDialogState,
 } from "@/app/services/redux/slices/dialog-config.slice";
 import AddFriendDialog from "./components/add-friend-dialog.component";
-import SearchIcon from "@mui/icons-material/Search";
 import { NotificationBell } from "./components/pending-friends-list.component";
 import StartConversationConfirmationDialog from "./components/start-converstation.dialog";
 import { useState } from "react";

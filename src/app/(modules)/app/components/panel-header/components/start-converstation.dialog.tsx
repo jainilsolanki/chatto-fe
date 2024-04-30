@@ -3,6 +3,7 @@ import { CREATE_CHAT } from "@/app/data/assets-data";
 import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import { updateConversationId } from "@/app/services/redux/slices/temp-data.slice";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -10,11 +11,14 @@ import {
   DialogContentText,
   DialogTitle,
   Stack,
+  Theme,
+  useMediaQuery,
 } from "@mui/material";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function StartConversationConfirmationDialog() {
+  const matches = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
   const dispatch = useDispatch();
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
   const tempData = useSelector((state: any) => state.tempData);
@@ -32,13 +36,16 @@ export default function StartConversationConfirmationDialog() {
             <DialogContentText>
               Do you want to begin conversation with Pragnesh Popat ?
             </DialogContentText>
-            <img
-              loading="lazy"
-              src={CREATE_CHAT}
-              alt="BEGIN_CONVERSATION_BANNER"
-              width={"100%"}
-              style={{ maxWidth: 200 }}
-            />
+            {matches && (
+              <Box
+                component={"img"}
+                src={CREATE_CHAT}
+                alt="BEGIN_CONVERSATION_BANNER"
+                loading="lazy"
+                width={"100%"}
+                maxWidth={200}
+              ></Box>
+            )}
           </Stack>
         </DialogContent>
         <DialogActions>

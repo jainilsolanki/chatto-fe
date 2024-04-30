@@ -119,7 +119,7 @@ export default function SignupPage() {
     <>
       <AuthLayout
         leftContent={
-          <Stack px={10} gap={3}>
+          <Stack sx={{ px: { xs: 2, sm: 4, md: 6, lg: 8, xl: 10 } }} gap={3}>
             <Stack gap={1}>
               <Typography variant="h5" fontWeight={"bold"}>
                 Sign up
@@ -139,7 +139,19 @@ export default function SignupPage() {
                 }
               }}
             >
-              <Stack direction={"row"} gap={3}>
+              <Stack
+                direction={"row"}
+                gap={3}
+                sx={{
+                  flexWrap: {
+                    xs: "wrap",
+                    sm: "wrap",
+                    md: "wrap",
+                    lg: "nowrap",
+                    xl: "nowrap",
+                  },
+                }}
+              >
                 <TextField
                   label="Enter your first name"
                   variant="outlined"
@@ -199,7 +211,7 @@ export default function SignupPage() {
               justifyContent={"center"}
               alignItems={"center"}
             >
-              <Typography>Already have an account?</Typography>
+              <Typography>Already have an account ?</Typography>
 
               <Link href={"/auth/login"}>
                 <Button>Login</Button>

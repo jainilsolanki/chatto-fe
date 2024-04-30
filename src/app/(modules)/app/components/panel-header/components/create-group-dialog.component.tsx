@@ -103,7 +103,7 @@ export default function CreateGroupDialog() {
         aria-labelledby="responsive-dialog-title"
         sx={{
           "& .MuiDialog-paper": {
-            minWidth: 500,
+            minWidth: { xs: 350, sm: 350, md: 500, lg: 500, xl: 500 },
             maxWidth: 700,
             height: "80vh",
           },

@@ -157,8 +157,14 @@ const ChatPanel = () => {
         <PanelListSkeletons />
       ) : (
         <Stack
-          height={"calc(80vh - 40px)"}
           sx={{
+            height: {
+              xs: "calc(100vh - 122px)",
+              sm: "calc(100vh - 122px)",
+              md: "calc(100vh - 122px)",
+              lg: "95vh",
+              xl: "95vh",
+            },
             overflow: "auto",
             "& :hover": {
               background:

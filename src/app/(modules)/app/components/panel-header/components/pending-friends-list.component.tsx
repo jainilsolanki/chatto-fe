@@ -29,7 +29,7 @@ import { socket } from "@/app/components/socket.connection";
 const FriendItem = ({
   friend,
   handleClosePop,
-  getFriendsList,
+  getFriendsRequestList,
   dataLength,
 }: any) => {
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ const FriendItem = ({
         }
         dispatch(handleBeginConversationDialogState(true));
         dispatch(updateConversationId(response.conversationId));
-        getFriendsList();
+        getFriendsRequestList();
       }
     } catch (e) {
       console.error(e);
@@ -66,7 +66,7 @@ const FriendItem = ({
           handleClosePop();
         }
         setTimeout(() => {
-          getFriendsList();
+          getFriendsRequestList();
         }, 500);
       }
     } catch (e) {
@@ -155,24 +155,25 @@ const FriendItem = ({
 export const FriendsList = ({
   friendsListData,
   handleClosePop,
-  getFriendsList,
+  getFriendsRequestList,
 }: any) => {
   return (
     <Paper
       sx={{
-        width: 500,
+        width: { xs: 350, sm: 350, md: 500, lg: 500, xl: 500 },
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
         gap: 3,
+        borderRadius: 4,
       }}
     >
       {friendsListData.length !== 0 ? (
         <List
           sx={{
             width: "100%",
-            maxWidth: 500,
+            maxWidth: { xs: 350, sm: 350, md: 500, lg: 500, xl: 500 },
             maxHeight: 300,
             overflowY: "auto",
           }}
@@ -182,7 +183,7 @@ export const FriendsList = ({
               key={friend.from_user_id}
               friend={friend}
               handleClosePop={handleClosePop}
-              getFriendsList={getFriendsList}
+              getFriendsRequestList={getFriendsRequestList}
               dataLength={friendsListData.length}
             />
           ))}
@@ -211,7 +212,7 @@ export const NotificationBell = () => {
   );
 
   const [friendsListData, setFriendsListData] = useState([]);
-  const getFriendsList = async () => {
+  const getFriendsRequestList = async () => {
     try {
       const response = await FriendAPI.getFriendsList();
       setFriendsListData(response.friends);
@@ -220,9 +221,9 @@ export const NotificationBell = () => {
     }
   };
   useEffect(() => {
-    getFriendsList();
+    getFriendsRequestList();
     function onNewFriendRequest(value: any) {
-      getFriendsList();
+      getFriendsRequestList();
     }
 
     socket?.on("friends-count", onNewFriendRequest);
@@ -276,11 +277,16 @@ export const NotificationBell = () => {
           vertical: "top",
           horizontal: "left",
         }}
+        sx={{
+          "& .MuiPopover-paper": {
+            borderRadius: 4,
+          },
+        }}
       >
         <FriendsList
           friendsListData={friendsListData}
           handleClosePop={handleClosePop}
-          getFriendsList={getFriendsList}
+          getFriendsRequestList={getFriendsRequestList}
         />
       </Popover>
     </>

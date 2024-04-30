@@ -49,7 +49,7 @@ export default function FriendsPanel() {
   }
 
   const navigateToConversation = (conversationId: number) => {
-    router.push(`/app/only-friends/${conversationId}`);
+    router.push(`/app/friends/${conversationId}`);
   };
   useEffect(() => {
     getAllFriends();
@@ -66,14 +66,20 @@ export default function FriendsPanel() {
   return (
     <>
       {/* Panel Header */}
-      <PanelHeader title={"Only Friends"} showOptions={true} />
+      <PanelHeader title={"Friends"} showOptions={true} />
       {/* Friends List */}
       {isLoading ? (
         <PanelListSkeletons />
       ) : (
         <Stack
-          height={"calc(80vh - 40px)"}
           sx={{
+            height: {
+              xs: "calc(100vh - 122px)",
+              sm: "calc(100vh - 122px)",
+              md: "calc(100vh - 122px)",
+              lg: "95vh",
+              xl: "95vh",
+            },
             overflow: "auto",
           }}
           p={1}
@@ -97,12 +103,14 @@ export default function FriendsPanel() {
                         : theme.palette.primary.main
                       : "unset",
                   "& .MuiSvgIcon-root": {
-                    display:
-                      friendsList.length !== 0 &&
-                      currentFriend &&
-                      friend.user.id === currentFriend.user.id
-                        ? "block"
-                        : "none",
+                    display: {
+                      xl:
+                        friendsList.length !== 0 &&
+                        currentFriend &&
+                        friend.user.id === currentFriend.user.id
+                          ? "block"
+                          : "none",
+                    },
                   },
                   cursor: "pointer",
                 }}

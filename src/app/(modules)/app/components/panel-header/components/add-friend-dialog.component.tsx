@@ -1,10 +1,10 @@
 "use client";
-
 import { ADD_FRIEND } from "@/app/data/assets-data";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import { handleAddFriendDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import CloseIcon from "@mui/icons-material/Close";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -13,7 +13,9 @@ import {
   DialogTitle,
   IconButton,
   Stack,
+  Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
@@ -21,6 +23,7 @@ import PinInput from "react-pin-input";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function AddFriendDialog() {
+  const matches = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
   const dispatch = useDispatch();
   const [userCode, setUserCode] = useState<string>("");
   const dialogConfig = useSelector((state: any) => state.dialogConfig);
@@ -96,11 +99,14 @@ export default function AddFriendDialog() {
                   focus
                   type="custom"
                   placeholder="U"
+                  style={{ display: "flex", justifyContent: "space-between" }}
                   inputStyle={{
                     borderRadius: 4,
                     background: "#F6F6F6",
                     border: "none",
                     fontSize: 16,
+                    width: matches ? 50 : 35,
+                    height: matches ? 50 : 35,
                   }}
                   inputFocusStyle={{ border: "1px solid #21978B" }}
                   onChange={(e: string) => setUserCode(e)}
@@ -112,17 +118,20 @@ export default function AddFriendDialog() {
                   Please fill the entire UCode
                 </Typography>
               )}
-              <DialogContentText mt={3} fontWeight={"bold"}>
+              <DialogContentText mt={2} fontWeight={"bold"}>
                 Note: You can find your user code in your profile
               </DialogContentText>
             </Stack>
-            <img
-              src={ADD_FRIEND}
-              width={"100%"}
-              style={{ maxWidth: 250 }}
-              alt="ADD_FRIEND_BANNER"
-              loading="lazy"
-            />
+            {matches && (
+              <Box
+                component={"img"}
+                src={ADD_FRIEND}
+                alt="ADD_FRIEND_BANNER"
+                loading="lazy"
+                width={"100%"}
+                maxWidth={250}
+              ></Box>
+            )}
           </Stack>
         </DialogContent>
         <DialogActions>
