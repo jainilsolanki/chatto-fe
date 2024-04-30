@@ -27,6 +27,7 @@ type UserData = {
   email: string;
   password: string;
   department_name: string;
+  is_google_signup: boolean;
 };
 export default function SignupPage() {
   const { data: session, status } = useSession();
@@ -37,6 +38,7 @@ export default function SignupPage() {
     email: "",
     password: "",
     department_name: "Development",
+    is_google_signup: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
