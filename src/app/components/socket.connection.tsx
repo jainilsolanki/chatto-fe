@@ -61,16 +61,6 @@ const SocketConnection = () => {
     dispatch(updateSelectedSection(3));
   };
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .then((registration) => {
-          console.log("Service Worker registered successfully:", registration);
-        })
-        .catch((error) => {
-          console.error("Service Worker registration failed:", error);
-        });
-    }
     //code for checking notification access
     requestNotificationPermission();
     function onMessageNotification(value: any) {
@@ -94,27 +84,15 @@ const SocketConnection = () => {
         return;
       }
 
-      navigator.serviceWorker.ready.then((registration) => {
-        registration.showNotification(`${message.username}`, {
-          icon: "/assets/logos/logo.png",
-          badge: "/assets/logos/logo.png",
+      const notification = new Notification(
+        `New message from ${message.username}`,
+        {
           body: `${decryptMessage(message.content, message.conversationId)}`,
+          icon: "/assets/logos/logo.png",
           requireInteraction:
             notificationSettings.autohide === "yes" ? false : true,
-          silent: notificationSettings.muted === "yes" ? true : false,
-          data: { conversationId: message.conversationId },
-        });
-      });
-
-      // const notification = new Notification(
-      //   `New message from ${message.username}`,
-      //   {
-      //     body: `${decryptMessage(message.content, message.conversationId)}`,
-      //     icon: "/assets/logos/logo.png",
-      //     requireInteraction:
-      //       notificationSettings.autohide === "yes" ? false : true,
-      //   }
-      // );
+        }
+      );
       let aud = new Audio(
         notificationSettings.notification ??
           "/assets/notifications/default-notification.mp3"
@@ -131,17 +109,17 @@ const SocketConnection = () => {
         lastNotification !== null && onMessageNotification(lastNotification);
       };
 
-      // notification.onclick = () => {
-      //   window && window.focus();
-      //   navigateTochat(message.conversationId);
-      //   document.dispatchEvent(
-      //     new CustomEvent("message-notification-clicked", {
-      //       detail: {
-      //         senderId: message.senderId,
-      //       },
-      //     })
-      //   );
-      // };
+      notification.onclick = () => {
+        window && window.focus();
+        navigateTochat(message.conversationId);
+        document.dispatchEvent(
+          new CustomEvent("message-notification-clicked", {
+            detail: {
+              senderId: message.senderId,
+            },
+          })
+        );
+      };
     }
 
     socket?.on("message-notification", onMessageNotification);
