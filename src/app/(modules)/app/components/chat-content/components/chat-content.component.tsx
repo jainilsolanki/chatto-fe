@@ -336,13 +336,25 @@ export default function ChatContent({ conversationId }) {
                                 chat.sender.id === userData?.id
                                   ? "flex-end"
                                   : "flex-start",
-                              gap: 1,
+                              gap: { xs: 0, sm: 0, md: 1, lg: 1, xl: 1 },
                             }}
                           >
                             <Avatar
                               sx={{
-                                width: 40,
-                                height: 40,
+                                width: {
+                                  xs: 20,
+                                  sm: 20,
+                                  md: 40,
+                                  lg: 40,
+                                  xl: 40,
+                                },
+                                height: {
+                                  xs: 20,
+                                  sm: 20,
+                                  md: 40,
+                                  lg: 40,
+                                  xl: 40,
+                                },
                                 borderRadius: 4,
                                 visibility:
                                   !isCurrentUser && isDifferentSender
@@ -405,8 +417,8 @@ export default function ChatContent({ conversationId }) {
                               </Typography>
 
                               <Tooltip
-                              leaveTouchDelay={10000}
-                              enterTouchDelay={0}
+                                leaveTouchDelay={10000}
+                                enterTouchDelay={0}
                                 title={moment(chat.createdAt).calendar(null, {
                                   sameDay: "[Today] hh:mm A",
                                   lastDay: "[Yesterday] hh:mm A",
@@ -435,8 +447,20 @@ export default function ChatContent({ conversationId }) {
                             <Avatar
                               sx={{
                                 // bgcolor: getRandomColor(),
-                                width: 40,
-                                height: 40,
+                                width: {
+                                  xs: 20,
+                                  sm: 20,
+                                  md: 40,
+                                  lg: 40,
+                                  xl: 40,
+                                },
+                                height: {
+                                  xs: 20,
+                                  sm: 20,
+                                  md: 40,
+                                  lg: 40,
+                                  xl: 40,
+                                },
                                 borderRadius: 4,
                                 visibility:
                                   isCurrentUser && isDifferentSender

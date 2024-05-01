@@ -26,7 +26,7 @@ import { Search } from "@mui/icons-material";
 import AssistantTwoToneIcon from "@mui/icons-material/AssistantTwoTone";
 import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import Groups2TwoToneIcon from "@mui/icons-material/Groups2TwoTone";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import useUserData from "../hooks/useUserData";
@@ -40,6 +40,7 @@ import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.s
 import { enqueueSnackbar } from "notistack";
 export default function BottomBar() {
   const dispatch = useDispatch();
+  const { conversationId } = useParams();
   const router = useRouter();
   const appData = useSelector((store: any) => store.appData);
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
@@ -114,6 +115,7 @@ export default function BottomBar() {
           position: "fixed",
           width: "100%",
           borderRadius: 0,
+          display: conversationId ? "none" : "block",
         }}
         elevation={0}
       >
