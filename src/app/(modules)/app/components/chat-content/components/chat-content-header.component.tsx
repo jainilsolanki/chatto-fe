@@ -41,178 +41,172 @@ export default function ChatContentHeader({
 
   return (
     <Stack
-      justifyContent={"space-evenly"}
-      flexDirection={"column"}
-      p={1}
+      direction={"row"}
+      alignItems={"center"}
+      justifyContent={"space-between"}
       height={60}
-      gap={2}
+      p={1}
     >
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <Stack direction={"row"} gap={2} alignItems={"center"}>
-          <ArrowBackIosNewTwoToneIcon
+      <Stack direction={"row"} gap={2} alignItems={"center"}>
+        <ArrowBackIosNewTwoToneIcon
+          sx={{
+            display: {
+              xs: "block",
+              sm: "block",
+              md: "none",
+              lg: "none",
+              xl: "none",
+            },
+          }}
+          onClick={() => {
+            router.back();
+          }}
+        />
+        {isLoading ? (
+          <Skeleton
+            sx={{
+              // bgcolor: getRandomColor(),
+              width: 45,
+              height: 75,
+              borderRadius: 4,
+            }}
+            animation="wave"
+          />
+        ) : (
+          <Avatar
+            sx={{
+              // bgcolor: getRandomColor(),
+              width: 45,
+              height: 45,
+              borderRadius: 4,
+            }}
+            src={messageReceiver.profile_picture}
+            alt={"No Image"}
+          >
+            {messageReceiver.first_name.charAt(0).toUpperCase() +
+              messageReceiver.last_name.charAt(0).toUpperCase()}
+          </Avatar>
+        )}
+        <Stack>
+          <Typography
+            variant="h6"
+            fontWeight={"bold"}
+            fontSize={18}
+            lineHeight={"normal"}
+          >
+            {isLoading ? (
+              <Skeleton width={160} animation="wave" />
+            ) : (
+              messageReceiver.first_name + " " + messageReceiver.last_name
+            )}
+          </Typography>
+          {isLoading ? (
+            <Skeleton width={80} animation="wave" />
+          ) : messageReceiver.status === "active" ? (
+            <Stack direction={"row"} alignItems={"center"} gap={1}>
+              <Box
+                sx={{
+                  background: "#44b700",
+                  height: 10,
+                  width: 10,
+                  borderRadius: "50%",
+                }}
+              ></Box>
+              <Typography variant="body1">Online</Typography>
+            </Stack>
+          ) : (
+            <Stack direction={"row"} alignItems={"center"} gap={1}>
+              <Box
+                sx={{
+                  background: "#616161",
+                  height: 10,
+                  width: 10,
+                  borderRadius: "50%",
+                }}
+              ></Box>
+              <Typography variant="body1">Offline</Typography>
+            </Stack>
+          )}
+        </Stack>
+      </Stack>
+      {isLoading ? (
+        <Stack direction={"row"} alignItems={"center"} gap={1}>
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+            gap={1}
             sx={{
               display: {
-                xs: "block",
-                sm: "block",
-                md: "none",
-                lg: "none",
-                xl: "none",
+                xs: "none",
+                sm: "none",
+                md: "flex",
+                lg: "flex",
+                xl: "flex",
               },
             }}
-            onClick={() => {
-              router.back();
-            }}
-          />
-          {isLoading ? (
+          >
             <Skeleton
-              sx={{
-                // bgcolor: getRandomColor(),
-                width: 45,
-                height: 75,
-                borderRadius: 4,
-              }}
+              width={80}
+              height={30}
+              variant="rounded"
+              sx={{ borderRadius: 3 }}
               animation="wave"
             />
-          ) : (
-            <Avatar
-              sx={{
-                // bgcolor: getRandomColor(),
-                width: 45,
-                height: 45,
-                borderRadius: 4,
-              }}
-              src={messageReceiver.profile_picture}
-              alt={"No Image"}
-            >
-              {messageReceiver.first_name.charAt(0).toUpperCase() +
-                messageReceiver.last_name.charAt(0).toUpperCase()}
-            </Avatar>
-          )}
-          <Stack>
-            <Typography
-              variant="h6"
-              fontWeight={"bold"}
-              fontSize={18}
-              lineHeight={"normal"}
-            >
-              {isLoading ? (
-                <Skeleton width={160} animation="wave" />
-              ) : (
-                messageReceiver.first_name + " " + messageReceiver.last_name
-              )}
-            </Typography>
-            {isLoading ? (
-              <Skeleton width={80} animation="wave" />
-            ) : messageReceiver.status === "active" ? (
-              <Stack direction={"row"} alignItems={"center"} gap={1}>
-                <Box
-                  sx={{
-                    background: "#44b700",
-                    height: 10,
-                    width: 10,
-                    borderRadius: "50%",
-                  }}
-                ></Box>
-                <Typography variant="body1">Online</Typography>
-              </Stack>
-            ) : (
-              <Stack direction={"row"} alignItems={"center"} gap={1}>
-                <Box
-                  sx={{
-                    background: "#616161",
-                    height: 10,
-                    width: 10,
-                    borderRadius: "50%",
-                  }}
-                ></Box>
-                <Typography variant="body1">Offline</Typography>
-              </Stack>
-            )}
+            <Skeleton
+              width={80}
+              height={30}
+              variant="rounded"
+              sx={{ borderRadius: 3 }}
+              animation="wave"
+            />
           </Stack>
+          <IconButton>
+            <Skeleton
+              variant="circular"
+              width={40}
+              height={40}
+              animation="wave"
+            />
+          </IconButton>
         </Stack>
-        {isLoading ? (
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              gap={1}
-              sx={{
-                display: {
-                  xs: "none",
-                  sm: "none",
-                  md: "flex",
-                  lg: "flex",
-                  xl: "flex",
-                },
-              }}
+      ) : (
+        <Stack direction={"row"} alignItems={"center"} gap={1}>
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+            gap={1}
+            sx={{
+              display: {
+                xs: "none",
+                sm: "none",
+                md: "flex",
+                lg: "flex",
+                xl: "flex",
+              },
+            }}
+          >
+            <Button
+              variant="outlined"
+              startIcon={<SportsEsportsIcon />}
+              sx={{ borderRadius: 3 }}
+              size="small"
             >
-              <Skeleton
-                width={80}
-                height={30}
-                variant="rounded"
-                sx={{ borderRadius: 3 }}
-                animation="wave"
-              />
-              <Skeleton
-                width={80}
-                height={30}
-                variant="rounded"
-                sx={{ borderRadius: 3 }}
-                animation="wave"
-              />
-            </Stack>
-            <IconButton>
-              <Skeleton
-                variant="circular"
-                width={40}
-                height={40}
-                animation="wave"
-              />
-            </IconButton>
-          </Stack>
-        ) : (
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              gap={1}
-              sx={{
-                display: {
-                  xs: "none",
-                  sm: "none",
-                  md: "flex",
-                  lg: "flex",
-                  xl: "flex",
-                },
-              }}
+              Games
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<CallIcon />}
+              sx={{ borderRadius: 3 }}
+              size="small"
             >
-              <Button
-                variant="outlined"
-                startIcon={<SportsEsportsIcon />}
-                sx={{ borderRadius: 3 }}
-                size="small"
-              >
-                Games
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<CallIcon />}
-                sx={{ borderRadius: 3 }}
-                size="small"
-              >
-                Call
-              </Button>
-            </Stack>
-            <IconButton>
-              <MoreHorizIcon />
-            </IconButton>
+              Call
+            </Button>
           </Stack>
-        )}
-      </Stack>
+          <IconButton>
+            <MoreHorizIcon />
+          </IconButton>
+        </Stack>
+      )}
     </Stack>
   );
 }
