@@ -65,6 +65,7 @@ export default function MessageField({ conversationId }) {
         justifyContent: "center",
         alignItems: "center",
         px: 1,
+        py: { xs: 2, sm: 2, md: 0, lg: 0, xl: 0 },
       }}
     >
       <Box

@@ -12,11 +12,14 @@ import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import CallIcon from "@mui/icons-material/Call";
 import { useEffect } from "react";
 import { socket } from "@/app/components/socket.connection";
+import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTone";
+import { useRouter } from "next/navigation";
 export default function ChatContentHeader({
   messageReceiver,
   isLoading,
   setOnGoingChatData,
 }) {
+  const router = useRouter();
   function updateUserActivity(user: any) {
     if (Number(user.user_id) === Number(messageReceiver.id)) {
       setOnGoingChatData((prevState) => ({
@@ -50,6 +53,20 @@ export default function ChatContentHeader({
         justifyContent={"space-between"}
       >
         <Stack direction={"row"} gap={2} alignItems={"center"}>
+          <ArrowBackIosNewTwoToneIcon
+            sx={{
+              display: {
+                xs: "block",
+                sm: "block",
+                md: "none",
+                lg: "none",
+                xl: "none",
+              },
+            }}
+            onClick={() => {
+              router.back();
+            }}
+          />
           {isLoading ? (
             <Skeleton
               sx={{
@@ -144,22 +161,37 @@ export default function ChatContentHeader({
           </Stack>
         ) : (
           <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <Button
-              variant="outlined"
-              startIcon={<SportsEsportsIcon />}
-              sx={{ borderRadius: 3 }}
-              size="small"
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              gap={1}
+              sx={{
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "flex",
+                  lg: "flex",
+                  xl: "flex",
+                },
+              }}
             >
-              Games
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<CallIcon />}
-              sx={{ borderRadius: 3 }}
-              size="small"
-            >
-              Call
-            </Button>
+              <Button
+                variant="outlined"
+                startIcon={<SportsEsportsIcon />}
+                sx={{ borderRadius: 3 }}
+                size="small"
+              >
+                Games
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<CallIcon />}
+                sx={{ borderRadius: 3 }}
+                size="small"
+              >
+                Call
+              </Button>
+            </Stack>
             <IconButton>
               <MoreHorizIcon />
             </IconButton>
