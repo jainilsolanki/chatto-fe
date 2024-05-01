@@ -5,9 +5,9 @@ export default function PanelListSkeletons() {
     <Stack
       sx={{
         height: {
-          xs: "calc(100vh - 122px)",
-          sm: "calc(100vh - 122px)",
-          md: "calc(100vh - 122px)",
+          xs: "calc(100vh - 124px)",
+          sm: "calc(100vh - 124px)",
+          md: "calc(100vh - 124px)",
           lg: "95vh",
           xl: "95vh",
         },

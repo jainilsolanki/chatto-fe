@@ -74,9 +74,9 @@ export default function FriendsPanel() {
         <Stack
           sx={{
             height: {
-              xs: "calc(100vh - 122px)",
-              sm: "calc(100vh - 122px)",
-              md: "calc(100vh - 122px)",
+              xs: "calc(100vh - 124px)",
+              sm: "calc(100vh - 124px)",
+              md: "calc(100vh - 124px)",
               lg: "95vh",
               xl: "95vh",
             },
@@ -160,7 +160,7 @@ export default function FriendsPanel() {
                 alt="You have no friends yet ! Start adding some"
                 style={{ maxWidth: 120, maxHeight: 120 }}
               />
-              <Typography variant="body1" fontSize={18}>
+              <Typography variant="body1" fontSize={18} textAlign={"center"}>
                 You have no friends yet ! Start adding some already
               </Typography>
             </Stack>

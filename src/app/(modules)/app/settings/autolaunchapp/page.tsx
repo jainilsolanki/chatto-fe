@@ -15,7 +15,12 @@ export default function AutoLaunchAppSteps() {
         onSave={() => {}}
       />
 
-      <Stack p={1} gap={4} height={"95vh"} sx={{ overflowY: "auto" }}>
+      <Stack
+        p={1}
+        gap={4}
+        height={"calc(100vh - 124px)"}
+        sx={{ overflowY: "auto" }}
+      >
         <Stack gap={1}>
           <Typography variant="subtitle2">
             Firstly install our app from the install popup.
