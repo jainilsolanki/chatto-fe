@@ -227,12 +227,23 @@ const ChatPanel = () => {
                       {getTimeDifference(user.chats.createdAt)}
                     </Typography>
                   </Stack>
-                  <Stack direction={"row"} alignItems={"center"}>
+                  <Stack
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                  >
                     <Box
                       sx={{
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        width: "14.5vw",
+                        width: "100%",
+                        maxWidth: {
+                          xs: "70vw",
+                          sm: "70vw",
+                          md: "70vw",
+                          lg: "14.5vw",
+                          xl: "14.5vw",
+                        },
                       }}
                     >
                       <Typography
@@ -253,6 +264,7 @@ const ChatPanel = () => {
                       color="primary"
                       max={9}
                       sx={{
+                        mx: 1.2,
                         "& :hover": {
                           background: theme.palette.primary.main,
                         },

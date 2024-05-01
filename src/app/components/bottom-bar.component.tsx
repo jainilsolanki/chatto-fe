@@ -18,19 +18,15 @@ import {
   Paper,
   Popover,
   Stack,
-  styled,
   Tab,
   Tabs,
-  Tooltip,
-  tooltipClasses,
-  TooltipProps,
   Typography,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import AssistantTwoToneIcon from "@mui/icons-material/AssistantTwoTone";
 import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import Groups2TwoToneIcon from "@mui/icons-material/Groups2TwoTone";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import useUserData from "../hooks/useUserData";
@@ -44,7 +40,6 @@ import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.s
 import { enqueueSnackbar } from "notistack";
 export default function BottomBar() {
   const dispatch = useDispatch();
-  const { conversationId } = useParams();
   const router = useRouter();
   const appData = useSelector((store: any) => store.appData);
   const [anchorElPop, setAnchorElPop] = useState<HTMLButtonElement | null>(
@@ -64,18 +59,10 @@ export default function BottomBar() {
       case 1:
         break;
       case 2:
-        if (conversationId) {
-          router.push(`/app/friends/${conversationId}`);
-        } else {
-          router.push(`/app/friends`);
-        }
+        router.push(`/app/friends`);
         break;
       case 3:
-        if (conversationId) {
-          router.push(`/app/message/${conversationId}`);
-        } else {
-          router.push("/app/message");
-        }
+        router.push("/app/message");
         break;
       default:
         router.push("/app/message");
