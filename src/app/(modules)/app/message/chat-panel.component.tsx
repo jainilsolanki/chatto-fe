@@ -237,7 +237,13 @@ const ChatPanel = () => {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         width: "100%",
-                        maxWidth: "14.5vw",
+                        maxWidth: {
+                          xs: "70vw",
+                          sm: "70vw",
+                          md: "70vw",
+                          lg: "14.5vw",
+                          xl: "14.5vw",
+                        },
                       }}
                     >
                       <Typography
