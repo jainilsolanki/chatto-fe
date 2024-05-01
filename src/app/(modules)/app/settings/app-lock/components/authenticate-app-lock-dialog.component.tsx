@@ -25,6 +25,11 @@ export default function AuthenticateAppLockDialog() {
 
   // useeffect for preventing user from interacting with app even after removing dialog using inspect
   useEffect(() => {
+    const popStateHandler = () => {
+      if (appData.appLockSettings.lockState) {
+        history.go(1);
+      }
+    };
     const clickHandler = (e) => {
       if (appData.appLockSettings.lockState) {
         const dialog = document.getElementById("appLockDialog");
@@ -37,9 +42,11 @@ export default function AuthenticateAppLockDialog() {
       }
     };
 
+    window.addEventListener("popstate", popStateHandler, true);
     document.addEventListener("click", clickHandler, true);
 
     return () => {
+      window.removeEventListener("popstate", popStateHandler, true);
       document.removeEventListener("click", clickHandler, true);
     };
   }, [appData.appLockSettings.lockState]);
