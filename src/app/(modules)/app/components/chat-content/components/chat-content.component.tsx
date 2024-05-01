@@ -291,7 +291,7 @@ export default function ChatContent({ conversationId }) {
                 });
                 return (
                   <Box key={date}>
-                    {index !== 0 && <Divider></Divider>}
+                    {index !== 0 && <Divider sx={{ my: 4 }} />}
 
                     <Box
                       sx={{
@@ -299,7 +299,7 @@ export default function ChatContent({ conversationId }) {
                         top: 16,
                         zIndex: 1,
                         textAlign: "center",
-                        marginTop: "-18px",
+                        marginTop: "-50px",
                       }}
                     >
                       <Chip
@@ -417,8 +417,8 @@ export default function ChatContent({ conversationId }) {
                               </Typography>
 
                               <Tooltip
-                                leaveTouchDelay={10000}
-                                enterTouchDelay={0}
+                                leaveTouchDelay={3000}
+                                enterTouchDelay={500}
                                 title={moment(chat.createdAt).calendar(null, {
                                   sameDay: "[Today] hh:mm A",
                                   lastDay: "[Yesterday] hh:mm A",

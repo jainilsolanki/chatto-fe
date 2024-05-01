@@ -136,20 +136,35 @@ export default function ChatContentHeader({
         </Stack>
         {isLoading ? (
           <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <Skeleton
-              width={80}
-              height={30}
-              variant="rounded"
-              sx={{ borderRadius: 3 }}
-              animation="wave"
-            />
-            <Skeleton
-              width={80}
-              height={30}
-              variant="rounded"
-              sx={{ borderRadius: 3 }}
-              animation="wave"
-            />
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              gap={1}
+              sx={{
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "flex",
+                  lg: "flex",
+                  xl: "flex",
+                },
+              }}
+            >
+              <Skeleton
+                width={80}
+                height={30}
+                variant="rounded"
+                sx={{ borderRadius: 3 }}
+                animation="wave"
+              />
+              <Skeleton
+                width={80}
+                height={30}
+                variant="rounded"
+                sx={{ borderRadius: 3 }}
+                animation="wave"
+              />
+            </Stack>
             <IconButton>
               <Skeleton
                 variant="circular"
