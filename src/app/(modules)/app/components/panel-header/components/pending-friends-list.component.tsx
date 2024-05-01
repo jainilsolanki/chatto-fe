@@ -26,6 +26,7 @@ import { useDispatch } from "react-redux";
 import { handleBeginConversationDialogState } from "@/app/services/redux/slices/dialog-config.slice";
 import { updateConversationId } from "@/app/services/redux/slices/temp-data.slice";
 import { socket } from "@/app/components/socket.connection";
+import { enqueueSnackbar } from "notistack";
 const FriendItem = ({
   friend,
   handleClosePop,
@@ -53,6 +54,7 @@ const FriendItem = ({
       }
     } catch (e) {
       console.error(e);
+      enqueueSnackbar(e.response.data.message, { variant: "error" });
     }
   };
   const rejectFriendRequest = async (id) => {
@@ -71,6 +73,7 @@ const FriendItem = ({
       }
     } catch (e) {
       console.error(e);
+      enqueueSnackbar(e.response.data.message, { variant: "error" });
     }
   };
   return (

@@ -59,7 +59,12 @@ export default function AppLock() {
         onCancel={() => {}}
         onSave={() => {}}
       />
-      <Stack gap={4} p={1} height={"95vh"} sx={{ overflowY: "auto" }}>
+      <Stack
+        gap={4}
+        p={1}
+        height={"calc(100vh - 124px)"}
+        sx={{ overflowY: "auto" }}
+      >
         <Stack gap={2}>
           <Stack direction={"row"}>
             <Typography variant="subtitle2">Enable App Lock</Typography>

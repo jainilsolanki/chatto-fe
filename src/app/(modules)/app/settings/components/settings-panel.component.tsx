@@ -97,26 +97,28 @@ const SettingsPanel = () => {
     // },
   ];
   return (
-    <Stack height={"100vh"}>
+    <Stack>
       {/* Panel Header */}
       <PanelHeader title={"Settings"} showOptions={false} />
       {/* Settings List */}
-      <List>
-        {settings.map((setting) => {
-          return (
-            <ListItem key={setting.key} sx={{ px: 1 }}>
-              <ListItemButton
-                sx={{ borderRadius: 4 }}
-                selected={setting.key === pathname.split("/")[3]}
-                onClick={setting.onClick}
-              >
-                <ListItemIcon>{setting.icon}</ListItemIcon>
-                <ListItemText primary={setting.title} />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
+      <Stack height={"calc(100vh - 124px)"} sx={{ overflowY: "auto" }}>
+        <List>
+          {settings.map((setting) => {
+            return (
+              <ListItem key={setting.key} sx={{ px: 1 }}>
+                <ListItemButton
+                  sx={{ borderRadius: 4 }}
+                  selected={setting.key === pathname.split("/")[3]}
+                  onClick={setting.onClick}
+                >
+                  <ListItemIcon>{setting.icon}</ListItemIcon>
+                  <ListItemText primary={setting.title} />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Stack>
     </Stack>
   );
 };

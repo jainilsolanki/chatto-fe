@@ -70,7 +70,12 @@ export default function Notifications() {
         onCancel={() => {}}
         onSave={() => {}}
       />
-      <Stack p={1} gap={4} height={"95vh"} sx={{ overflowY: "auto" }}>
+      <Stack
+        p={1}
+        gap={4}
+        height={"calc(100vh - 124px)"}
+        sx={{ overflowY: "auto" }}
+      >
         <Stack gap={2}>
           <Typography variant="subtitle2">Mute notifications</Typography>
           <ToggleButtonGroup

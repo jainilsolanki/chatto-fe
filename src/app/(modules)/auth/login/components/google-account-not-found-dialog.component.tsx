@@ -1,5 +1,6 @@
 "use client";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -58,12 +59,22 @@ export default function GoogleAccountNotFoundDialog() {
             justifyContent={"center"}
             gap={5}
           >
-            <img
+            <Box
+              component={"img"}
               src={ACCOUNT_NOT_FOUND}
               width={"100%"}
-              style={{ maxWidth: 200 }}
               alt="Account does not exist banner"
               loading="lazy"
+              sx={{
+                maxWidth: 200,
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "block",
+                  lg: "block",
+                  xl: "block",
+                },
+              }}
             />
             <Stack gap={2}>
               <Typography color={"error"}>
@@ -87,7 +98,7 @@ export default function GoogleAccountNotFoundDialog() {
             sx={{ width: "100%" }}
             onClick={handleCreateNewAccount}
           >
-            Create New account
+            Create
           </Button>
         </DialogActions>
       </Dialog>
