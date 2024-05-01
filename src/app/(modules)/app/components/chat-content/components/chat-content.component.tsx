@@ -418,7 +418,7 @@ export default function ChatContent({ conversationId }) {
 
                               <Tooltip
                                 leaveTouchDelay={3000}
-                                enterTouchDelay={500}
+                                enterTouchDelay={1000}
                                 title={moment(chat.createdAt).calendar(null, {
                                   sameDay: "[Today] hh:mm A",
                                   lastDay: "[Yesterday] hh:mm A",
