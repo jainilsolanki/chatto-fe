@@ -1,4 +1,5 @@
 "use client";
+import store from "@/app/services/redux";
 import { updateLockStateAppLockSettings } from "@/app/services/redux/slices/app-data.slice";
 import {
   Button,
@@ -12,12 +13,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 export default function AuthenticateAppLockDialog() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
-  const appData = useSelector((store: any) => store.appData);
   const [errorData, setErrorData] = useState({
     error: false,
     message: "Password is required",
@@ -25,8 +25,13 @@ export default function AuthenticateAppLockDialog() {
 
   // useeffect for preventing user from interacting with app even after removing dialog using inspect
   useEffect(() => {
+    const popStateHandler = () => {
+      if (store.getState().appData.appLockSettings.lockState) {
+        history.go(1);
+      }
+    };
     const clickHandler = (e) => {
-      if (appData.appLockSettings.lockState) {
+      if (store.getState().appData.appLockSettings.lockState) {
         const dialog = document.getElementById("appLockDialog");
         if (dialog && dialog.contains(e.target)) {
           return;
@@ -37,12 +42,14 @@ export default function AuthenticateAppLockDialog() {
       }
     };
 
+    window.addEventListener("popstate", popStateHandler, true);
     document.addEventListener("click", clickHandler, true);
 
     return () => {
+      window.removeEventListener("popstate", popStateHandler, true);
       document.removeEventListener("click", clickHandler, true);
     };
-  }, [appData.appLockSettings.lockState]);
+  }, [store.getState().appData.appLockSettings.lockState]);
 
   // use effect for out of tab based autolock
   useEffect(() => {
@@ -51,25 +58,29 @@ export default function AuthenticateAppLockDialog() {
         dispatch(updateLockStateAppLockSettings(true));
       }
     };
-    if (appData.appLockSettings.autoLock === 0) {
+    if (store.getState().appData.appLockSettings.autoLock === 0) {
       document.addEventListener("visibilitychange", outOfTabHandler);
     }
 
     return () => {
       document.removeEventListener("visibilitychange", outOfTabHandler);
     };
-  }, [appData.appLockSettings.autoLock]);
+  }, [store.getState().appData.appLockSettings.autoLock]);
 
   //use effect for time based auto lock
   useEffect(() => {
-    if ([300000, 600000, 900000].includes(appData.appLockSettings.autoLock)) {
+    if (
+      [300000, 600000, 900000].includes(
+        store.getState().appData.appLockSettings.autoLock
+      )
+    ) {
       let inactivityTimer;
 
       const resetTimer = () => {
         clearTimeout(inactivityTimer);
         inactivityTimer = setTimeout(() => {
           dispatch(updateLockStateAppLockSettings(true));
-        }, appData.appLockSettings.autoLock);
+        }, store.getState().appData.appLockSettings.autoLock);
       };
 
       const handleUserActivity = () => {
@@ -87,13 +98,15 @@ export default function AuthenticateAppLockDialog() {
         document.removeEventListener("keydown", handleUserActivity);
       };
     }
-  }, [appData.appLockSettings.autoLock]);
+  }, [store.getState().appData.appLockSettings.autoLock]);
 
   const unlockAppLock = () => {
     if (password.trim().length === 0) {
       setErrorData({ error: true, message: "Password is required" });
       return;
-    } else if (appData.appLockSettings.password !== password.trim()) {
+    } else if (
+      store.getState().appData.appLockSettings.password !== password.trim()
+    ) {
       setErrorData({ error: true, message: "Password doesn't match" });
       return;
     }
@@ -104,7 +117,7 @@ export default function AuthenticateAppLockDialog() {
 
   return (
     <Dialog
-      open={appData.appLockSettings.lockState}
+      open={store.getState().appData.appLockSettings.lockState}
       aria-labelledby="responsive-dialog-title"
       sx={{
         background:
