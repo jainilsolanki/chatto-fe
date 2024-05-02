@@ -60,6 +60,14 @@ export const notificationsList = [
   },
 ];
 
+// public paths for middleware
+export const publicPaths = [
+  "/",
+  "/auth/login",
+  "/auth/signup",
+  "/auth/forgot-password",
+];
+
 // number of chats per page
 export const NUMBER_OF_CHATS_PER_PAGE_LIMIT = 30;
 
