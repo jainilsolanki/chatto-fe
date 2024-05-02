@@ -6,7 +6,6 @@ import useUserData from "../hooks/useUserData";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import CryptoJS from "crypto-js";
-import { updateSelectedSection } from "../services/redux/slices/app-data.slice";
 export let socket: any;
 let preventNotification = false;
 let lastNotification: any = null;
@@ -58,7 +57,6 @@ const SocketConnection = () => {
 
   const navigateTochat = async (conversationId) => {
     router.push(`/app/message/${conversationId}`);
-    dispatch(updateSelectedSection(3));
   };
   useEffect(() => {
     //code for checking notification access

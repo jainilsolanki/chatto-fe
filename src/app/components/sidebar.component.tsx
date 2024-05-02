@@ -24,7 +24,7 @@ import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
 import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
 import { destroyCookie, setCookie } from "nookies";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "./socket.connection";
 import { useState } from "react";
@@ -34,7 +34,6 @@ import useUserData from "../hooks/useUserData";
 import {
   clearAppDataSlice,
   updateLockStateAppLockSettings,
-  updateSelectedSection,
 } from "../services/redux/slices/app-data.slice";
 import { FriendAPI } from "../services/axios/apis/friend.api";
 import { signOut } from "next-auth/react";
@@ -48,6 +47,7 @@ type MenuItemType = {
 const drawerWidth = 90;
 
 export default function Sidebar() {
+  const currentPath = usePathname();
   const { conversationId } = useParams();
   const router = useRouter();
   const { userData } = useUserData();
@@ -78,28 +78,24 @@ export default function Sidebar() {
   };
   const SidebarData = [
     {
-      id: "Home",
+      id: "home",
       name: "Home",
       icon: <HomeTwoToneIcon />,
       onClick: () => {
-        dispatch(updateSelectedSection(0));
         router.push("/app/home");
       },
     },
     {
-      id: "Search",
+      id: "search",
       name: "Search",
       icon: <SearchTwoToneIcon />,
-      onClick: () => {
-        dispatch(updateSelectedSection(1));
-      },
+      onClick: () => {},
     },
     {
-      id: "Friends",
+      id: "friends",
       name: "Friends",
       icon: <Groups2TwoToneIcon />,
       onClick: () => {
-        dispatch(updateSelectedSection(2));
         if (conversationId) {
           router.push(`/app/friends/${conversationId}`);
         } else {
@@ -108,11 +104,10 @@ export default function Sidebar() {
       },
     },
     {
-      id: "Message",
+      id: "message",
       name: "Message",
       icon: <AssistantTwoToneIcon />,
       onClick: () => {
-        dispatch(updateSelectedSection(3));
         if (conversationId) {
           router.push(`/app/message/${conversationId}`);
         } else {
@@ -121,7 +116,7 @@ export default function Sidebar() {
       },
     },
     {
-      id: "Logout",
+      id: "logout",
       name: "Logout",
       icon: <ExitToAppTwoToneIcon />,
       onClick: async () => {
@@ -231,7 +226,7 @@ export default function Sidebar() {
                     alignItems: "center",
                   }}
                   onClick={() => menu.onClick()}
-                  selected={index === appData.selectedSection}
+                  selected={menu.id === currentPath.split("/")[2]}
                 >
                   <ListItemIcon
                     sx={{
@@ -257,7 +252,7 @@ export default function Sidebar() {
             },
           }}
         >
-          <ListItem key={"Settings"} disablePadding sx={{ display: "block" }}>
+          <ListItem key={"settings"} disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -267,10 +262,9 @@ export default function Sidebar() {
                 px: 2.5,
               }}
               onClick={() => {
-                dispatch(updateSelectedSection(5));
                 router.push("/app/settings/customisations");
               }}
-              selected={5 === appData.selectedSection}
+              selected={"settings" === currentPath.split("/")[2]}
             >
               <ListItemIcon
                 sx={{
