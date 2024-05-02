@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   clearAppDataSlice,
   updateLockStateAppLockSettings,
-  updateSelectedSection,
 } from "../services/redux/slices/app-data.slice";
 import {
   Avatar,
@@ -26,7 +25,7 @@ import { Search } from "@mui/icons-material";
 import AssistantTwoToneIcon from "@mui/icons-material/AssistantTwoTone";
 import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import Groups2TwoToneIcon from "@mui/icons-material/Groups2TwoTone";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import useUserData from "../hooks/useUserData";
@@ -40,6 +39,7 @@ import { clearDialogConfigSlice } from "../services/redux/slices/dialog-config.s
 import { enqueueSnackbar } from "notistack";
 export default function BottomBar() {
   const dispatch = useDispatch();
+  const currentPath = usePathname();
   const { conversationId } = useParams();
   const router = useRouter();
   const appData = useSelector((store: any) => store.appData);
@@ -50,19 +50,18 @@ export default function BottomBar() {
   const [status, setStatus] = useState(userData?.status);
   const openPop = Boolean(anchorElPop);
   const popOverId = openPop ? "bottom-bar-profile-popover" : undefined;
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    if (newValue === -1) return;
-    dispatch(updateSelectedSection(newValue));
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    if (newValue === "notselected") return;
     switch (newValue) {
-      case 0:
+      case "home":
         router.push("/app/home");
         break;
-      case 1:
+      case "search":
         break;
-      case 2:
+      case "friends":
         router.push(`/app/friends`);
         break;
-      case 3:
+      case "message":
         router.push("/app/message");
         break;
       default:
@@ -120,7 +119,7 @@ export default function BottomBar() {
         elevation={0}
       >
         <Tabs
-          value={appData.selectedSection}
+          value={currentPath.split("/")[2]}
           onChange={handleChange}
           TabIndicatorProps={{
             sx: {
@@ -133,13 +132,13 @@ export default function BottomBar() {
             icon={<HomeTwoToneIcon />}
             label="Home"
             sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-            value={0}
+            value={"home"}
           />
           <Tab
             icon={<Search />}
             label="Search"
             sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-            value={1}
+            value={"search"}
           />
           <Tab
             icon={
@@ -147,19 +146,19 @@ export default function BottomBar() {
             }
             onClick={(e: any) => handleClickPop(e)}
             sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-            value={-1}
+            value={"notselected"}
           />
           <Tab
             icon={<Groups2TwoToneIcon />}
             label="Friends"
             sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-            value={2}
+            value={"friends"}
           />
           <Tab
             icon={<AssistantTwoToneIcon />}
             label="Message"
             sx={{ fontSize: "0.6rem", minHeight: 0, minWidth: 0 }}
-            value={3}
+            value={"message"}
           />
         </Tabs>
       </Paper>
@@ -280,7 +279,6 @@ export default function BottomBar() {
                 onClick={() => {
                   handleClosePop();
                   router.push("/app/settings");
-                  dispatch(updateSelectedSection(5));
                 }}
               >
                 <ListItemIcon sx={{ minWidth: 32 }}>
