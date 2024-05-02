@@ -53,7 +53,7 @@ export default function ChatContentHeader({
             display: {
               xs: "block",
               sm: "block",
-              md: "none",
+              md: "block",
               lg: "none",
               xl: "none",
             },
