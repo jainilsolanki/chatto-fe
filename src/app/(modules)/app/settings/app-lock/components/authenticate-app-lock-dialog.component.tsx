@@ -11,10 +11,12 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 export default function AuthenticateAppLockDialog() {
   const theme = useTheme();
+  const router = useRouter();
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const appData = useSelector((store: any) => store.appData);
@@ -25,9 +27,10 @@ export default function AuthenticateAppLockDialog() {
 
   // useeffect for preventing user from interacting with app even after removing dialog using inspect
   useEffect(() => {
+    const currentPath = document.URL;
     const popStateHandler = () => {
       if (appData.appLockSettings.lockState) {
-        history.go(1);
+        router.replace(currentPath);
       }
     };
     const clickHandler = (e) => {
