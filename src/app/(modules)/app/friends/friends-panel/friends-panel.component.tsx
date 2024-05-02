@@ -3,7 +3,7 @@ import { VOID } from "@/app/data/assets-data";
 import { getTimeDifference } from "@/app/data/utils";
 import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
 import FriendOptions from "./components/friend-options.component";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PanelHeader from "../../components/panel-header/panel-header.component";
 import { FriendAPI } from "@/app/services/axios/apis/friend.api";
 import useLoader from "@/app/hooks/useLoaders";
@@ -17,6 +17,23 @@ export default function FriendsPanel() {
   const { hideLoader, isLoading } = useLoader(true);
   const [friendsList, setFriendsList] = useState([]);
   const router = useRouter();
+  const [width, setWidth] = useState(0);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setWidth(containerRef.current.clientWidth);
+      }
+    };
+
+    updateWidth(); // Call it once to get the initial width
+    window.addEventListener("resize", updateWidth);
+
+    return () => {
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, [containerRef, isLoading]);
   const getAllFriends = async () => {
     try {
       const response = await FriendAPI.getAllFriends();
@@ -72,6 +89,7 @@ export default function FriendsPanel() {
         <PanelListSkeletons />
       ) : (
         <Stack
+          ref={containerRef}
           sx={{
             height: {
               xs: "calc(100vh - 124px)",
@@ -137,10 +155,20 @@ export default function FriendsPanel() {
                   </Avatar>
                 </UserActivityBadge>
                 <Box flexGrow={1}>
-                  <Typography variant="body1" fontWeight={"bold"} noWrap>
+                  <Typography
+                    variant="body1"
+                    fontWeight={"bold"}
+                    noWrap
+                    sx={{ maxWidth: `calc(${width}px - 100px)` }}
+                  >
                     {friend.user.first_name} {friend.user.last_name}
                   </Typography>
-                  <Typography variant="body2" color="textSecondary" noWrap>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    noWrap
+                    sx={{ maxWidth: `calc(${width}px - 100px)` }}
+                  >
                     Friends since {getTimeDifference(friend.createdAt)}
                   </Typography>
                 </Box>
