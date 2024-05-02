@@ -137,10 +137,10 @@ export default function FriendsPanel() {
                   </Avatar>
                 </UserActivityBadge>
                 <Box flexGrow={1}>
-                  <Typography variant="body1" fontWeight={"bold"}>
+                  <Typography variant="body1" fontWeight={"bold"} noWrap>
                     {friend.user.first_name} {friend.user.last_name}
                   </Typography>
-                  <Typography variant="body2" color="textSecondary">
+                  <Typography variant="body2" color="textSecondary" noWrap>
                     Friends since {getTimeDifference(friend.createdAt)}
                   </Typography>
                 </Box>

@@ -1,6 +1,6 @@
 "use client";
 import { Avatar, Badge, Box, Stack, Typography, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getTimeDifference } from "@/app/data/utils";
 import { VOID } from "@/app/data/assets-data";
 import { socket } from "@/app/components/socket.connection";
@@ -18,6 +18,23 @@ const ChatPanel = () => {
   const theme = useTheme();
   const [activeChatConversationId, setActiveChatConversationId] =
     useState(null);
+  const [width, setWidth] = useState(0);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setWidth(containerRef.current.clientWidth);
+      }
+    };
+
+    updateWidth(); // Call it once to get the initial width
+    window.addEventListener("resize", updateWidth);
+
+    return () => {
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, [containerRef, isLoading]);
 
   function updateLastMessage(value: any) {
     const { message } = value;
@@ -157,6 +174,7 @@ const ChatPanel = () => {
         <PanelListSkeletons />
       ) : (
         <Stack
+          ref={containerRef}
           sx={{
             height: {
               xs: "calc(100vh - 124px)",
@@ -188,6 +206,7 @@ const ChatPanel = () => {
                 px={1}
                 sx={{
                   borderRadius: 5,
+                  overflow: "hidden",
                 }}
                 onClick={() =>
                   getSingleChatData(user.conversationDetails.id, user.user.id)
@@ -216,13 +235,28 @@ const ChatPanel = () => {
                     justifyContent={"space-between"}
                     direction={"row"}
                   >
-                    <Typography variant="body1" fontWeight={"bold"}>
+                    <Typography
+                      variant="body1"
+                      fontWeight={"bold"}
+                      noWrap
+                      sx={{
+                        width: "100%",
+                        maxWidth: {
+                          xs: `calc(${width}px / 2)`,
+                          sm: `calc(${width}px / 2)`,
+                          md: `calc(${width}px / 2)`,
+                          lg: `calc(${width}px / 3)`,
+                          xl: `calc(${width}px / 3)`,
+                        },
+                      }}
+                    >
                       {user.user.first_name} {user.user.last_name}
                     </Typography>
                     <Typography
                       variant="body2"
                       color="textSecondary"
                       alignSelf={"flex-start"}
+                      noWrap
                     >
                       {getTimeDifference(user.chats.createdAt)}
                     </Typography>
@@ -237,13 +271,7 @@ const ChatPanel = () => {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         width: "100%",
-                        maxWidth: {
-                          xs: "70vw",
-                          sm: "70vw",
-                          md: "70vw",
-                          lg: "14.5vw",
-                          xl: "14.5vw",
-                        },
+                        maxWidth: `calc(${width}px - 120px)`,
                       }}
                     >
                       <Typography
