@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import { socketURL } from "../data/constants-data";
 import { io } from "socket.io-client";
 import useUserData from "../hooks/useUserData";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { useParams, useRouter } from "next/navigation";
 import CryptoJS from "crypto-js";
 export let socket: any;
 let preventNotification = false;
@@ -16,9 +16,7 @@ const SocketConnection = () => {
   const { appLockSettings } = appData;
   const { userData } = useUserData();
   const accessToken = userData ? userData.accessToken : null;
-  const dispatch = useDispatch();
   const router = useRouter();
-  const currentPath = usePathname();
   const requestNotificationPermission = async () => {
     try {
       await Notification.requestPermission();

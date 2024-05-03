@@ -239,7 +239,7 @@ export default function ChatContent({ conversationId }) {
       <Divider />
       {/* Chat List */}
       <Stack
-        height={"92vh"}
+        height={"calc(100vh - 60px)"}
         // mt={2}
         sx={{
           justifyContent: "space-between",
