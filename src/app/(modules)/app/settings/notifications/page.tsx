@@ -195,6 +195,10 @@ export default function Notifications() {
             })}
           </Select>
         </Stack>
+        <Typography variant="caption">
+          We prefer to use Chatto in firefox or safari for receiving
+          notifications in mobile devices.
+        </Typography>
       </Stack>
     </Stack>
   );
