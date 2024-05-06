@@ -23,6 +23,7 @@ import {
 import PlayCircleFilledTwoToneIcon from "@mui/icons-material/PlayCircleFilledTwoTone";
 import HelpTwoToneIcon from "@mui/icons-material/HelpTwoTone";
 import { notificationsList } from "@/app/data/constants-data";
+import ErrorTwoToneIcon from "@mui/icons-material/ErrorTwoTone";
 import { MAC_NOTIFICATION_INFO } from "@/app/data/assets-data";
 
 export default function Notifications() {
@@ -195,10 +196,14 @@ export default function Notifications() {
             })}
           </Select>
         </Stack>
-        <Typography variant="caption">
-          We prefer to use Chatto in firefox or safari for receiving
-          notifications in mobile devices.
-        </Typography>
+
+        <Stack direction={"row"} gap={1} alignItems={"center"}>
+          <ErrorTwoToneIcon sx={{ fontSize: 20 }} />
+          <Typography variant="caption">
+            We prefer to use Chatto in firefox or safari on mobile devices for
+            receiving notifications.
+          </Typography>
+        </Stack>
       </Stack>
     </Stack>
   );
