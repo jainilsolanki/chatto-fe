@@ -299,7 +299,7 @@ export default function ChatContent({ conversationId }) {
                         top: 16,
                         zIndex: 1,
                         textAlign: "center",
-                        marginTop: "-50px",
+                        marginTop: index !== 0 ? "-50px" : "0",
                       }}
                     >
                       <Chip
