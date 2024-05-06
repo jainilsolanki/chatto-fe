@@ -200,7 +200,7 @@ export default function Notifications() {
         <Stack direction={"row"} gap={1} alignItems={"center"}>
           <ErrorTwoToneIcon sx={{ fontSize: 20 }} />
           <Typography variant="caption">
-            We prefer to use Chatto in firefox or safari on mobile devices for
+            We recommend to use Chatto in firefox or safari on mobile devices for
             receiving notifications.
           </Typography>
         </Stack>
