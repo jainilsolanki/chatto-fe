@@ -291,7 +291,7 @@ export default function ChatContent({ conversationId }) {
                 });
                 return (
                   <Box key={date}>
-                    {index !== 0 && <Divider sx={{ my: 4 }} />}
+                    {index !== 0 && <Divider sx={{ my: 6 }} />}
 
                     <Box
                       sx={{
@@ -299,7 +299,7 @@ export default function ChatContent({ conversationId }) {
                         top: 16,
                         zIndex: 1,
                         textAlign: "center",
-                        marginTop: index !== 0 ? "-50px" : "0",
+                        marginTop: index !== 0 ? "-65px" : "0",
                       }}
                     >
                       <Chip
@@ -323,7 +323,7 @@ export default function ChatContent({ conversationId }) {
                       return (
                         <Box
                           key={chat.id}
-                          p={1}
+                          px={1}
                           ref={(el: any) => {
                             return (chatRefs.current[chat.id] = el);
                           }}
@@ -375,8 +375,19 @@ export default function ChatContent({ conversationId }) {
                             </Avatar>
                             <Box
                               sx={{
+                                // borderRadius: isDifferentSender
+                                //   ? isCurrentUser
+                                //     ? "16px 16px 0 16px"
+                                //     : "16px 16px 16px 0"
+                                //   : "16px",
                                 wordBreak: "break-all",
-                                margin: "8px",
+                                m: {
+                                  xs: 1,
+                                  sm: 1,
+                                  md: 1,
+                                  lg: "4px 8px",
+                                  xl: "4px 8px",
+                                },
                                 borderRadius: 4,
                                 textAlign: isCurrentUser ? "right" : "left",
                                 backgroundColor: isCurrentUser
