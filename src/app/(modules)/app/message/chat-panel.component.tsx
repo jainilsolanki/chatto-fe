@@ -10,6 +10,7 @@ import useLoader from "@/app/hooks/useLoaders";
 import PanelListSkeletons from "../components/panel-list-skeletons.component";
 import UserActivityBadge from "../components/user-activity-badge.component";
 import { useParams, useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 const ChatPanel = () => {
   const router = useRouter();
   const { conversationId } = useParams();
@@ -167,161 +168,170 @@ const ChatPanel = () => {
   };
   return (
     <>
-      {/* Panel Header */}
-      <PanelHeader title={"Messages"} showOptions={true} />
-      {/* Chat List */}
-      {isLoading ? (
-        <PanelListSkeletons />
-      ) : (
-        <Stack
-          ref={containerRef}
-          sx={{
-            height: {
-              xs: "calc(100vh - 124px)",
-              sm: "calc(100vh - 124px)",
-              md: "calc(100vh - 124px)",
-              lg: "95vh",
-              xl: "95vh",
-            },
-            overflow: "auto",
-            "& :hover": {
-              background:
-                friendsList.length !== 0
-                  ? theme.palette.mode === "light"
-                    ? theme.palette.primary.light
-                    : theme.palette.primary.main
-                  : "unset",
-              cursor: "pointer",
-            },
-          }}
-          p={1}
-        >
-          {friendsList.length !== 0 ? (
-            friendsList.map((user) => (
-              <Box
-                key={user.user.id}
-                display="flex"
-                alignItems="center"
-                py={1}
-                px={1}
-                sx={{
-                  borderRadius: 5,
-                  overflow: "hidden",
-                }}
-                onClick={() =>
-                  getSingleChatData(user.conversationDetails.id, user.user.id)
-                }
-              >
-                <UserActivityBadge
-                  status={(user.conversationDetails.id, user.user.status)}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Panel Header */}
+        <PanelHeader title={"Messages"} showOptions={true} />
+        {/* Chat List */}
+        {isLoading ? (
+          <PanelListSkeletons />
+        ) : (
+          <Stack
+            ref={containerRef}
+            sx={{
+              height: {
+                xs: "calc(100vh - 124px)",
+                sm: "calc(100vh - 124px)",
+                md: "calc(100vh - 124px)",
+                lg: "95vh",
+                xl: "95vh",
+              },
+              overflow: "auto",
+              "& :hover": {
+                background:
+                  friendsList.length !== 0
+                    ? theme.palette.mode === "light"
+                      ? theme.palette.primary.light
+                      : theme.palette.primary.main
+                    : "unset",
+                cursor: "pointer",
+              },
+            }}
+            p={1}
+          >
+            {friendsList.length !== 0 ? (
+              friendsList.map((user) => (
+                <Box
+                  key={user.user.id}
+                  display="flex"
+                  alignItems="center"
+                  py={1}
+                  px={1}
+                  sx={{
+                    borderRadius: 5,
+                    overflow: "hidden",
+                  }}
+                  onClick={() =>
+                    getSingleChatData(user.conversationDetails.id, user.user.id)
+                  }
                 >
-                  <Avatar
-                    sx={{
-                      // bgcolor: getRandomColor(),
-                      width: 45,
-                      height: 45,
-                      borderRadius: 4,
-                    }}
-                    src={user.profile_picture}
-                    alt={"No Image"}
+                  <UserActivityBadge
+                    status={(user.conversationDetails.id, user.user.status)}
                   >
-                    {user.user.first_name.charAt(0).toUpperCase() +
-                      user.user.last_name.charAt(0).toUpperCase()}
-                  </Avatar>
-                </UserActivityBadge>
-                <Stack width={"100%"}>
-                  <Stack
-                    flexGrow={1}
-                    justifyContent={"space-between"}
-                    direction={"row"}
-                  >
-                    <Typography
-                      variant="body1"
-                      fontWeight={"bold"}
-                      noWrap
+                    <Avatar
                       sx={{
-                        width: "100%",
-                        maxWidth: {
-                          xs: `calc(${width}px / 2)`,
-                          sm: `calc(${width}px / 2)`,
-                          md: `calc(${width}px / 2)`,
-                          lg: `calc(${width}px / 3)`,
-                          xl: `calc(${width}px / 3)`,
-                        },
+                        // bgcolor: getRandomColor(),
+                        width: 45,
+                        height: 45,
+                        borderRadius: 4,
                       }}
+                      src={user.profile_picture}
+                      alt={"No Image"}
                     >
-                      {user.user.first_name} {user.user.last_name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      alignSelf={"flex-start"}
-                      noWrap
+                      {user.user.first_name.charAt(0).toUpperCase() +
+                        user.user.last_name.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </UserActivityBadge>
+                  <Stack width={"100%"}>
+                    <Stack
+                      flexGrow={1}
+                      justifyContent={"space-between"}
+                      direction={"row"}
                     >
-                      {getTimeDifference(user.chats.createdAt)}
-                    </Typography>
-                  </Stack>
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                  >
-                    <Box
-                      sx={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        width: "100%",
-                        maxWidth: `calc(${width}px - 120px)`,
-                      }}
-                    >
+                      <Typography
+                        variant="body1"
+                        fontWeight={"bold"}
+                        noWrap
+                        sx={{
+                          width: "100%",
+                          maxWidth: {
+                            xs: `calc(${width}px / 2)`,
+                            sm: `calc(${width}px / 2)`,
+                            md: `calc(${width}px / 2)`,
+                            lg: `calc(${width}px / 3)`,
+                            xl: `calc(${width}px / 3)`,
+                          },
+                        }}
+                      >
+                        {user.user.first_name} {user.user.last_name}
+                      </Typography>
                       <Typography
                         variant="body2"
                         color="textSecondary"
+                        alignSelf={"flex-start"}
                         noWrap
-                        fontWeight={user.unreadMessages > 0 ? "800" : "medium"}
                       >
-                        {decryptMessage(
-                          user.chats.content,
-                          user.conversationDetails.id
-                        )}
+                        {getTimeDifference(user.chats.createdAt)}
                       </Typography>
-                    </Box>
+                    </Stack>
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                    >
+                      <Box
+                        sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          width: "100%",
+                          maxWidth: `calc(${width}px - 120px)`,
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          noWrap
+                          fontWeight={
+                            user.unreadMessages > 0 ? "800" : "medium"
+                          }
+                        >
+                          {decryptMessage(
+                            user.chats.content,
+                            user.conversationDetails.id
+                          )}
+                        </Typography>
+                      </Box>
 
-                    <Badge
-                      badgeContent={user.unreadMessages}
-                      color="primary"
-                      max={9}
-                      sx={{
-                        mx: 1.2,
-                        "& :hover": {
-                          background: theme.palette.primary.main,
-                        },
-                      }}
-                    />
+                      <Badge
+                        badgeContent={user.unreadMessages}
+                        color="primary"
+                        max={9}
+                        sx={{
+                          mx: 1.2,
+                          "& :hover": {
+                            background: theme.palette.primary.main,
+                          },
+                        }}
+                      />
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Box>
-            ))
-          ) : (
-            <Stack
-              alignItems={"center"}
-              justifyContent={"center"}
-              height={"100%"}
-              gap={2}
-            >
-              <img
-                loading="lazy"
-                src={VOID}
-                alt="NO_PENDING_MESSAGES_OR_CHATS_BANNER"
-                style={{ maxWidth: 120, maxHeight: 120 }}
-              />
-              <Typography variant="body1" fontSize={18}>
-                No messages found
-              </Typography>
-            </Stack>
-          )}
-        </Stack>
-      )}
+                </Box>
+              ))
+            ) : (
+              <Stack
+                alignItems={"center"}
+                justifyContent={"center"}
+                height={"100%"}
+                gap={2}
+              >
+                <img
+                  loading="lazy"
+                  src={VOID}
+                  alt="NO_PENDING_MESSAGES_OR_CHATS_BANNER"
+                  style={{ maxWidth: 120, maxHeight: 120 }}
+                />
+                <Typography variant="body1" fontSize={18}>
+                  No messages found
+                </Typography>
+              </Stack>
+            )}
+          </Stack>
+        )}
+      </motion.div>
     </>
   );
 };
