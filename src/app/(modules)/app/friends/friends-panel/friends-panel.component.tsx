@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 import { VOID } from "@/app/data/assets-data";
 import { getTimeDifference } from "@/app/data/utils";
 import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
@@ -82,119 +83,126 @@ export default function FriendsPanel() {
 
   return (
     <>
-      {/* Panel Header */}
-      <PanelHeader title={"Friends"} showOptions={true} />
-      {/* Friends List */}
-      {isLoading ? (
-        <PanelListSkeletons />
-      ) : (
-        <Stack
-          ref={containerRef}
-          sx={{
-            height: {
-              xs: "calc(100vh - 124px)",
-              sm: "calc(100vh - 124px)",
-              md: "calc(100vh - 124px)",
-              lg: "95vh",
-              xl: "95vh",
-            },
-            overflow: "auto",
-          }}
-          p={1}
-        >
-          {friendsList.length !== 0 ? (
-            friendsList.map((friend) => (
-              <Box
-                key={friend.user.id}
-                display="flex"
-                alignItems="center"
-                py={1}
-                px={1}
-                sx={{
-                  borderRadius: 5,
-                  background:
-                    friendsList.length !== 0 &&
-                    currentFriend &&
-                    friend.user.id === currentFriend.user.id
-                      ? theme.palette.mode === "light"
-                        ? theme.palette.primary.light
-                        : theme.palette.primary.main
-                      : "unset",
-                  "& .MuiSvgIcon-root": {
-                    display: {
-                      xl:
-                        friendsList.length !== 0 &&
-                        currentFriend &&
-                        friend.user.id === currentFriend.user.id
-                          ? "block"
-                          : "none",
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Panel Header */}
+        <PanelHeader title={"Friends"} showOptions={true} />
+        {/* Friends List */}
+        {isLoading ? (
+          <PanelListSkeletons />
+        ) : (
+          <Stack
+            ref={containerRef}
+            sx={{
+              height: {
+                xs: "calc(100vh - 124px)",
+                sm: "calc(100vh - 124px)",
+                md: "calc(100vh - 124px)",
+                lg: "95vh",
+                xl: "95vh",
+              },
+              overflow: "auto",
+            }}
+            p={1}
+          >
+            {friendsList.length !== 0 ? (
+              friendsList.map((friend) => (
+                <Box
+                  key={friend.user.id}
+                  display="flex"
+                  alignItems="center"
+                  py={1}
+                  px={1}
+                  sx={{
+                    borderRadius: 5,
+                    background:
+                      friendsList.length !== 0 &&
+                      currentFriend &&
+                      friend.user.id === currentFriend.user.id
+                        ? theme.palette.mode === "light"
+                          ? theme.palette.primary.light
+                          : theme.palette.primary.main
+                        : "unset",
+                    "& .MuiSvgIcon-root": {
+                      display: {
+                        xl:
+                          friendsList.length !== 0 &&
+                          currentFriend &&
+                          friend.user.id === currentFriend.user.id
+                            ? "block"
+                            : "none",
+                      },
                     },
-                  },
-                  cursor: "pointer",
-                }}
-                onMouseOver={() => setCurrentFriend(friend)}
-                onMouseOut={() => setCurrentFriend(null)}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigateToConversation(friend.conversation_id);
-                }}
-              >
-                <UserActivityBadge status={friend.user.status}>
-                  <Avatar
-                    sx={{
-                      // bgcolor: getRandomColor(),
-                      width: 45,
-                      height: 45,
-                      borderRadius: 4,
-                    }}
-                    src={friend.user.profile_picture}
-                    alt={"No Image"}
-                  >
-                    {friend.user.first_name.charAt(0).toUpperCase() +
-                      friend.user.last_name.charAt(0).toUpperCase()}
-                  </Avatar>
-                </UserActivityBadge>
-                <Box flexGrow={1}>
-                  <Typography
-                    variant="body1"
-                    fontWeight={"bold"}
-                    noWrap
-                    sx={{ maxWidth: `calc(${width}px - 100px)` }}
-                  >
-                    {friend.user.first_name} {friend.user.last_name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    noWrap
-                    sx={{ maxWidth: `calc(${width}px - 100px)` }}
-                  >
-                    Friends since {getTimeDifference(friend.createdAt)}
-                  </Typography>
+                    cursor: "pointer",
+                  }}
+                  onMouseOver={() => setCurrentFriend(friend)}
+                  onMouseOut={() => setCurrentFriend(null)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateToConversation(friend.conversation_id);
+                  }}
+                >
+                  <UserActivityBadge status={friend.user.status}>
+                    <Avatar
+                      sx={{
+                        // bgcolor: getRandomColor(),
+                        width: 45,
+                        height: 45,
+                        borderRadius: 4,
+                      }}
+                      src={friend.user.profile_picture}
+                      alt={"No Image"}
+                    >
+                      {friend.user.first_name.charAt(0).toUpperCase() +
+                        friend.user.last_name.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </UserActivityBadge>
+                  <Box flexGrow={1}>
+                    <Typography
+                      variant="body1"
+                      fontWeight={"bold"}
+                      noWrap
+                      sx={{ maxWidth: `calc(${width}px - 100px)` }}
+                    >
+                      {friend.user.first_name} {friend.user.last_name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      noWrap
+                      sx={{ maxWidth: `calc(${width}px - 100px)` }}
+                    >
+                      Friends since {getTimeDifference(friend.createdAt)}
+                    </Typography>
+                  </Box>
+                  <FriendOptions currentFriend={currentFriend} />
                 </Box>
-                <FriendOptions currentFriend={currentFriend} />
-              </Box>
-            ))
-          ) : (
-            <Stack
-              alignItems={"center"}
-              justifyContent={"center"}
-              height={"100%"}
-              gap={2}
-            >
-              <img
-                loading="lazy"
-                src={VOID}
-                alt="You have no friends yet ! Start adding some"
-                style={{ maxWidth: 120, maxHeight: 120 }}
-              />
-              <Typography variant="body1" fontSize={18} textAlign={"center"}>
-                You have no friends yet ! Start adding some already
-              </Typography>
-            </Stack>
-          )}
-        </Stack>
-      )}
+              ))
+            ) : (
+              <Stack
+                alignItems={"center"}
+                justifyContent={"center"}
+                height={"100%"}
+                gap={2}
+              >
+                <img
+                  loading="lazy"
+                  src={VOID}
+                  alt="You have no friends yet ! Start adding some"
+                  style={{ maxWidth: 120, maxHeight: 120 }}
+                />
+                <Typography variant="body1" fontSize={18} textAlign={"center"}>
+                  You have no friends yet ! Start adding some already
+                </Typography>
+              </Stack>
+            )}
+          </Stack>
+        )}
+      </motion.div>
     </>
   );
 }
